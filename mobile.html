@@ -1,2258 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Job Search">
-  <meta name="theme-color" content="#0a0a0a">
-  <title>Job Search 2026</title>
-  <link rel="manifest" href="manifest.json">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #111;
-      --surface2: #1a1a1a;
-      --border: #222;
-      --accent: #e8ff47;
-      --accent2: #ff4747;
-      --accent3: #47c4ff;
-      --text: #f0f0f0;
-      --muted: #666;
-      --dim: #999;
-      --week1: #47c4ff;
-      --week2: #e8ff47;
-      --week3: #ff9f47;
-      --week4: #c447ff;
-      --nav-h: 72px;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── LOADING ── */
-    #loading {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      z-index: 999;
-    }
-
-    .ld-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 4px;
-      color: var(--accent);
-    }
-
-    .ld-spin {
-      width: 28px;
-      height: 28px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* ── AUTH ── */
-    #auth {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 998;
-    }
-
-    .auth-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      width: 100%;
-      max-width: 380px;
-    }
-
-    .auth-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 24px;
-      letter-spacing: 3px;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .auth-tagline {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
-
-    .auth-segs {
-      display: flex;
-      background: var(--surface2);
-      border-radius: 8px;
-      padding: 3px;
-      margin-bottom: 20px;
-      gap: 3px;
-    }
-
-    .auth-seg {
-      flex: 1;
-      text-align: center;
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      transition: all .2s;
-    }
-
-    .auth-seg.on {
-      background: var(--border);
-      color: var(--text);
-    }
-
-    .auth-field {
-      margin-bottom: 14px;
-    }
-
-    .auth-lbl {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .auth-inp {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-    }
-
-    .auth-inp:focus {
-      border-color: var(--dim);
-    }
-
-    .auth-submit {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 13px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-
-    .auth-err {
-      color: var(--accent2);
-      font-size: 12px;
-      text-align: center;
-      min-height: 16px;
-      font-family: 'DM Mono', monospace;
-      margin-bottom: 8px;
-    }
-
-    .magic-lnk {
-      width: 100%;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--dim);
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    /* ── APP SHELL ── */
-    #app {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .topbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      padding-top: calc(12px + env(safe-area-inset-top, 0px));
-    }
-
-    .tb-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 2px;
-      color: var(--accent);
-    }
-
-    .tb-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sync-pill {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 9px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-    }
-
-    .sync-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-      transition: background .3s;
-    }
-
-    .sync-dot.ok {
-      background: #47ff9f;
-    }
-
-    .sync-dot.syncing {
-      background: var(--week3);
-      animation: pulse 1s infinite;
-    }
-
-    .sync-dot.err {
-      background: var(--accent2);
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: .4;
-      }
-    }
-
-    .sync-txt {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .tb-user {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      color: var(--dim);
-    }
-
-    /* ── SCREENS ── */
-    .screens {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .screen {
-      position: absolute;
-      inset: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding: 16px 16px calc(var(--nav-h) + var(--safe-bottom) + 16px);
-      display: none;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity .2s, transform .2s;
-    }
-
-    .screen.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── BOTTOM NAV ── */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      height: calc(var(--nav-h) + var(--safe-bottom));
-      padding-bottom: var(--safe-bottom);
-      z-index: 100;
-    }
-
-    .nav-tab {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      gap: 4px;
-      padding: 8px 0;
-      position: relative;
-      transition: opacity .15s;
-    }
-
-    .nav-tab:active {
-      opacity: .7;
-    }
-
-    .nav-icon {
-      font-size: 22px;
-      line-height: 1;
-      transition: transform .2s;
-    }
-
-    .nav-tab.active .nav-icon {
-      transform: scale(1.15);
-    }
-
-    .nav-lbl {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--muted);
-      transition: color .2s;
-      font-family: 'DM Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-
-    .nav-tab.active .nav-lbl {
-      color: var(--accent);
-    }
-
-    .nav-badge {
-      position: absolute;
-      top: 6px;
-      right: calc(50% - 18px);
-      background: var(--accent2);
-      color: #fff;
-      font-size: 9px;
-      font-family: 'DM Mono', monospace;
-      padding: 1px 5px;
-      border-radius: 6px;
-      font-weight: bold;
-      min-width: 16px;
-      text-align: center;
-    }
-
-    /* ── SECTION HEADER ── */
-    .sec-hd {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .sec-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 2px;
-    }
-
-    .sec-sub {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .pill-btn {
-      padding: 7px 14px;
-      border-radius: 20px;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 600;
-      font-size: 12px;
-      cursor: pointer;
-      transition: opacity .15s;
-    }
-
-    .pill-btn:active {
-      opacity: .7;
-    }
-
-    .pill-btn.primary {
-      background: var(--accent);
-      color: #000;
-    }
-
-    .pill-btn.ghost {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--dim);
-    }
-
-    /* ── HOME SCREEN ── */
-    .day-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(232, 255, 71, .08);
-      border: 1px solid rgba(232, 255, 71, .2);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .stat-tile {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-tile::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-    }
-
-    .stat-tile.y::before {
-      background: var(--accent);
-    }
-
-    .stat-tile.b::before {
-      background: var(--accent3);
-    }
-
-    .stat-tile.r::before {
-      background: var(--accent2);
-    }
-
-    .stat-tile.p::before {
-      background: var(--week4);
-    }
-
-    .stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      line-height: 1;
-      margin-bottom: 2px;
-    }
-
-    .stat-tile.y .stat-num {
-      color: var(--accent);
-    }
-
-    .stat-tile.b .stat-num {
-      color: var(--accent3);
-    }
-
-    .stat-tile.r .stat-num {
-      color: var(--accent2);
-    }
-
-    .stat-tile.p .stat-num {
-      color: var(--week4);
-    }
-
-    .stat-lbl {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      font-family: 'DM Mono', monospace;
-    }
-
-    .home-section {
-      margin-bottom: 22px;
-    }
-
-    .hs-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 14px;
-      letter-spacing: 1.5px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .alert-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      border-left: 3px solid var(--accent2);
-    }
-
-    .alert-card:active {
-      opacity: .8;
-    }
-
-    .ac-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .ac-body {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .ac-co {
-      font-weight: 600;
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ac-role {
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ac-time {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      flex-shrink: 0;
-    }
-
-    .task-quick {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .task-quick:active {
-      opacity: .8;
-    }
-
-    .tq-box {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 12px;
-    }
-
-    .task-quick.dk .tq-box {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-    }
-
-    .task-quick.dk .tq-txt {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
-
-    .tq-txt {
-      font-size: 13px;
-      line-height: 1.4;
-      flex: 1;
-    }
-
-    .week-badge {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      padding: 2px 6px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    .empty-home {
-      text-align: center;
-      padding: 24px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* ── FIND JOBS ── */
-    .search-box {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .s-inp {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 12px;
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-      min-width: 0;
-    }
-
-    .s-inp:focus {
-      border-color: var(--dim);
-    }
-
-    .s-btn {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 11px 16px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .s-btn:disabled {
-      opacity: .5;
-    }
-
-    .api-setup-m {
-      background: rgba(232, 255, 71, .05);
-      border: 1px dashed rgba(232, 255, 71, .25);
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .api-setup-m-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-
-    .api-setup-m-sub {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .api-setup-m-sub a {
-      color: var(--accent3);
-    }
-
-    .api-inp-m {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid rgba(232, 255, 71, .25);
-      border-radius: 8px;
-      padding: 11px 12px;
-      color: var(--text);
-      font-size: 13px;
-      font-family: 'DM Mono', monospace;
-      outline: none;
-      margin-bottom: 10px;
-    }
-
-    .filter-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-
-    .filter-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .fc {
-      padding: 7px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .fc.on {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(232, 255, 71, .08);
-    }
-
-    .saved-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-
-    .saved-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .sv-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      color: var(--dim);
-    }
-
-    .sv-x {
-      font-size: 15px;
-      color: var(--muted);
-    }
-
-    .jd-card-m {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 10px;
-      position: relative;
-    }
-
-    .jdc-co {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      margin-bottom: 3px;
-    }
-
-    .jdc-title {
-      font-weight: 600;
-      font-size: 15px;
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .jdc-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .jt {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-family: 'DM Mono', monospace;
-      background: var(--surface2);
-      color: var(--muted);
-    }
-
-    .jt.ea {
-      background: rgba(232, 255, 71, .12);
-      color: var(--accent);
-      border: 1px solid rgba(232, 255, 71, .3);
-      font-weight: 600;
-    }
-
-    .jt.rm {
-      background: rgba(71, 196, 255, .1);
-      color: var(--accent3);
-    }
-
-    .jt.nw {
-      background: rgba(71, 255, 179, .1);
-      color: #47ffb3;
-    }
-
-    .jdc-desc {
-      font-size: 12px;
-      color: var(--dim);
-      line-height: 1.5;
-      margin-bottom: 12px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .jdc-foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .jdc-meta {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-    }
-
-    .apply-btn-m {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-
-    .apply-btn-m:active {
-      opacity: .8;
-    }
-
-    .apply-btn-m.done {
-      background: var(--surface2);
-      color: var(--accent);
-      border: 1px solid rgba(232, 255, 71, .3);
-    }
-
-    .skip-btn-m {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .in-pipe-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(232, 255, 71, .1);
-      border: 1px solid rgba(232, 255, 71, .2);
-      color: var(--accent);
-      font-size: 9px;
-      font-family: 'DM Mono', monospace;
-      padding: 2px 7px;
-      border-radius: 4px;
-    }
-
-    .jd-loading-m {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px;
-      gap: 14px;
-      color: var(--muted);
-      font-size: 13px;
-      font-family: 'DM Mono', monospace;
-    }
-
-    /* ── PIPELINE ── */
-    .stage-filter {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 16px;
-      scrollbar-width: none;
-    }
-
-    .stage-filter::-webkit-scrollbar {
-      display: none;
-    }
-
-    .sf-chip {
-      padding: 7px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .sf-chip.on {
-      color: var(--text);
-      border-color: var(--text);
-    }
-
-    .pipe-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      position: relative;
-      transition: transform .15s;
-    }
-
-    .pipe-card:active {
-      transform: scale(.98);
-    }
-
-    .pipe-card-co {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      margin-bottom: 3px;
-    }
-
-    .pipe-card-role {
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 10px;
-      line-height: 1.3;
-    }
-
-    .pipe-card-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .stage-pill {
-      font-size: 10px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-family: 'DM Mono', monospace;
-      font-weight: 600;
-    }
-
-    .pipe-card-meta {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-    }
-
-    .pipe-ov-strip {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 3px;
-      border-radius: 12px 0 0 12px;
-      background: var(--accent2);
-    }
-
-    .pipe-ds-strip {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 3px;
-      border-radius: 12px 0 0 12px;
-      background: var(--week3);
-    }
-
-    .fu-tag {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      padding: 3px 8px;
-      border-radius: 4px;
-    }
-
-    .fu-tag.ov {
-      background: rgba(255, 71, 71, .15);
-      color: var(--accent2);
-    }
-
-    .fu-tag.ds {
-      background: rgba(255, 159, 71, .15);
-      color: var(--week3);
-    }
-
-    /* ── TASKS ── */
-    .week-section {
-      margin-bottom: 24px;
-    }
-
-    .week-hd {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .week-hd-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .week-color-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    .week-hd-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 17px;
-      letter-spacing: 1px;
-    }
-
-    .week-hd-pct {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-    }
-
-    .week-prog-bar {
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      margin-bottom: 12px;
-      overflow: hidden;
-    }
-
-    .week-prog-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width .5s;
-    }
-
-    .task-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .task-row:last-child {
-      border-bottom: none;
-    }
-
-    .task-row:active {
-      opacity: .7;
-    }
-
-    .task-row.dk {
-      opacity: .5;
-    }
-
-    .task-row.dk .tr-txt {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
-
-    .tr-box {
-      width: 22px;
-      height: 22px;
-      border-radius: 5px;
-      border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-      font-size: 12px;
-    }
-
-    .task-row.dk .tr-box {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-    }
-
-    .tr-txt {
-      font-size: 14px;
-      line-height: 1.5;
-      flex: 1;
-    }
-
-    .tr-day {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      background: var(--surface2);
-      padding: 2px 6px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      margin-top: 3px;
-    }
-
-    /* ── ALERTS TAB ── */
-    .alerts-empty {
-      text-align: center;
-      padding: 48px 24px;
-    }
-
-    .ae-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: .4;
-    }
-
-    .ae-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      letter-spacing: 1px;
-      color: var(--muted);
-    }
-
-    .ae-sub {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .alert-row {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      border-left: 3px solid var(--accent2);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .alert-row:active {
-      opacity: .8;
-    }
-
-    .alert-row.ds {
-      border-left-color: var(--week3);
-    }
-
-    .ar-body {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .ar-co {
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    .ar-role {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .ar-time {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .ar-time.ov {
-      color: var(--accent2);
-    }
-
-    .ar-time.ds {
-      color: var(--week3);
-    }
-
-    /* ── QUICK ADD SHEET ── */
-    .sheet-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .6);
-      z-index: 200;
-      display: none;
-      align-items: flex-end;
-    }
-
-    .sheet-overlay.on {
-      display: flex;
-    }
-
-    .sheet {
-      background: var(--surface);
-      border-radius: 20px 20px 0 0;
-      padding: 20px 20px calc(20px + var(--safe-bottom));
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      animation: slideUp .3s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
-
-      to {
-        transform: translateY(0);
-      }
-    }
-
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      margin: 0 auto 18px;
-    }
-
-    .sheet-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin-bottom: 18px;
-    }
-
-    .sf {
-      margin-bottom: 14px;
-    }
-
-    .sf label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .sf input,
-    .sf select,
-    .sf textarea {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .sf textarea {
-      resize: none;
-      min-height: 70px;
-    }
-
-    .sf select option {
-      background: var(--surface2);
-    }
-
-    .sheet-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .sheet-row .sf {
-      flex: 1;
-    }
-
-    .sheet-btns {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .sheet-save {
-      flex: 1;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 13px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .sheet-cancel {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--dim);
-      padding: 13px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    /* ── JOB DETAIL SHEET ── */
-    .jd-sheet-stage {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 16px;
-      scrollbar-width: none;
-    }
-
-    .jd-sheet-stage::-webkit-scrollbar {
-      display: none;
-    }
-
-    .stage-opt {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .stage-opt.on {
-      color: var(--text);
-      border-color: var(--text);
-    }
-
-    .jd-sheet-field {
-      margin-bottom: 12px;
-    }
-
-    .jd-sf-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .jd-sf-val {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    .jd-sf-val a {
-      color: var(--accent3);
-      text-decoration: none;
-    }
-
-    .li-open-m {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(71, 196, 255, .1);
-      border: 1px solid rgba(71, 196, 255, .25);
-      color: var(--accent3);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      text-decoration: none;
-      margin-top: 6px;
-    }
-
-    .delete-btn-m {
-      width: 100%;
-      background: rgba(255, 71, 71, .1);
-      border: 1px solid rgba(255, 71, 71, .2);
-      color: var(--accent2);
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    /* ── USER MENU ── */
-    .user-menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 300;
-      display: none;
-    }
-
-    .user-menu.on {
-      display: block;
-    }
-
-    .um-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, .5);
-    }
-
-    .um-card {
-      position: absolute;
-      top: calc(60px + env(safe-area-inset-top, 0px));
-      right: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      min-width: 220px;
-    }
-
-    .um-email {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 14px;
-      word-break: break-all;
-    }
-
-    .um-btn {
-      width: 100%;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--dim);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* ── AI TOOLS MOBILE ── */
-    .ai-key-strip {
-      background: rgba(196, 71, 255, .07);
-      border: 1px solid rgba(196, 71, 255, .2);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .ai-key-strip-title {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--week4);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-
-    .ai-key-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .ai-key-row input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid rgba(196, 71, 255, .25);
-      border-radius: 7px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .ai-key-row button {
-      background: var(--week4);
-      color: #fff;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .ai-li-strip {
-      background: rgba(71, 196, 255, .06);
-      border: 1px solid rgba(71, 196, 255, .18);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .ai-li-title {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--accent3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ai-li-loaded {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(71, 196, 255, .12);
-      border: 1px solid rgba(71, 196, 255, .25);
-      border-radius: 4px;
-      padding: 2px 8px;
-      font-size: 10px;
-      color: var(--accent3);
-    }
-
-    .ai-li-sub {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-
-    .ai-li-sub a {
-      color: var(--accent3);
-    }
-
-    .ai-li-upload {
-      border: 2px dashed var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-      transition: border-color .2s;
-    }
-
-    .ai-li-upload:active {
-      border-color: var(--accent3);
-    }
-
-    .ai-li-upload input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    .ai-li-upload-icon {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .ai-li-upload-txt {
-      font-size: 12px;
-      color: var(--dim);
-    }
-
-    .ai-li-parsing {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      background: rgba(71, 196, 255, .06);
-      border-radius: 7px;
-      margin-top: 10px;
-    }
-
-    .ai-li-parsing.on {
-      display: flex;
-    }
-
-    .ai-li-spin {
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(71, 196, 255, .2);
-      border-top-color: var(--accent3);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      flex-shrink: 0;
-    }
-
-    .ai-li-parse-txt {
-      font-size: 12px;
-      color: var(--accent3);
-      font-family: 'DM Mono', monospace;
-    }
-
-    .ai-li-card {
-      background: rgba(71, 196, 255, .05);
-      border: 1px solid rgba(71, 196, 255, .15);
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
-      display: none;
-    }
-
-    .ai-li-card.on {
-      display: block;
-    }
-
-    .ai-li-card-name {
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--accent3);
-      margin-bottom: 8px;
-    }
-
-    .ai-li-card-section {
-      margin-bottom: 8px;
-    }
-
-    .ai-li-card-label {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      color: var(--accent3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 3px;
-    }
-
-    .ai-li-card-text {
-      font-size: 11px;
-      color: var(--dim);
-      line-height: 1.5;
-      white-space: pre-wrap;
-      max-height: 100px;
-      overflow-y: auto;
-    }
-
-    .ai-li-remove {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 4px 10px;
-      border-radius: 5px;
-      font-size: 11px;
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-    }
-
-    .ai-profile-strip {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .ai-profile-strip-title {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .ai-tool-grid-m {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .ai-tool-btn-m {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 12px;
-      cursor: pointer;
-      text-align: left;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ai-tool-btn-m::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-    }
-
-    .ai-tool-btn-m.resume::before {
-      background: var(--accent);
-    }
-
-    .ai-tool-btn-m.cover::before {
-      background: var(--accent3);
-    }
-
-    .ai-tool-btn-m.recruiter::before {
-      background: var(--week3);
-    }
-
-    .ai-tool-btn-m.hiringmgr::before {
-      background: var(--week4);
-    }
-
-    .ai-tool-btn-m:active {
-      opacity: .8;
-      transform: scale(.98);
-    }
-
-    .ai-tool-icon-m {
-      font-size: 22px;
-      margin-bottom: 5px;
-    }
-
-    .ai-tool-name-m {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 15px;
-      letter-spacing: 1px;
-    }
-
-    .ai-tool-btn-m.resume .ai-tool-name-m {
-      color: var(--accent);
-    }
-
-    .ai-tool-btn-m.cover .ai-tool-name-m {
-      color: var(--accent3);
-    }
-
-    .ai-tool-btn-m.recruiter .ai-tool-name-m {
-      color: var(--week3);
-    }
-
-    .ai-tool-btn-m.hiringmgr .ai-tool-name-m {
-      color: var(--week4);
-    }
-
-    .ai-tool-desc-m {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-      line-height: 1.4;
-    }
-
-    .ai-gen-panel-m {
-      display: none;
-    }
-
-    .ai-gen-panel-m.on {
-      display: block;
-    }
-
-    .ai-gen-back-m {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--dim);
-      padding: 8px 14px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-      margin-bottom: 14px;
-    }
-
-    .ai-gen-title-m {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      margin-bottom: 14px;
-    }
-
-    .ai-gen-field {
-      margin-bottom: 12px;
-    }
-
-    .ai-gen-field label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .ai-gen-field input,
-    .ai-gen-field textarea {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 12px;
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-    }
-
-    .ai-gen-field textarea {
-      resize: none;
-      min-height: 90px;
-    }
-
-    .ai-gen-go {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 13px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .ai-gen-go:disabled {
-      opacity: .5;
-    }
-
-    .ai-output-m {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 16px;
-      display: none;
-    }
-
-    .ai-output-m.on {
-      display: block;
-    }
-
-    .ai-output-m-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .ai-output-m-label {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .ai-copy-m {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--dim);
-      padding: 5px 12px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-family: 'DM Mono', monospace;
-      cursor: pointer;
-    }
-
-    .ai-output-m-text {
-      font-size: 13px;
-      line-height: 1.7;
-      color: var(--text);
-      white-space: pre-wrap;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .ai-cursor {
-      display: inline-block;
-      width: 2px;
-      height: 13px;
-      background: var(--accent);
-      animation: blink 1s infinite;
-      vertical-align: middle;
-      margin-left: 1px;
-    }
-
-    @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0;
-      }
-    }
-
-    .ai-spin-sm {
-      width: 15px;
-      height: 15px;
-      border: 2px solid rgba(0, 0, 0, .2);
-      border-top-color: #000;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: inline-block;
-    }
-
-    .jd-ai-section {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .jd-ai-label {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      color: var(--week4);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-
-    .jd-ai-btns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .jd-ai-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-      cursor: pointer;
-      text-align: center;
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--dim);
-      transition: all .15s;
-    }
-
-    .jd-ai-btn:active {
-      opacity: .7;
-    }
-
-    .jd-ai-jd-field {
-      margin-bottom: 10px;
-    }
-
-    .jd-ai-jd-field label {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .jd-ai-jd-field textarea {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-      resize: none;
-      min-height: 80px;
-    }
-
-    .jd-ai-output {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      display: none;
-      margin-top: 10px;
-    }
-
-    .jd-ai-output.on {
-      display: block;
-    }
-
-    .jd-ai-out-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .jd-ai-out-label {
-      font-size: 10px;
-      font-family: 'DM Mono', monospace;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .jd-ai-out-text {
-      font-size: 12px;
-      line-height: 1.6;
-      color: var(--text);
-      white-space: pre-wrap;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Job Search">
+<meta name="theme-color" content="#0a0a0a">
+<title>Job Search 2026</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;
+  --accent:#e8ff47;--accent2:#ff4747;--accent3:#47c4ff;
+  --text:#f0f0f0;--muted:#666;--dim:#999;
+  --week1:#47c4ff;--week2:#e8ff47;--week3:#ff9f47;--week4:#c447ff;
+  --nav-h:72px;--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+body{display:flex;flex-direction:column;}
+
+/* ── LOADING ── */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:999;}
+.ld-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;color:var(--accent);}
+.ld-spin{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── AUTH ── */
+#auth{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;z-index:998;}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:380px;}
+.auth-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--accent);margin-bottom:4px;}
+.auth-tagline{font-size:12px;color:var(--muted);margin-bottom:24px;}
+.auth-segs{display:flex;background:var(--surface2);border-radius:8px;padding:3px;margin-bottom:20px;gap:3px;}
+.auth-seg{flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s;}
+.auth-seg.on{background:var(--border);color:var(--text);}
+.auth-field{margin-bottom:14px;}
+.auth-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'DM Mono',monospace;display:block;margin-bottom:5px;}
+.auth-inp{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-size:15px;outline:none;}
+.auth-inp:focus{border-color:var(--dim);}
+.auth-submit{width:100%;background:var(--accent);color:#000;border:none;padding:13px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;margin-top:4px;}
+.auth-err{color:var(--accent2);font-size:12px;text-align:center;min-height:16px;font-family:'DM Mono',monospace;margin-bottom:8px;}
+.magic-lnk{width:100%;background:none;border:1px solid var(--border);color:var(--dim);padding:12px;border-radius:8px;font-size:13px;cursor:pointer;margin-top:10px;}
+
+/* ── APP SHELL ── */
+#app{display:none;flex-direction:column;height:100%;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding-top:calc(12px + env(safe-area-inset-top,0px));}
+.tb-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent);}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.sync-pill{display:flex;align-items:center;gap:5px;padding:4px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s;}
+.sync-dot.ok{background:#47ff9f;}
+.sync-dot.syncing{background:var(--week3);animation:pulse 1s infinite;}
+.sync-dot.err{background:var(--accent2);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.sync-txt{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.tb-user{width:30px;height:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;color:var(--dim);}
+
+/* ── SCREENS ── */
+.screens{flex:1;overflow:hidden;position:relative;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nav-h) + var(--safe-bottom) + 16px);display:none;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;}
+.screen.active{display:block;opacity:1;transform:translateY(0);}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;height:calc(var(--nav-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);z-index:100;}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:4px;padding:8px 0;position:relative;transition:opacity .15s;}
+.nav-tab:active{opacity:.7;}
+.nav-icon{font-size:22px;line-height:1;transition:transform .2s;}
+.nav-tab.active .nav-icon{transform:scale(1.15);}
+.nav-lbl{font-size:10px;font-weight:600;color:var(--muted);transition:color .2s;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;}
+.nav-tab.active .nav-lbl{color:var(--accent);}
+.nav-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--accent2);color:#fff;font-size:9px;font-family:'DM Mono',monospace;padding:1px 5px;border-radius:6px;font-weight:bold;min-width:16px;text-align:center;}
+
+/* ── SECTION HEADER ── */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;}
+.sec-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.pill-btn{padding:7px 14px;border-radius:20px;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;cursor:pointer;transition:opacity .15s;}
+.pill-btn:active{opacity:.7;}
+.pill-btn.primary{background:var(--accent);color:#000;}
+.pill-btn.ghost{background:var(--surface2);border:1px solid var(--border);color:var(--dim);}
+
+/* ── HOME SCREEN ── */
+.day-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(232,255,71,.08);border:1px solid rgba(232,255,71,.2);border-radius:20px;padding:5px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-bottom:16px;}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;}
+.stat-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat-tile.y::before{background:var(--accent);}
+.stat-tile.b::before{background:var(--accent3);}
+.stat-tile.r::before{background:var(--accent2);}
+.stat-tile.p::before{background:var(--week4);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;margin-bottom:2px;}
+.stat-tile.y .stat-num{color:var(--accent);}
+.stat-tile.b .stat-num{color:var(--accent3);}
+.stat-tile.r .stat-num{color:var(--accent2);}
+.stat-tile.p .stat-num{color:var(--week4);}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Mono',monospace;}
+.home-section{margin-bottom:22px;}
+.hs-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;}
+.alert-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;border-left:3px solid var(--accent2);}
+.alert-card:active{opacity:.8;}
+.ac-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ac-body{flex:1;min-width:0;}
+.ac-co{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ac-role{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ac-time{font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;}
+.task-quick{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.task-quick:active{opacity:.8;}
+.tq-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;}
+.task-quick.dk .tq-box{background:var(--accent);border-color:var(--accent);color:#000;}
+.task-quick.dk .tq-txt{text-decoration:line-through;color:var(--muted);}
+.tq-txt{font-size:13px;line-height:1.4;flex:1;}
+.week-badge{font-size:10px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.empty-home{text-align:center;padding:24px;color:var(--muted);font-size:13px;}
+
+/* ── FIND JOBS ── */
+.search-box{background:var(--surface);border-radius:12px;padding:14px;margin-bottom:16px;}
+.search-row{display:flex;gap:8px;margin-bottom:10px;}
+.s-inp{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 12px;color:var(--text);font-size:15px;outline:none;min-width:0;}
+.s-inp:focus{border-color:var(--dim);}
+.s-btn{background:var(--accent);color:#000;border:none;padding:11px 16px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;flex-shrink:0;}
+.s-btn:disabled{opacity:.5;}
+.api-setup-m{background:rgba(232,255,71,.05);border:1px dashed rgba(232,255,71,.25);border-radius:10px;padding:16px;margin-bottom:16px;}
+.api-setup-m-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:6px;}
+.api-setup-m-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.api-setup-m-sub a{color:var(--accent3);}
+.api-inp-m{width:100%;background:var(--surface2);border:1px solid rgba(232,255,71,.25);border-radius:8px;padding:11px 12px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;outline:none;margin-bottom:10px;}
+.filter-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none;}
+.filter-scroll::-webkit-scrollbar{display:none;}
+.fc{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.fc.on{border-color:var(--accent);color:var(--accent);background:rgba(232,255,71,.08);}
+.saved-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none;}
+.saved-scroll::-webkit-scrollbar{display:none;}
+.sv-chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;white-space:nowrap;flex-shrink:0;color:var(--dim);}
+.sv-x{font-size:15px;color:var(--muted);}
+.jd-card-m{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;position:relative;}
+.jdc-co{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:3px;}
+.jdc-title{font-weight:600;font-size:15px;line-height:1.3;margin-bottom:8px;}
+.jdc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.jt{font-size:10px;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;background:var(--surface2);color:var(--muted);}
+.jt.ea{background:rgba(232,255,71,.12);color:var(--accent);border:1px solid rgba(232,255,71,.3);font-weight:600;}
+.jt.rm{background:rgba(71,196,255,.1);color:var(--accent3);}
+.jt.nw{background:rgba(71,255,179,.1);color:#47ffb3;}
+.jdc-desc{font-size:12px;color:var(--dim);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.jdc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.jdc-meta{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
+.apply-btn-m{background:var(--accent);color:#000;border:none;padding:9px 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.apply-btn-m:active{opacity:.8;}
+.apply-btn-m.done{background:var(--surface2);color:var(--accent);border:1px solid rgba(232,255,71,.3);}
+.skip-btn-m{background:none;border:1px solid var(--border);color:var(--muted);padding:9px 12px;border-radius:8px;font-size:12px;cursor:pointer;flex-shrink:0;}
+.in-pipe-badge{position:absolute;top:12px;right:12px;background:rgba(232,255,71,.1);border:1px solid rgba(232,255,71,.2);color:var(--accent);font-size:9px;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:4px;}
+.jd-loading-m{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;gap:14px;color:var(--muted);font-size:13px;font-family:'DM Mono',monospace;}
+
+/* ── PIPELINE ── */
+.stage-filter{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none;}
+.stage-filter::-webkit-scrollbar{display:none;}
+.sf-chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.sf-chip.on{color:var(--text);border-color:var(--text);}
+.pipe-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;position:relative;transition:transform .15s;}
+.pipe-card:active{transform:scale(.98);}
+.pipe-card-co{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:3px;}
+.pipe-card-role{font-weight:600;font-size:15px;margin-bottom:10px;line-height:1.3;}
+.pipe-card-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.stage-pill{font-size:10px;padding:4px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-weight:600;}
+.pipe-card-meta{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
+.pipe-ov-strip{position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px;background:var(--accent2);}
+.pipe-ds-strip{position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px;background:var(--week3);}
+.fu-tag{font-size:10px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:4px;}
+.fu-tag.ov{background:rgba(255,71,71,.15);color:var(--accent2);}
+.fu-tag.ds{background:rgba(255,159,71,.15);color:var(--week3);}
+
+/* ── TASKS ── */
+.week-section{margin-bottom:24px;}
+.week-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.week-hd-left{display:flex;align-items:center;gap:10px;}
+.week-color-dot{width:10px;height:10px;border-radius:50%;}
+.week-hd-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;}
+.week-hd-pct{font-family:'Bebas Neue',sans-serif;font-size:20px;}
+.week-prog-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden;}
+.week-prog-fill{height:100%;border-radius:2px;transition:width .5s;}
+.task-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+.task-row:last-child{border-bottom:none;}
+.task-row:active{opacity:.7;}
+.task-row.dk{opacity:.5;}
+.task-row.dk .tr-txt{text-decoration:line-through;color:var(--muted);}
+.tr-box{width:22px;height:22px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:12px;}
+.task-row.dk .tr-box{background:var(--accent);border-color:var(--accent);color:#000;}
+.tr-txt{font-size:14px;line-height:1.5;flex:1;}
+.tr-day{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:var(--surface2);padding:2px 6px;border-radius:3px;flex-shrink:0;margin-top:3px;}
+
+/* ── ALERTS TAB ── */
+.alerts-empty{text-align:center;padding:48px 24px;}
+.ae-icon{font-size:48px;margin-bottom:12px;opacity:.4;}
+.ae-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--muted);}
+.ae-sub{font-size:13px;color:var(--muted);margin-top:6px;}
+.alert-row{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;border-left:3px solid var(--accent2);display:flex;align-items:center;gap:12px;}
+.alert-row:active{opacity:.8;}
+.alert-row.ds{border-left-color:var(--week3);}
+.ar-body{flex:1;min-width:0;}
+.ar-co{font-weight:600;font-size:15px;}
+.ar-role{font-size:12px;color:var(--muted);margin-top:2px;}
+.ar-time{font-family:'DM Mono',monospace;font-size:12px;flex-shrink:0;}
+.ar-time.ov{color:var(--accent2);}
+.ar-time.ds{color:var(--week3);}
+
+/* ── QUICK ADD SHEET ── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;}
+.sheet-overlay.on{display:flex;}
+.sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + var(--safe-bottom));width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.sheet-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.sheet-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent);margin-bottom:18px;}
+.sf{margin-bottom:14px;}
+.sf label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'DM Mono',monospace;display:block;margin-bottom:5px;}
+.sf input,.sf select,.sf textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;}
+.sf textarea{resize:none;min-height:70px;}
+.sf select option{background:var(--surface2);}
+.sheet-row{display:flex;gap:10px;}
+.sheet-row .sf{flex:1;}
+.sheet-btns{display:flex;gap:10px;margin-top:6px;}
+.sheet-save{flex:1;background:var(--accent);color:#000;border:none;padding:13px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;}
+.sheet-cancel{background:var(--surface2);border:1px solid var(--border);color:var(--dim);padding:13px 18px;border-radius:8px;font-size:14px;cursor:pointer;}
+
+/* ── JOB DETAIL SHEET ── */
+.jd-sheet-stage{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:16px;scrollbar-width:none;}
+.jd-sheet-stage::-webkit-scrollbar{display:none;}
+.stage-opt{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.stage-opt.on{color:var(--text);border-color:var(--text);}
+.jd-sheet-field{margin-bottom:12px;}
+.jd-sf-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'DM Mono',monospace;display:block;margin-bottom:5px;}
+.jd-sf-val{font-size:14px;color:var(--text);line-height:1.5;}
+.jd-sf-val a{color:var(--accent3);text-decoration:none;}
+.li-open-m{display:inline-flex;align-items:center;gap:5px;background:rgba(71,196,255,.1);border:1px solid rgba(71,196,255,.25);color:var(--accent3);padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;text-decoration:none;margin-top:6px;}
+.delete-btn-m{width:100%;background:rgba(255,71,71,.1);border:1px solid rgba(255,71,71,.2);color:var(--accent2);padding:12px;border-radius:8px;font-size:14px;cursor:pointer;margin-top:12px;}
+
+/* ── USER MENU ── */
+.user-menu{position:fixed;top:0;right:0;bottom:0;left:0;z-index:300;display:none;}
+.user-menu.on{display:block;}
+.um-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);}
+.um-card{position:absolute;top:calc(60px + env(safe-area-inset-top,0px));right:14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;min-width:220px;}
+.um-email{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px;word-break:break-all;}
+.um-btn{width:100%;background:none;border:1px solid var(--border);color:var(--dim);padding:10px;border-radius:8px;font-size:13px;cursor:pointer;text-align:left;}
+
+::-webkit-scrollbar{display:none;}
+/* ── AI TOOLS MOBILE ── */
+.ai-key-strip{background:rgba(196,71,255,.07);border:1px solid rgba(196,71,255,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+.ai-key-strip-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--week4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.ai-key-row{display:flex;gap:8px;}
+.ai-key-row input{flex:1;background:var(--surface2);border:1px solid rgba(196,71,255,.25);border-radius:7px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;}
+.ai-key-row button{background:var(--week4);color:#fff;border:none;padding:10px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.ai-li-strip{background:rgba(71,196,255,.06);border:1px solid rgba(71,196,255,.18);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+.ai-li-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--accent3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.ai-li-loaded{display:inline-flex;align-items:center;gap:5px;background:rgba(71,196,255,.12);border:1px solid rgba(71,196,255,.25);border-radius:4px;padding:2px 8px;font-size:10px;color:var(--accent3);}
+.ai-li-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;}
+.ai-li-sub a{color:var(--accent3);}
+.ai-li-upload{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;position:relative;transition:border-color .2s;}
+.ai-li-upload:active{border-color:var(--accent3);}
+.ai-li-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.ai-li-upload-icon{font-size:24px;margin-bottom:6px;}
+.ai-li-upload-txt{font-size:12px;color:var(--dim);}
+.ai-li-parsing{display:none;align-items:center;gap:10px;padding:12px;background:rgba(71,196,255,.06);border-radius:7px;margin-top:10px;}
+.ai-li-parsing.on{display:flex;}
+.ai-li-spin{width:14px;height:14px;border:2px solid rgba(71,196,255,.2);border-top-color:var(--accent3);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.ai-li-parse-txt{font-size:12px;color:var(--accent3);font-family:'DM Mono',monospace;}
+.ai-li-card{background:rgba(71,196,255,.05);border:1px solid rgba(71,196,255,.15);border-radius:8px;padding:12px;margin-top:10px;display:none;}
+.ai-li-card.on{display:block;}
+.ai-li-card-name{font-weight:700;font-size:13px;color:var(--accent3);margin-bottom:8px;}
+.ai-li-card-section{margin-bottom:8px;}
+.ai-li-card-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--accent3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.ai-li-card-text{font-size:11px;color:var(--dim);line-height:1.5;white-space:pre-wrap;max-height:100px;overflow-y:auto;}
+.ai-li-remove{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:5px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;}
+.ai-profile-strip{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+.ai-profile-strip-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.ai-tool-grid-m{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.ai-tool-btn-m{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 12px;cursor:pointer;text-align:left;position:relative;overflow:hidden;}
+.ai-tool-btn-m::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.ai-tool-btn-m.resume::before{background:var(--accent);}
+.ai-tool-btn-m.cover::before{background:var(--accent3);}
+.ai-tool-btn-m.recruiter::before{background:var(--week3);}
+.ai-tool-btn-m.hiringmgr::before{background:var(--week4);}
+.ai-tool-btn-m:active{opacity:.8;transform:scale(.98);}
+.ai-tool-icon-m{font-size:22px;margin-bottom:5px;}
+.ai-tool-name-m{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;}
+.ai-tool-btn-m.resume .ai-tool-name-m{color:var(--accent);}
+.ai-tool-btn-m.cover .ai-tool-name-m{color:var(--accent3);}
+.ai-tool-btn-m.recruiter .ai-tool-name-m{color:var(--week3);}
+.ai-tool-btn-m.hiringmgr .ai-tool-name-m{color:var(--week4);}
+.ai-tool-desc-m{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.ai-gen-panel-m{display:none;}
+.ai-gen-panel-m.on{display:block;}
+.ai-gen-back-m{background:none;border:1px solid var(--border);color:var(--dim);padding:8px 14px;border-radius:7px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;margin-bottom:14px;}
+.ai-gen-title-m{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:14px;}
+.ai-gen-field{margin-bottom:12px;}
+.ai-gen-field label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'DM Mono',monospace;display:block;margin-bottom:5px;}
+.ai-gen-field input,.ai-gen-field textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 12px;color:var(--text);font-size:15px;outline:none;}
+.ai-gen-field textarea{resize:none;min-height:90px;}
+.ai-gen-go{width:100%;background:var(--accent);color:#000;border:none;padding:13px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+.ai-gen-go:disabled{opacity:.5;}
+.ai-output-m{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:16px;display:none;}
+.ai-output-m.on{display:block;}
+.ai-output-m-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.ai-output-m-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.ai-copy-m{background:var(--surface);border:1px solid var(--border);color:var(--dim);padding:5px 12px;border-radius:5px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;}
+.ai-output-m-text{font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;max-height:300px;overflow-y:auto;}
+.ai-cursor{display:inline-block;width:2px;height:13px;background:var(--accent);animation:blink 1s infinite;vertical-align:middle;margin-left:1px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.ai-spin-sm{width:15px;height:15px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+.jd-ai-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.jd-ai-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--week4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.jd-ai-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.jd-ai-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;text-align:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--dim);transition:all .15s;}
+.jd-ai-btn:active{opacity:.7;}
+.jd-ai-jd-field{margin-bottom:10px;}
+.jd-ai-jd-field label{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px;}
+.jd-ai-jd-field textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:14px;outline:none;resize:none;min-height:80px;}
+.jd-ai-output{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;display:none;margin-top:10px;}
+.jd-ai-output.on{display:block;}
+.jd-ai-out-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.jd-ai-out-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.jd-ai-out-text{font-size:12px;line-height:1.6;color:var(--text);white-space:pre-wrap;max-height:220px;overflow-y:auto;}
+</style>
 </head>
-
 <body>
 
-  <!-- LOADING -->
-  <div id="loading">
-    <div class="ld-logo">JOB SEARCH</div>
-    <div class="ld-spin"></div>
+<!-- LOADING -->
+<div id="loading"><div class="ld-logo">JOB SEARCH</div><div class="ld-spin"></div></div>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="auth-card">
+    <div class="auth-logo">JOB SEARCH</div>
+    <div class="auth-tagline">2026 Edition — sync across all your devices</div>
+    <div class="auth-segs">
+      <div class="auth-seg on" id="as-in" onclick="authSeg('in')">Sign In</div>
+      <div class="auth-seg" id="as-up" onclick="authSeg('up')">Sign Up</div>
+    </div>
+    <div class="auth-field"><label class="auth-lbl">Email</label><input class="auth-inp" id="a-email" type="email" placeholder="you@example.com" inputmode="email"></div>
+    <div class="auth-field" id="a-pw-wrap"><label class="auth-lbl">Password</label><input class="auth-inp" id="a-pw" type="password" placeholder="Min 6 characters"></div>
+    <div class="auth-err" id="a-err"></div>
+    <button class="auth-submit" id="a-btn" onclick="authGo()">Sign In</button>
+    <button class="magic-lnk" onclick="magicGo()">✉ Send Magic Link instead</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="tb-title" id="tb-title">HOME</div>
+    <div class="tb-right">
+      <div class="sync-pill"><div class="sync-dot" id="sdot"></div><div class="sync-txt" id="stxt">—</div></div>
+      <div class="tb-user" id="tb-user-btn" onclick="toggleUserMenu()">··</div>
+    </div>
   </div>
 
-  <!-- AUTH -->
-  <div id="auth">
-    <div class="auth-card">
-      <div class="auth-logo">JOB SEARCH</div>
-      <div class="auth-tagline">2026 Edition — sync across all your devices</div>
-      <div class="auth-segs">
-        <div class="auth-seg on" id="as-in" onclick="authSeg('in')">Sign In</div>
-        <div class="auth-seg" id="as-up" onclick="authSeg('up')">Sign Up</div>
+  <div class="screens">
+    <!-- HOME -->
+    <div class="screen active" id="sc-home">
+      <div class="day-chip">📅 <span id="home-day">DAY 1 / 30</span></div>
+      <div class="stats-row">
+        <div class="stat-tile y"><div class="stat-num" id="h-tasks">0</div><div class="stat-lbl">Tasks Done</div></div>
+        <div class="stat-tile b"><div class="stat-num" id="h-apps">0</div><div class="stat-lbl">Applications</div></div>
+        <div class="stat-tile r"><div class="stat-num" id="h-ints">0</div><div class="stat-lbl">Interviews</div></div>
+        <div class="stat-tile p"><div class="stat-num" id="h-skills">0</div><div class="stat-lbl">Skills</div></div>
       </div>
-      <div class="auth-field"><label class="auth-lbl">Email</label><input class="auth-inp" id="a-email" type="email"
-          placeholder="you@example.com" inputmode="email"></div>
-      <div class="auth-field" id="a-pw-wrap"><label class="auth-lbl">Password</label><input class="auth-inp" id="a-pw"
-          type="password" placeholder="Min 6 characters"></div>
-      <div class="auth-err" id="a-err"></div>
-      <button class="auth-submit" id="a-btn" onclick="authGo()">Sign In</button>
-      <button class="magic-lnk" onclick="magicGo()">✉ Send Magic Link instead</button>
+
+      <div class="home-section">
+        <div class="hs-title">⚠ FOLLOW-UP ALERTS</div>
+        <div id="home-alerts"></div>
+      </div>
+
+      <div class="home-section">
+        <div class="sec-hd"><div class="hs-title">TODAY'S PRIORITY TASKS</div><button class="pill-btn ghost" onclick="switchTab('tasks')" style="font-size:11px">See All</button></div>
+        <div id="home-tasks"></div>
+      </div>
+
+      <div class="home-section">
+        <div class="sec-hd"><div class="hs-title">RECENT APPLICATIONS</div><button class="pill-btn ghost" onclick="switchTab('pipeline')" style="font-size:11px">See All</button></div>
+        <div id="home-recent"></div>
+      </div>
+    </div>
+
+    <!-- FIND JOBS -->
+    <div class="screen" id="sc-jobs">
+      <div id="jd-api-setup" class="api-setup-m">
+        <div class="api-setup-m-title">⚡ API Key Required</div>
+        <div class="api-setup-m-sub">Get a free key at <a href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank">RapidAPI → JSearch</a> (free tier, 200 searches/month). Paste it below.</div>
+        <input class="api-inp-m" id="m-api-key" type="password" placeholder="Paste RapidAPI key...">
+        <button class="pill-btn primary" style="width:100%;padding:12px" onclick="mSaveApiKey()">Save & Enable Job Search</button>
+      </div>
+
+      <div class="search-box">
+        <div class="search-row">
+          <input class="s-inp" id="m-jq" placeholder="Job title / keywords" onkeydown="if(event.key==='Enter')mSearch()">
+        </div>
+        <div class="search-row">
+          <input class="s-inp" id="m-jloc" placeholder="Location (e.g. New York, Remote)" onkeydown="if(event.key==='Enter')mSearch()">
+          <button class="s-btn" id="m-sbtn" onclick="mSearch()">Go</button>
+        </div>
+      </div>
+
+      <div class="saved-scroll" id="m-saved"></div>
+
+      <div class="filter-scroll" id="m-filters" style="display:none">
+        <button class="fc on" id="mf-all" onclick="mToggleFilter('all')">All</button>
+        <button class="fc" id="mf-easy" onclick="mToggleFilter('easy')">⚡ Easy Apply</button>
+        <button class="fc" id="mf-remote" onclick="mToggleFilter('remote')">🌐 Remote</button>
+        <button class="fc" id="mf-new" onclick="mToggleFilter('new')">🟢 This Week</button>
+        <button class="fc" onclick="mSaveSearch()">⭐ Save Search</button>
+      </div>
+
+      <div id="m-jd-results"></div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="screen" id="sc-pipeline">
+      <div class="sec-hd">
+        <div class="sec-title">PIPELINE</div>
+        <button class="pill-btn primary" onclick="openAddSheet()">+ Add</button>
+      </div>
+      <div class="stage-filter" id="stage-filter">
+        <button class="sf-chip on" data-stage="all" onclick="setStageFilt('all',this)">All</button>
+        <button class="sf-chip" data-stage="applied" onclick="setStageFilt('applied',this)">Applied</button>
+        <button class="sf-chip" data-stage="recruiter" onclick="setStageFilt('recruiter',this)">Recruiter</button>
+        <button class="sf-chip" data-stage="manager" onclick="setStageFilt('manager',this)">Manager</button>
+        <button class="sf-chip" data-stage="skills" onclick="setStageFilt('skills',this)">Skills</button>
+        <button class="sf-chip" data-stage="panel" onclick="setStageFilt('panel',this)">Panel</button>
+        <button class="sf-chip" data-stage="offer" onclick="setStageFilt('offer',this)">Offer</button>
+      </div>
+      <div id="pipe-list"></div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="screen" id="sc-tasks">
+      <div class="sec-title" style="margin-bottom:6px">30-DAY PLAN</div>
+      <div class="sec-sub">Tap any task to mark it done. Progress syncs to your desktop.</div>
+      <div id="tasks-list"></div>
+    </div>
+
+    <!-- ALERTS -->
+    <div class="screen" id="sc-alerts">
+      <div class="sec-title" style="margin-bottom:6px">FOLLOW-UP ALERTS</div>
+      <div class="sec-sub">Applications that need your attention right now.</div>
+      <div id="alerts-list"></div>
     </div>
   </div>
-
-  <!-- APP -->
-  <div id="app">
-    <div class="topbar">
-      <div class="tb-title" id="tb-title">HOME</div>
-      <div class="tb-right">
-        <div class="sync-pill">
-          <div class="sync-dot" id="sdot"></div>
-          <div class="sync-txt" id="stxt">—</div>
-        </div>
-        <div class="tb-user" id="tb-user-btn" onclick="toggleUserMenu()">··</div>
-      </div>
-    </div>
-
-    <div class="screens">
-      <!-- HOME -->
-      <div class="screen active" id="sc-home">
-        <div class="day-chip">📅 <span id="home-day">DAY 1 / 30</span></div>
-        <div class="stats-row">
-          <div class="stat-tile y">
-            <div class="stat-num" id="h-tasks">0</div>
-            <div class="stat-lbl">Tasks Done</div>
-          </div>
-          <div class="stat-tile b">
-            <div class="stat-num" id="h-apps">0</div>
-            <div class="stat-lbl">Applications</div>
-          </div>
-          <div class="stat-tile r">
-            <div class="stat-num" id="h-ints">0</div>
-            <div class="stat-lbl">Interviews</div>
-          </div>
-          <div class="stat-tile p">
-            <div class="stat-num" id="h-skills">0</div>
-            <div class="stat-lbl">Skills</div>
-          </div>
-        </div>
-
-        <div class="home-section">
-          <div class="hs-title">⚠ FOLLOW-UP ALERTS</div>
-          <div id="home-alerts"></div>
-        </div>
-
-        <div class="home-section">
-          <div class="sec-hd">
-            <div class="hs-title">TODAY'S PRIORITY TASKS</div><button class="pill-btn ghost"
-              onclick="switchTab('tasks')" style="font-size:11px">See All</button>
-          </div>
-          <div id="home-tasks"></div>
-        </div>
-
-        <div class="home-section">
-          <div class="sec-hd">
-            <div class="hs-title">RECENT APPLICATIONS</div><button class="pill-btn ghost"
-              onclick="switchTab('pipeline')" style="font-size:11px">See All</button>
-          </div>
-          <div id="home-recent"></div>
-        </div>
-      </div>
-
-      <!-- FIND JOBS -->
-      <div class="screen" id="sc-jobs">
-        <div id="jd-api-setup" class="api-setup-m">
-          <div class="api-setup-m-title">⚡ API Key Required</div>
-          <div class="api-setup-m-sub">Get a free key at <a
-              href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank">RapidAPI → JSearch</a> (free
-            tier, 200 searches/month). Paste it below.</div>
-          <input class="api-inp-m" id="m-api-key" type="password" placeholder="Paste RapidAPI key...">
-          <button class="pill-btn primary" style="width:100%;padding:12px" onclick="mSaveApiKey()">Save & Enable Job
-            Search</button>
-        </div>
-
-        <div class="search-box">
-          <div class="search-row">
-            <input class="s-inp" id="m-jq" placeholder="Job title / keywords"
-              onkeydown="if(event.key==='Enter')mSearch()">
-          </div>
-          <div class="search-row">
-            <input class="s-inp" id="m-jloc" placeholder="Location (e.g. New York, Remote)"
-              onkeydown="if(event.key==='Enter')mSearch()">
-            <button class="s-btn" id="m-sbtn" onclick="mSearch()">Go</button>
-          </div>
-        </div>
-
-        <div class="saved-scroll" id="m-saved"></div>
-
-        <div class="filter-scroll" id="m-filters" style="display:none">
-          <button class="fc on" id="mf-all" onclick="mToggleFilter('all')">All</button>
-          <button class="fc" id="mf-easy" onclick="mToggleFilter('easy')">⚡ Easy Apply</button>
-          <button class="fc" id="mf-remote" onclick="mToggleFilter('remote')">🌐 Remote</button>
-          <button class="fc" id="mf-new" onclick="mToggleFilter('new')">🟢 This Week</button>
-          <button class="fc" onclick="mSaveSearch()">⭐ Save Search</button>
-        </div>
-
-        <div id="m-jd-results"></div>
-      </div>
-
-      <!-- PIPELINE -->
-      <div class="screen" id="sc-pipeline">
-        <div class="sec-hd">
-          <div class="sec-title">PIPELINE</div>
-          <button class="pill-btn primary" onclick="openAddSheet()">+ Add</button>
-        </div>
-        <div class="stage-filter" id="stage-filter">
-          <button class="sf-chip on" data-stage="all" onclick="setStageFilt('all',this)">All</button>
-          <button class="sf-chip" data-stage="applied" onclick="setStageFilt('applied',this)">Applied</button>
-          <button class="sf-chip" data-stage="recruiter" onclick="setStageFilt('recruiter',this)">Recruiter</button>
-          <button class="sf-chip" data-stage="manager" onclick="setStageFilt('manager',this)">Manager</button>
-          <button class="sf-chip" data-stage="skills" onclick="setStageFilt('skills',this)">Skills</button>
-          <button class="sf-chip" data-stage="panel" onclick="setStageFilt('panel',this)">Panel</button>
-          <button class="sf-chip" data-stage="offer" onclick="setStageFilt('offer',this)">Offer</button>
-        </div>
-        <div id="pipe-list"></div>
-      </div>
-
-      <!-- TASKS -->
-      <div class="screen" id="sc-tasks">
-        <div class="sec-title" style="margin-bottom:6px">30-DAY PLAN</div>
-        <div class="sec-sub">Tap any task to mark it done. Progress syncs to your desktop.</div>
-        <div id="tasks-list"></div>
-      </div>
-
-      <!-- ALERTS -->
-      <div class="screen" id="sc-alerts">
-        <div class="sec-title" style="margin-bottom:6px">FOLLOW-UP ALERTS</div>
-        <div class="sec-sub">Applications that need your attention right now.</div>
-        <div id="alerts-list"></div>
-      </div>
-    </div>
 
     <!-- AI TOOLS -->
     <div class="screen" id="sc-ai">
@@ -2263,9 +456,7 @@
           <input id="m-ai-key" type="password" placeholder="sk-ant-...">
           <button onclick="mSaveAIKey()">Save</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px">Get free key at <a
-            href="https://console.anthropic.com" target="_blank" style="color:var(--week4)">console.anthropic.com</a>
-        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px">Get free key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--week4)">console.anthropic.com</a></div>
       </div>
 
       <!-- LinkedIn PDF -->
@@ -2274,8 +465,7 @@
           <span>in LinkedIn Profile</span>
           <span id="m-li-badge" class="ai-li-loaded" style="display:none">✓ Loaded</span>
         </div>
-        <div class="ai-li-sub">Export from LinkedIn → Me → View Profile → More → <strong style="color:var(--dim)">Save
-            to PDF</strong> · Upload once, used in every generation.</div>
+        <div class="ai-li-sub">Export from LinkedIn → Me → View Profile → More → <strong style="color:var(--dim)">Save to PDF</strong> · Upload once, used in every generation.</div>
         <div class="ai-li-upload" id="m-li-drop">
           <input type="file" accept=".pdf" onchange="mHandleLIPDF(this.files[0])">
           <div class="ai-li-upload-icon">📄</div>
@@ -2304,26 +494,19 @@
       <!-- Profile -->
       <div class="ai-profile-strip">
         <div class="ai-profile-strip-title">Your Profile (supplements LinkedIn)</div>
-        <div class="ai-gen-field"><label>Current Role</label><input id="m-prof-role"
-            placeholder="e.g. Senior Product Manager"></div>
-        <div class="ai-gen-field"><label>Years of Experience</label><input id="m-prof-yoe" placeholder="e.g. 6 years">
-        </div>
+        <div class="ai-gen-field"><label>Current Role</label><input id="m-prof-role" placeholder="e.g. Senior Product Manager"></div>
+        <div class="ai-gen-field"><label>Years of Experience</label><input id="m-prof-yoe" placeholder="e.g. 6 years"></div>
         <div class="ai-gen-field"><label>Top Achievements (one per line, include numbers)</label>
-          <textarea id="m-prof-ach"
-            placeholder="Grew pipeline 34% in Q3&#10;Reduced churn 22% with new onboarding"></textarea>
+          <textarea id="m-prof-ach" placeholder="Grew pipeline 34% in Q3&#10;Reduced churn 22% with new onboarding"></textarea>
         </div>
-        <div class="ai-gen-field" style="margin-bottom:10px"><label>Key Skills</label><input id="m-prof-skills"
-            placeholder="SQL, Figma, Salesforce, Agile…"></div>
+        <div class="ai-gen-field" style="margin-bottom:10px"><label>Key Skills</label><input id="m-prof-skills" placeholder="SQL, Figma, Salesforce, Agile…"></div>
         <button class="pill-btn primary" style="width:100%" onclick="mSaveProfile()">Save Profile</button>
-        <div id="m-prof-saved" style="text-align:center;font-size:12px;color:var(--accent);margin-top:8px;display:none">
-          ✓ Profile saved</div>
+        <div id="m-prof-saved" style="text-align:center;font-size:12px;color:var(--accent);margin-top:8px;display:none">✓ Profile saved</div>
       </div>
 
       <!-- Tool selector -->
       <div id="m-ai-selector">
-        <div
-          style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px">
-          CHOOSE A TOOL</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px">CHOOSE A TOOL</div>
         <div class="ai-tool-grid-m">
           <div class="ai-tool-btn-m resume" onclick="mOpenTool('resume')">
             <div class="ai-tool-icon-m">📄</div>
@@ -2374,308 +557,292 @@
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <div class="nav-tab active" id="nt-home" onclick="switchTab('home')">
-      <div class="nav-icon">🏠</div>
-      <div class="nav-lbl">Home</div>
+      <div class="nav-icon">🏠</div><div class="nav-lbl">Home</div>
     </div>
     <div class="nav-tab" id="nt-jobs" onclick="switchTab('jobs')">
-      <div class="nav-icon">🔍</div>
-      <div class="nav-lbl">Find</div>
+      <div class="nav-icon">🔍</div><div class="nav-lbl">Find</div>
     </div>
     <div class="nav-tab" id="nt-pipeline" onclick="switchTab('pipeline')">
-      <div class="nav-icon">📋</div>
-      <div class="nav-lbl">Pipeline</div>
+      <div class="nav-icon">📋</div><div class="nav-lbl">Pipeline</div>
       <div class="nav-badge" id="nb-pipe" style="display:none"></div>
     </div>
     <div class="nav-tab" id="nt-tasks" onclick="switchTab('tasks')">
-      <div class="nav-icon">✅</div>
-      <div class="nav-lbl">Tasks</div>
+      <div class="nav-icon">✅</div><div class="nav-lbl">Tasks</div>
     </div>
     <div class="nav-tab" id="nt-alerts" onclick="switchTab('alerts')">
-      <div class="nav-icon">🔔</div>
-      <div class="nav-lbl">Alerts</div>
+      <div class="nav-icon">🔔</div><div class="nav-lbl">Alerts</div>
       <div class="nav-badge" id="nb-alerts" style="display:none"></div>
     </div>
     <div class="nav-tab" id="nt-ai" onclick="switchTab('ai')">
-      <div class="nav-icon">✨</div>
-      <div class="nav-lbl" style="color:var(--week4)">AI</div>
+      <div class="nav-icon">✨</div><div class="nav-lbl" style="color:var(--week4)">AI</div>
     </div>
   </nav>
-  </div>
+</div>
 
-  <!-- QUICK ADD SHEET -->
-  <div class="sheet-overlay" id="add-sheet" onclick="maybeCloseSheet(event)">
-    <div class="sheet">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title" id="sheet-ttl">ADD APPLICATION</div>
-      <div class="sheet-row">
-        <div class="sf"><label>Company</label><input id="sh-co" placeholder="e.g. Stripe"></div>
-        <div class="sf"><label>Role</label><input id="sh-role" placeholder="e.g. PM"></div>
-      </div>
-      <div class="sf"><label>Stage</label>
-        <select id="sh-stage">
-          <option value="applied">Applied</option>
-          <option value="recruiter">Recruiter Screen</option>
-          <option value="manager">Manager Screen</option>
-          <option value="skills">Skills Assessment</option>
-          <option value="panel">Panel Interview</option>
-          <option value="offer">Reference / Offer</option>
-        </select>
-      </div>
-      <div class="sheet-row">
-        <div class="sf"><label>Location</label><input id="sh-loc" placeholder="Remote / NYC"></div>
-        <div class="sf"><label>Follow-Up Date</label><input id="sh-fu" type="date"></div>
-      </div>
-      <div class="sf"><label>LinkedIn URL</label><input id="sh-li" type="url" placeholder="https://linkedin.com/in/..."
-          inputmode="url"></div>
-      <div class="sf"><label>Notes</label><textarea id="sh-notes"
-          placeholder="Hiring manager, next steps..."></textarea></div>
-      <div class="sheet-btns">
-        <button class="sheet-cancel" onclick="closeSheet()">Cancel</button>
-        <button class="sheet-save" onclick="saveSheet()">Save</button>
-      </div>
+<!-- QUICK ADD SHEET -->
+<div class="sheet-overlay" id="add-sheet" onclick="maybeCloseSheet(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-ttl">ADD APPLICATION</div>
+    <div class="sheet-row">
+      <div class="sf"><label>Company</label><input id="sh-co" placeholder="e.g. Stripe"></div>
+      <div class="sf"><label>Role</label><input id="sh-role" placeholder="e.g. PM"></div>
+    </div>
+    <div class="sf"><label>Stage</label>
+      <select id="sh-stage">
+        <option value="applied">Applied</option>
+        <option value="recruiter">Recruiter Screen</option>
+        <option value="manager">Manager Screen</option>
+        <option value="skills">Skills Assessment</option>
+        <option value="panel">Panel Interview</option>
+        <option value="offer">Reference / Offer</option>
+      </select>
+    </div>
+    <div class="sheet-row">
+      <div class="sf"><label>Location</label><input id="sh-loc" placeholder="Remote / NYC"></div>
+      <div class="sf"><label>Follow-Up Date</label><input id="sh-fu" type="date"></div>
+    </div>
+    <div class="sf"><label>LinkedIn URL</label><input id="sh-li" type="url" placeholder="https://linkedin.com/in/..." inputmode="url"></div>
+    <div class="sf"><label>Notes</label><textarea id="sh-notes" placeholder="Hiring manager, next steps..."></textarea></div>
+    <div class="sheet-btns">
+      <button class="sheet-cancel" onclick="closeSheet()">Cancel</button>
+      <button class="sheet-save" onclick="saveSheet()">Save</button>
     </div>
   </div>
+</div>
 
-  <!-- JOB DETAIL SHEET -->
-  <div class="sheet-overlay" id="job-sheet" onclick="maybeCloseJobSheet(event)">
-    <div class="sheet" id="job-sheet-inner"></div>
+<!-- JOB DETAIL SHEET -->
+<div class="sheet-overlay" id="job-sheet" onclick="maybeCloseJobSheet(event)">
+  <div class="sheet" id="job-sheet-inner"></div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="user-menu">
+  <div class="um-backdrop" onclick="toggleUserMenu()"></div>
+  <div class="um-card">
+    <div class="um-email" id="um-email"></div>
+    <button class="um-btn" onclick="doSignOut()">Sign Out ↪</button>
   </div>
+</div>
 
-  <!-- USER MENU -->
-  <div class="user-menu" id="user-menu">
-    <div class="um-backdrop" onclick="toggleUserMenu()"></div>
-    <div class="um-card">
-      <div class="um-email" id="um-email"></div>
-      <button class="um-btn" onclick="doSignOut()">Sign Out ↪</button>
-    </div>
-  </div>
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+// ─────────────────────────────────────────────────────────────
 
-  <script>
-    // ─── CONFIG ───────────────────────────────────────────────────
-    const SUPABASE_URL = 'https://ddvypqzyhhxeoezounaj.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnlwcXp5aGh4ZW9lem91bmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTU0MTUsImV4cCI6MjA4OTI3MTQxNX0.LUDxdn1Yjl2SDHVzWv-UDoYPA9-LKWqIGm32g3wluBQ';
-    // ─────────────────────────────────────────────────────────────
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let user = null, saveTimer = null;
+let S = { tasks:{}, emergency:{}, skills:{}, jobs:[], savedSearches:[], startDate:null };
 
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let user = null, saveTimer = null;
-    let S = { tasks: {}, emergency: {}, skills: {}, jobs: [], savedSearches: [], startDate: null };
+// ─── STATIC DATA ──────────────────────────────────────────────
+const WEEKS = {
+  week1:{label:'WEEK 1',color:'var(--week1)',sections:[
+    {title:'Days 1–2: Audit & Inventory',day:'D1-2',tasks:['List every job, result, tool, and certification','Write down salary history and target range','Identify top 3 transferable skills','Acknowledge gaps honestly — do not skip']},
+    {title:'Days 3–4: Resume Overhaul',day:'D3-4',tasks:['1 page (under 10yrs) or 2 pages max','Every bullet = Action + What + Measurable Result','Mirror EXACT language from job descriptions','Remove "responsible for", photos, tables, columns','Tailor resume for EVERY application — generic = dead']},
+    {title:'Days 5–6: LinkedIn Overhaul',day:'D5-6',tasks:['Professional photo: bright background, eye contact','Headline = value proposition, NOT job title','About: 3–5 sentences, first person, results, CTA','Fill every section to 100% for search ranking','Turn on Open to Work (recruiters-only option)','Connect with 20+ people in target industry','Post once — short insight or project takeaway']},
+    {title:'Day 7: Target Company List',day:'D7',tasks:['Identify 30–50 companies you want to work for','Track in spreadsheet: Company|Role|Contact|Status','Find hiring manager on LinkedIn for each company']}
+  ]},
+  week2:{label:'WEEK 2',color:'var(--week2)',sections:[
+    {title:'Applications',day:'D8-14',tasks:['Apply to 5–8 positions per day max — do each properly','Customize resume AND cover letter for every application','Cover letter: Hook → Result → Why this role → Ask','Apply within 24–48 hours of posting going live']},
+    {title:'Direct Outreach',day:'D8-14',tasks:['LinkedIn message to hiring manager for EVERY application','Template: "Hi [Name], I just applied for [Role]..."','Find recruiter emails and reach out directly','Track all outreach with follow-up dates']},
+    {title:'Networking',day:'D8-14',tasks:['Message 5 people per day from your network','Ask: "Who should I talk to in [field]?"','Schedule one coffee chat per day','70–80% of jobs are never posted — network hard']}
+  ]},
+  week3:{label:'WEEK 3',color:'var(--week3)',sections:[
+    {title:'Interview Prep',day:'D15-21',tasks:['Read last 3 earnings calls / press releases','Know CEO name, background, recent quotes','Use the product — sign up and try it','Know company\'s top 3 challenges','Read LinkedIn of every interviewer']},
+    {title:'STAR Stories',day:'D15-21',tasks:['Prepare 8–10 STAR stories (quantified results)','Polish 90-sec "tell me about yourself"','Prepare honest "biggest weakness" answer','Nail "why this company" with specific research','Prepare 5 sharp questions to ask them']},
+    {title:'Salary',day:'D15-21',tasks:['Never give a number first — ask for their range','Counter at top of their range or above','Always negotiate — never accept first offer']}
+  ]},
+  week4:{label:'WEEK 4',color:'var(--week4)',sections:[
+    {title:'Follow-Up',day:'D22-30',tasks:['Thank-you email within 2hrs of every interview','If no response after 5 days: follow up once','If rejected: ask for feedback, take it seriously']},
+    {title:'Pipeline Mgmt',day:'D22-30',tasks:['Keep 3–5 active processes running at all times','Never bank on one offer until letter is signed','Keep applying even when something looks good','Track response rates and adjust based on data']}
+  ]}
+};
+const SL={applied:'Applied',recruiter:'Recruiter',manager:'Manager Screen',skills:'Skills Test',panel:'Panel',offer:'Offer'};
+const SC={applied:'#555',recruiter:'var(--accent3)',manager:'var(--week2)',skills:'var(--week3)',panel:'var(--week4)',offer:'var(--accent)'};
+const SKILLS=[{title:'Immediate',color:'var(--accent)',items:['AI tools: ChatGPT, Claude, Copilot, Gemini','Data literacy: Excel, dashboards, analytics','Prompt engineering basics','Resume tailoring & ATS optimization','LinkedIn profile optimization']},{title:'Field Certs',color:'var(--accent3)',items:['Google / AWS / Azure (tech/ops)','PMP or Agile/Scrum (project mgmt)','Google Analytics, HubSpot (marketing)','CPA, CFA, FRM (finance)','SHRM-CP or SHRM-SCP (HR)']}];
 
-    // ─── STATIC DATA ──────────────────────────────────────────────
-    const WEEKS = {
-      week1: {
-        label: 'WEEK 1', color: 'var(--week1)', sections: [
-          { title: 'Days 1–2: Audit & Inventory', day: 'D1-2', tasks: ['List every job, result, tool, and certification', 'Write down salary history and target range', 'Identify top 3 transferable skills', 'Acknowledge gaps honestly — do not skip'] },
-          { title: 'Days 3–4: Resume Overhaul', day: 'D3-4', tasks: ['1 page (under 10yrs) or 2 pages max', 'Every bullet = Action + What + Measurable Result', 'Mirror EXACT language from job descriptions', 'Remove "responsible for", photos, tables, columns', 'Tailor resume for EVERY application — generic = dead'] },
-          { title: 'Days 5–6: LinkedIn Overhaul', day: 'D5-6', tasks: ['Professional photo: bright background, eye contact', 'Headline = value proposition, NOT job title', 'About: 3–5 sentences, first person, results, CTA', 'Fill every section to 100% for search ranking', 'Turn on Open to Work (recruiters-only option)', 'Connect with 20+ people in target industry', 'Post once — short insight or project takeaway'] },
-          { title: 'Day 7: Target Company List', day: 'D7', tasks: ['Identify 30–50 companies you want to work for', 'Track in spreadsheet: Company|Role|Contact|Status', 'Find hiring manager on LinkedIn for each company'] }
-        ]
-      },
-      week2: {
-        label: 'WEEK 2', color: 'var(--week2)', sections: [
-          { title: 'Applications', day: 'D8-14', tasks: ['Apply to 5–8 positions per day max — do each properly', 'Customize resume AND cover letter for every application', 'Cover letter: Hook → Result → Why this role → Ask', 'Apply within 24–48 hours of posting going live'] },
-          { title: 'Direct Outreach', day: 'D8-14', tasks: ['LinkedIn message to hiring manager for EVERY application', 'Template: "Hi [Name], I just applied for [Role]..."', 'Find recruiter emails and reach out directly', 'Track all outreach with follow-up dates'] },
-          { title: 'Networking', day: 'D8-14', tasks: ['Message 5 people per day from your network', 'Ask: "Who should I talk to in [field]?"', 'Schedule one coffee chat per day', '70–80% of jobs are never posted — network hard'] }
-        ]
-      },
-      week3: {
-        label: 'WEEK 3', color: 'var(--week3)', sections: [
-          { title: 'Interview Prep', day: 'D15-21', tasks: ['Read last 3 earnings calls / press releases', 'Know CEO name, background, recent quotes', 'Use the product — sign up and try it', 'Know company\'s top 3 challenges', 'Read LinkedIn of every interviewer'] },
-          { title: 'STAR Stories', day: 'D15-21', tasks: ['Prepare 8–10 STAR stories (quantified results)', 'Polish 90-sec "tell me about yourself"', 'Prepare honest "biggest weakness" answer', 'Nail "why this company" with specific research', 'Prepare 5 sharp questions to ask them'] },
-          { title: 'Salary', day: 'D15-21', tasks: ['Never give a number first — ask for their range', 'Counter at top of their range or above', 'Always negotiate — never accept first offer'] }
-        ]
-      },
-      week4: {
-        label: 'WEEK 4', color: 'var(--week4)', sections: [
-          { title: 'Follow-Up', day: 'D22-30', tasks: ['Thank-you email within 2hrs of every interview', 'If no response after 5 days: follow up once', 'If rejected: ask for feedback, take it seriously'] },
-          { title: 'Pipeline Mgmt', day: 'D22-30', tasks: ['Keep 3–5 active processes running at all times', 'Never bank on one offer until letter is signed', 'Keep applying even when something looks good', 'Track response rates and adjust based on data'] }
-        ]
-      }
-    };
-    const SL = { applied: 'Applied', recruiter: 'Recruiter', manager: 'Manager Screen', skills: 'Skills Test', panel: 'Panel', offer: 'Offer' };
-    const SC = { applied: '#555', recruiter: 'var(--accent3)', manager: 'var(--week2)', skills: 'var(--week3)', panel: 'var(--week4)', offer: 'var(--accent)' };
-    const SKILLS = [{ title: 'Immediate', color: 'var(--accent)', items: ['AI tools: ChatGPT, Claude, Copilot, Gemini', 'Data literacy: Excel, dashboards, analytics', 'Prompt engineering basics', 'Resume tailoring & ATS optimization', 'LinkedIn profile optimization'] }, { title: 'Field Certs', color: 'var(--accent3)', items: ['Google / AWS / Azure (tech/ops)', 'PMP or Agile/Scrum (project mgmt)', 'Google Analytics, HubSpot (marketing)', 'CPA, CFA, FRM (finance)', 'SHRM-CP or SHRM-SCP (HR)'] }];
+// ─── SUPABASE ─────────────────────────────────────────────────
+async function loadDB(){setSS('syncing');try{const{data,error}=await sb.from('user_data').select('data').eq('user_id',user.id).single();if(error&&error.code!=='PGRST116')throw error;if(data?.data)S={...S,...data.data};if(!S.startDate)S.startDate=Date.now();setSS('ok');}catch(e){setSS('err');loadLocal();}}
+function loadLocal(){try{const s=localStorage.getItem('bjsd-local');if(s)S={...S,...JSON.parse(s)};}catch(e){}}
+async function saveToDB(){setSS('syncing');localStorage.setItem('bjsd-local',JSON.stringify(S));try{const{error}=await sb.from('user_data').upsert({user_id:user.id,data:S,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;setSS('ok');}catch(e){setSS('err');}}
+function save(){clearTimeout(saveTimer);saveTimer=setTimeout(saveToDB,800);}
+function setSS(s){const d=document.getElementById('sdot'),l=document.getElementById('stxt');d.className='sync-dot '+s;l.textContent=s==='ok'?'Synced':s==='syncing'?'Syncing…':'Offline';}
 
-    // ─── SUPABASE ─────────────────────────────────────────────────
-    async function loadDB() { setSS('syncing'); try { const { data, error } = await sb.from('user_data').select('data').eq('user_id', user.id).single(); if (error && error.code !== 'PGRST116') throw error; if (data?.data) S = { ...S, ...data.data }; if (!S.startDate) S.startDate = Date.now(); setSS('ok'); } catch (e) { setSS('err'); loadLocal(); } }
-    function loadLocal() { try { const s = localStorage.getItem('bjsd-local'); if (s) S = { ...S, ...JSON.parse(s) }; } catch (e) { } }
-    async function saveToDB() { setSS('syncing'); localStorage.setItem('bjsd-local', JSON.stringify(S)); try { const { error } = await sb.from('user_data').upsert({ user_id: user.id, data: S, updated_at: new Date().toISOString() }, { onConflict: 'user_id' }); if (error) throw error; setSS('ok'); } catch (e) { setSS('err'); } }
-    function save() { clearTimeout(saveTimer); saveTimer = setTimeout(saveToDB, 800); }
-    function setSS(s) { const d = document.getElementById('sdot'), l = document.getElementById('stxt'); d.className = 'sync-dot ' + s; l.textContent = s === 'ok' ? 'Synced' : s === 'syncing' ? 'Syncing…' : 'Offline'; }
+// ─── AUTH ─────────────────────────────────────────────────────
+let authMode='in';
+function authSeg(m){authMode=m;document.getElementById('as-in').classList.toggle('on',m==='in');document.getElementById('as-up').classList.toggle('on',m==='up');document.getElementById('a-btn').textContent=m==='in'?'Sign In':'Create Account';}
+async function authGo(){const email=document.getElementById('a-email').value.trim(),pw=document.getElementById('a-pw').value,btn=document.getElementById('a-btn');if(!email)return;btn.disabled=true;btn.textContent='…';try{let r;if(authMode==='in')r=await sb.auth.signInWithPassword({email,password:pw});else r=await sb.auth.signUp({email,password:pw});if(r.error)setErr(r.error.message);else if(authMode==='up')setErr('✓ Check your email to confirm');}catch(e){setErr(e.message);}btn.disabled=false;btn.textContent=authMode==='in'?'Sign In':'Create Account';}
+async function magicGo(){const email=document.getElementById('a-email').value.trim();if(!email){setErr('Enter your email first');return;}const{error}=await sb.auth.signInWithOtp({email});setErr(error?error.message:'✓ Magic link sent — check your inbox');}
+function setErr(m){document.getElementById('a-err').textContent=m;}
+async function doSignOut(){await sb.auth.signOut();location.reload();}
+function toggleUserMenu(){document.getElementById('user-menu').classList.toggle('on');}
 
-    // ─── AUTH ─────────────────────────────────────────────────────
-    let authMode = 'in';
-    function authSeg(m) { authMode = m; document.getElementById('as-in').classList.toggle('on', m === 'in'); document.getElementById('as-up').classList.toggle('on', m === 'up'); document.getElementById('a-btn').textContent = m === 'in' ? 'Sign In' : 'Create Account'; }
-    async function authGo() { const email = document.getElementById('a-email').value.trim(), pw = document.getElementById('a-pw').value, btn = document.getElementById('a-btn'); if (!email) return; btn.disabled = true; btn.textContent = '…'; try { let r; if (authMode === 'in') r = await sb.auth.signInWithPassword({ email, password: pw }); else r = await sb.auth.signUp({ email, password: pw }); if (r.error) setErr(r.error.message); else if (authMode === 'up') setErr('✓ Check your email to confirm'); } catch (e) { setErr(e.message); } btn.disabled = false; btn.textContent = authMode === 'in' ? 'Sign In' : 'Create Account'; }
-    async function magicGo() { const email = document.getElementById('a-email').value.trim(); if (!email) { setErr('Enter your email first'); return; } const { error } = await sb.auth.signInWithOtp({ email }); setErr(error ? error.message : '✓ Magic link sent — check your inbox'); }
-    function setErr(m) { document.getElementById('a-err').textContent = m; }
-    async function doSignOut() { await sb.auth.signOut(); location.reload(); }
-    function toggleUserMenu() { document.getElementById('user-menu').classList.toggle('on'); }
+// ─── DATE UTILS ───────────────────────────────────────────────
+function tod(){return new Date().toISOString().slice(0,10);}
+function pd(s){if(!s)return null;const d=new Date(s+'T00:00:00');return isNaN(d)?null:d;}
+function alertSt(fu){if(!fu)return null;const d=pd(fu);if(!d)return null;const now=new Date();now.setHours(0,0,0,0);const diff=Math.floor((d-now)/86400000);if(diff<0)return'ov';if(diff<=2)return'ds';return null;}
+function fmtD(s){if(!s)return'—';const d=pd(s);if(!d)return s;return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function ago(s){if(!s)return'';const d=pd(s);if(!d)return'';const diff=Math.floor((new Date()-d)/86400000);if(diff===0)return'today';if(diff===1)return'1d ago';return diff+'d ago';}
+function daysFromNow(s){if(!s)return null;const d=pd(s);if(!d)return null;const now=new Date();now.setHours(0,0,0,0);return Math.floor((d-now)/86400000);}
+function getFU(days){const d=new Date();d.setDate(d.getDate()+days);return d.toISOString().slice(0,10);}
+function timeAgo(ds){if(!ds)return'';const d=new Date(ds);if(isNaN(d))return'';const diff=Math.floor((Date.now()-d)/86400000);if(diff===0)return'today';if(diff===1)return'1d ago';if(diff<7)return diff+'d ago';return Math.floor(diff/7)+'w ago';}
 
-    // ─── DATE UTILS ───────────────────────────────────────────────
-    function tod() { return new Date().toISOString().slice(0, 10); }
-    function pd(s) { if (!s) return null; const d = new Date(s + 'T00:00:00'); return isNaN(d) ? null : d; }
-    function alertSt(fu) { if (!fu) return null; const d = pd(fu); if (!d) return null; const now = new Date(); now.setHours(0, 0, 0, 0); const diff = Math.floor((d - now) / 86400000); if (diff < 0) return 'ov'; if (diff <= 2) return 'ds'; return null; }
-    function fmtD(s) { if (!s) return '—'; const d = pd(s); if (!d) return s; return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-    function ago(s) { if (!s) return ''; const d = pd(s); if (!d) return ''; const diff = Math.floor((new Date() - d) / 86400000); if (diff === 0) return 'today'; if (diff === 1) return '1d ago'; return diff + 'd ago'; }
-    function daysFromNow(s) { if (!s) return null; const d = pd(s); if (!d) return null; const now = new Date(); now.setHours(0, 0, 0, 0); return Math.floor((d - now) / 86400000); }
-    function getFU(days) { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0, 10); }
-    function timeAgo(ds) { if (!ds) return ''; const d = new Date(ds); if (isNaN(d)) return ''; const diff = Math.floor((Date.now() - d) / 86400000); if (diff === 0) return 'today'; if (diff === 1) return '1d ago'; if (diff < 7) return diff + 'd ago'; return Math.floor(diff / 7) + 'w ago'; }
+// ─── TABS ─────────────────────────────────────────────────────
+const TAB_TITLES={home:'HOME',jobs:'FIND JOBS',pipeline:'PIPELINE',tasks:'30-DAY PLAN',alerts:'ALERTS',ai:'AI TOOLS'};
+function switchTab(t){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sc-'+t).classList.add('active');
+  document.getElementById('nt-'+t).classList.add('active');
+  document.getElementById('tb-title').textContent=TAB_TITLES[t];
+  if(t==='home')renderHome();
+  if(t==='pipeline')renderPipeline();
+  if(t==='tasks')renderTasks();
+  if(t==='alerts')renderAlertsList();
+  if(t==='jobs')initJobSearch();
+  if(t==='ai')initMobileAI();
+}
 
-    // ─── TABS ─────────────────────────────────────────────────────
-    const TAB_TITLES = { home: 'HOME', jobs: 'FIND JOBS', pipeline: 'PIPELINE', tasks: '30-DAY PLAN', alerts: 'ALERTS', ai: 'AI TOOLS' };
-    function switchTab(t) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
-      document.getElementById('sc-' + t).classList.add('active');
-      document.getElementById('nt-' + t).classList.add('active');
-      document.getElementById('tb-title').textContent = TAB_TITLES[t];
-      if (t === 'home') renderHome();
-      if (t === 'pipeline') renderPipeline();
-      if (t === 'tasks') renderTasks();
-      if (t === 'alerts') renderAlertsList();
-      if (t === 'jobs') initJobSearch();
-      if (t === 'ai') initMobileAI();
-    }
+// ─── STATS ────────────────────────────────────────────────────
+function wkStats(k){const w=WEEKS[k];let dn=0,tot=0;for(const s of w.sections)for(let i=0;i<s.tasks.length;i++){tot++;if(S.tasks[`${k}_${s.title}_${i}`])dn++;}return{dn,tot};}
+function totalTaskStats(){let td=0,tt=0;for(const k of Object.keys(WEEKS)){const{dn,tot}=wkStats(k);td+=dn;tt+=tot;}return{td,tt};}
+function getAlerts(){return S.jobs.filter(j=>alertSt(j.fu)).sort((a,b)=>(pd(a.fu)||0)-(pd(b.fu)||0));}
 
-    // ─── STATS ────────────────────────────────────────────────────
-    function wkStats(k) { const w = WEEKS[k]; let dn = 0, tot = 0; for (const s of w.sections) for (let i = 0; i < s.tasks.length; i++) { tot++; if (S.tasks[`${k}_${s.title}_${i}`]) dn++; } return { dn, tot }; }
-    function totalTaskStats() { let td = 0, tt = 0; for (const k of Object.keys(WEEKS)) { const { dn, tot } = wkStats(k); td += dn; tt += tot; } return { td, tt }; }
-    function getAlerts() { return S.jobs.filter(j => alertSt(j.fu)).sort((a, b) => (pd(a.fu) || 0) - (pd(b.fu) || 0)); }
+function updateStats(){
+  const{td,tt}=totalTaskStats();
+  const ints=S.jobs.filter(j=>['manager','skills','panel'].includes(j.stage)).length;
+  const skD=Object.values(S.skills).filter(Boolean).length;
+  const als=getAlerts();
+  document.getElementById('h-tasks').textContent=td;
+  document.getElementById('h-apps').textContent=S.jobs.length;
+  document.getElementById('h-ints').textContent=ints;
+  document.getElementById('h-skills').textContent=skD;
+  const dp=Math.min(30,Math.floor((Date.now()-S.startDate)/86400000)+1);
+  document.getElementById('home-day').textContent=`DAY ${dp} / 30`;
+  // badges
+  const nb=document.getElementById('nb-alerts');
+  if(als.length>0){nb.textContent=als.length;nb.style.display='block';}else{nb.style.display='none';}
+  const pp=document.getElementById('nb-pipe');
+  if(S.jobs.length>0){pp.textContent=S.jobs.length;pp.style.display='block';}else{pp.style.display='none';}
+}
 
-    function updateStats() {
-      const { td, tt } = totalTaskStats();
-      const ints = S.jobs.filter(j => ['manager', 'skills', 'panel'].includes(j.stage)).length;
-      const skD = Object.values(S.skills).filter(Boolean).length;
-      const als = getAlerts();
-      document.getElementById('h-tasks').textContent = td;
-      document.getElementById('h-apps').textContent = S.jobs.length;
-      document.getElementById('h-ints').textContent = ints;
-      document.getElementById('h-skills').textContent = skD;
-      const dp = Math.min(30, Math.floor((Date.now() - S.startDate) / 86400000) + 1);
-      document.getElementById('home-day').textContent = `DAY ${dp} / 30`;
-      // badges
-      const nb = document.getElementById('nb-alerts');
-      if (als.length > 0) { nb.textContent = als.length; nb.style.display = 'block'; } else { nb.style.display = 'none'; }
-      const pp = document.getElementById('nb-pipe');
-      if (S.jobs.length > 0) { pp.textContent = S.jobs.length; pp.style.display = 'block'; } else { pp.style.display = 'none'; }
-    }
+// ─── HOME ─────────────────────────────────────────────────────
+function renderHome(){
+  updateStats();
+  // Alerts
+  const als=getAlerts();
+  const ae=document.getElementById('home-alerts');
+  if(!als.length){ae.innerHTML='<div class="empty-home">✓ No pending follow-ups</div>';}
+  else{ae.innerHTML=als.slice(0,3).map(j=>{const st=alertSt(j.fu),d=daysFromNow(j.fu);const lbl=st==='ov'?Math.abs(d)+'d overdue':d===0?'Today':'In '+d+'d';return`<div class="alert-card" onclick="openJobSheet('${j.id}')"><div class="ac-dot" style="background:${st==='ov'?'var(--accent2)':'var(--week3)'}"></div><div class="ac-body"><div class="ac-co">${j.co}</div><div class="ac-role">${j.role}</div></div><div class="ac-time" style="color:${st==='ov'?'var(--accent2)':'var(--week3)'}">${lbl}</div></div>`;}).join('');}
+  // Priority tasks — first unchecked from current week
+  const pt=document.getElementById('home-tasks');
+  const allTasks=[];
+  for(const[k,w]of Object.entries(WEEKS)){for(const s of w.sections){for(let i=0;i<s.tasks.length;i++){const key=`${k}_${s.title}_${i}`;if(!S.tasks[key])allTasks.push({key,txt:s.tasks[i],week:w.label,color:w.color});if(allTasks.length>=5)break;}if(allTasks.length>=5)break;}if(allTasks.length>=5)break;}
+  if(!allTasks.length){pt.innerHTML='<div class="empty-home">🎉 All tasks done!</div>';}
+  else{pt.innerHTML=allTasks.map(t=>`<div class="task-quick" onclick="quickToggleTask('${t.key}',this)"><div class="tq-box"></div><div class="tq-txt">${t.txt}</div><span class="week-badge" style="background:${t.color}22;color:${t.color}">${t.week}</span></div>`).join('');}
+  // Recent apps
+  const re=document.getElementById('home-recent');
+  const recent=[...S.jobs].sort((a,b)=>b.ts-a.ts).slice(0,4);
+  if(!recent.length){re.innerHTML='<div class="empty-home">No applications yet. Hit Find Jobs ↓</div>';}
+  else{re.innerHTML=recent.map(j=>`<div class="pipe-card" onclick="openJobSheet('${j.id}')"><div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><span class="pipe-card-meta">${ago(j.dateApp)}</span></div></div>`).join('');}
+}
 
-    // ─── HOME ─────────────────────────────────────────────────────
-    function renderHome() {
-      updateStats();
-      // Alerts
-      const als = getAlerts();
-      const ae = document.getElementById('home-alerts');
-      if (!als.length) { ae.innerHTML = '<div class="empty-home">✓ No pending follow-ups</div>'; }
-      else { ae.innerHTML = als.slice(0, 3).map(j => { const st = alertSt(j.fu), d = daysFromNow(j.fu); const lbl = st === 'ov' ? Math.abs(d) + 'd overdue' : d === 0 ? 'Today' : 'In ' + d + 'd'; return `<div class="alert-card" onclick="openJobSheet('${j.id}')"><div class="ac-dot" style="background:${st === 'ov' ? 'var(--accent2)' : 'var(--week3)'}"></div><div class="ac-body"><div class="ac-co">${j.co}</div><div class="ac-role">${j.role}</div></div><div class="ac-time" style="color:${st === 'ov' ? 'var(--accent2)' : 'var(--week3)'}">${lbl}</div></div>`; }).join(''); }
-      // Priority tasks — first unchecked from current week
-      const pt = document.getElementById('home-tasks');
-      const allTasks = [];
-      for (const [k, w] of Object.entries(WEEKS)) { for (const s of w.sections) { for (let i = 0; i < s.tasks.length; i++) { const key = `${k}_${s.title}_${i}`; if (!S.tasks[key]) allTasks.push({ key, txt: s.tasks[i], week: w.label, color: w.color }); if (allTasks.length >= 5) break; } if (allTasks.length >= 5) break; } if (allTasks.length >= 5) break; }
-      if (!allTasks.length) { pt.innerHTML = '<div class="empty-home">🎉 All tasks done!</div>'; }
-      else { pt.innerHTML = allTasks.map(t => `<div class="task-quick" onclick="quickToggleTask('${t.key}',this)"><div class="tq-box"></div><div class="tq-txt">${t.txt}</div><span class="week-badge" style="background:${t.color}22;color:${t.color}">${t.week}</span></div>`).join(''); }
-      // Recent apps
-      const re = document.getElementById('home-recent');
-      const recent = [...S.jobs].sort((a, b) => b.ts - a.ts).slice(0, 4);
-      if (!recent.length) { re.innerHTML = '<div class="empty-home">No applications yet. Hit Find Jobs ↓</div>'; }
-      else { re.innerHTML = recent.map(j => `<div class="pipe-card" onclick="openJobSheet('${j.id}')"><div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><span class="pipe-card-meta">${ago(j.dateApp)}</span></div></div>`).join(''); }
-    }
+function quickToggleTask(k,el){S.tasks[k]=!S.tasks[k];const p=el.closest('.task-quick');p.classList.toggle('dk');p.querySelector('.tq-box').textContent=S.tasks[k]?'✓':'';save();updateStats();}
 
-    function quickToggleTask(k, el) { S.tasks[k] = !S.tasks[k]; const p = el.closest('.task-quick'); p.classList.toggle('dk'); p.querySelector('.tq-box').textContent = S.tasks[k] ? '✓' : ''; save(); updateStats(); }
+// ─── PIPELINE ─────────────────────────────────────────────────
+let stageFilt='all';
+function setStageFilt(s,el){stageFilt=s;document.querySelectorAll('.sf-chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderPipeline();}
+function renderPipeline(){
+  const list=document.getElementById('pipe-list');
+  let jobs=[...S.jobs].sort((a,b)=>b.ts-a.ts);
+  if(stageFilt!=='all')jobs=jobs.filter(j=>j.stage===stageFilt);
+  if(!jobs.length){list.innerHTML='<div class="empty-home" style="padding:40px">'+( S.jobs.length===0?'No applications yet.<br>Tap + Add to get started.':'No applications in this stage.'  )+'</div>';return;}
+  list.innerHTML=jobs.map(j=>{
+    const st=alertSt(j.fu);
+    const strip=st==='ov'?'<div class="pipe-ov-strip"></div>':st==='ds'?'<div class="pipe-ds-strip"></div>':'';
+    const fuTag=st?`<span class="fu-tag ${st}">${st==='ov'?'⚠ Overdue':'⏰ Soon'}</span>`:'';
+    return`<div class="pipe-card" onclick="openJobSheet('${j.id}')">${strip}<div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><div style="display:flex;gap:6px;align-items:center">${fuTag}<span class="pipe-card-meta">${j.loc||''}</span></div></div></div>`;
+  }).join('');
+}
 
-    // ─── PIPELINE ─────────────────────────────────────────────────
-    let stageFilt = 'all';
-    function setStageFilt(s, el) { stageFilt = s; document.querySelectorAll('.sf-chip').forEach(c => c.classList.remove('on')); el.classList.add('on'); renderPipeline(); }
-    function renderPipeline() {
-      const list = document.getElementById('pipe-list');
-      let jobs = [...S.jobs].sort((a, b) => b.ts - a.ts);
-      if (stageFilt !== 'all') jobs = jobs.filter(j => j.stage === stageFilt);
-      if (!jobs.length) { list.innerHTML = '<div class="empty-home" style="padding:40px">' + (S.jobs.length === 0 ? 'No applications yet.<br>Tap + Add to get started.' : 'No applications in this stage.') + '</div>'; return; }
-      list.innerHTML = jobs.map(j => {
-        const st = alertSt(j.fu);
-        const strip = st === 'ov' ? '<div class="pipe-ov-strip"></div>' : st === 'ds' ? '<div class="pipe-ds-strip"></div>' : '';
-        const fuTag = st ? `<span class="fu-tag ${st}">${st === 'ov' ? '⚠ Overdue' : '⏰ Soon'}</span>` : '';
-        return `<div class="pipe-card" onclick="openJobSheet('${j.id}')">${strip}<div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><div style="display:flex;gap:6px;align-items:center">${fuTag}<span class="pipe-card-meta">${j.loc || ''}</span></div></div></div>`;
-      }).join('');
-    }
-
-    // ─── TASKS ────────────────────────────────────────────────────
-    function renderTasks() {
-      const el = document.getElementById('tasks-list');
-      el.innerHTML = Object.entries(WEEKS).map(([k, w]) => {
-        const { dn, tot } = wkStats(k), pct = tot ? Math.round(dn / tot * 100) : 0;
-        return `<div class="week-section">
+// ─── TASKS ────────────────────────────────────────────────────
+function renderTasks(){
+  const el=document.getElementById('tasks-list');
+  el.innerHTML=Object.entries(WEEKS).map(([k,w])=>{
+    const{dn,tot}=wkStats(k),pct=tot?Math.round(dn/tot*100):0;
+    return`<div class="week-section">
       <div class="week-hd">
         <div class="week-hd-left"><div class="week-color-dot" style="background:${w.color}"></div><div class="week-hd-title">${w.label}</div></div>
         <div class="week-hd-pct" style="color:${w.color}">${pct}%</div>
       </div>
       <div class="week-prog-bar"><div class="week-prog-fill" style="width:${pct}%;background:${w.color}"></div></div>
-      ${w.sections.map(s => s.tasks.map((t, i) => {
-          const key = `${k}_${s.title}_${i}`, done = !!S.tasks[key];
-          return `<div class="task-row ${done ? 'dk' : ''}" onclick="mToggleTask('${key}',this)"><div class="tr-box">${done ? '✓' : ''}</div><div class="tr-txt">${t}</div><div class="tr-day">${s.day}</div></div>`;
-        }).join('')).join('')}
+      ${w.sections.map(s=>s.tasks.map((t,i)=>{
+        const key=`${k}_${s.title}_${i}`,done=!!S.tasks[key];
+        return`<div class="task-row ${done?'dk':''}" onclick="mToggleTask('${key}',this)"><div class="tr-box">${done?'✓':''}</div><div class="tr-txt">${t}</div><div class="tr-day">${s.day}</div></div>`;
+      }).join('')).join('')}
     </div>`;
-      }).join('');
-    }
+  }).join('');
+}
 
-    function mToggleTask(k, el) { S.tasks[k] = !S.tasks[k]; el.classList.toggle('dk'); el.querySelector('.tr-box').textContent = S.tasks[k] ? '✓' : ''; save(); updateStats(); }
+function mToggleTask(k,el){S.tasks[k]=!S.tasks[k];el.classList.toggle('dk');el.querySelector('.tr-box').textContent=S.tasks[k]?'✓':'';save();updateStats();}
 
-    // ─── ALERTS TAB ───────────────────────────────────────────────
-    function renderAlertsList() {
-      const el = document.getElementById('alerts-list');
-      const als = getAlerts();
-      if (!als.length) { el.innerHTML = '<div class="alerts-empty"><div class="ae-icon">✓</div><div class="ae-title">ALL CLEAR</div><div class="ae-sub">No pending follow-ups right now.</div></div>'; return; }
-      el.innerHTML = als.map(j => {
-        const st = alertSt(j.fu), d = daysFromNow(j.fu);
-        const lbl = st === 'ov' ? Math.abs(d) + 'd overdue' : d === 0 ? 'Due today' : 'Due in ' + d + 'd';
-        return `<div class="alert-row ${st === 'ds' ? 'ds' : ''}" onclick="openJobSheet('${j.id}')"><div class="ar-body"><div class="ar-co">${j.co}</div><div class="ar-role">${j.role} · ${SL[j.stage]}</div></div><div class="ar-time ${st}">${lbl}</div></div>`;
-      }).join('');
-    }
+// ─── ALERTS TAB ───────────────────────────────────────────────
+function renderAlertsList(){
+  const el=document.getElementById('alerts-list');
+  const als=getAlerts();
+  if(!als.length){el.innerHTML='<div class="alerts-empty"><div class="ae-icon">✓</div><div class="ae-title">ALL CLEAR</div><div class="ae-sub">No pending follow-ups right now.</div></div>';return;}
+  el.innerHTML=als.map(j=>{
+    const st=alertSt(j.fu),d=daysFromNow(j.fu);
+    const lbl=st==='ov'?Math.abs(d)+'d overdue':d===0?'Due today':'Due in '+d+'d';
+    return`<div class="alert-row ${st==='ds'?'ds':''}" onclick="openJobSheet('${j.id}')"><div class="ar-body"><div class="ar-co">${j.co}</div><div class="ar-role">${j.role} · ${SL[j.stage]}</div></div><div class="ar-time ${st}">${lbl}</div></div>`;
+  }).join('');
+}
 
-    // ─── ADD / EDIT SHEET ─────────────────────────────────────────
-    let editJobId = null;
-    function openAddSheet(prefill) {
-      editJobId = null;
-      document.getElementById('sheet-ttl').textContent = 'ADD APPLICATION';
-      document.getElementById('sh-co').value = prefill?.co || '';
-      document.getElementById('sh-role').value = prefill?.role || '';
-      document.getElementById('sh-stage').value = prefill?.stage || 'applied';
-      document.getElementById('sh-loc').value = prefill?.loc || '';
-      document.getElementById('sh-fu').value = prefill?.fu || getFU(5);
-      document.getElementById('sh-li').value = prefill?.li || '';
-      document.getElementById('sh-notes').value = prefill?.notes || '';
-      document.getElementById('add-sheet').classList.add('on');
-    }
-    function closeSheet() { document.getElementById('add-sheet').classList.remove('on'); }
-    function maybeCloseSheet(e) { if (e.target === document.getElementById('add-sheet')) closeSheet(); }
-    function saveSheet() {
-      const co = document.getElementById('sh-co').value.trim(), role = document.getElementById('sh-role').value.trim();
-      if (!co || !role) { alert('Company & role required'); return; }
-      const ex = editJobId ? S.jobs.find(j => j.id === editJobId) : null;
-      const job = { id: ex?.id || Date.now().toString(), co, role, stage: document.getElementById('sh-stage').value, loc: document.getElementById('sh-loc').value.trim(), dateApp: tod(), fu: document.getElementById('sh-fu').value, li: document.getElementById('sh-li').value.trim(), notes: document.getElementById('sh-notes').value.trim(), sal: ex?.sal || '', jurl: ex?.jurl || '', contacts: ex?.contacts || [], interviews: ex?.interviews || [], ts: ex?.ts || Date.now() };
-      if (ex) S.jobs = S.jobs.map(j => j.id === ex.id ? job : j); else S.jobs.push(job);
-      save(); closeSheet(); closeJobSheet(); renderPipeline(); updateStats();
-    }
+// ─── ADD / EDIT SHEET ─────────────────────────────────────────
+let editJobId=null;
+function openAddSheet(prefill){
+  editJobId=null;
+  document.getElementById('sheet-ttl').textContent='ADD APPLICATION';
+  document.getElementById('sh-co').value=prefill?.co||'';
+  document.getElementById('sh-role').value=prefill?.role||'';
+  document.getElementById('sh-stage').value=prefill?.stage||'applied';
+  document.getElementById('sh-loc').value=prefill?.loc||'';
+  document.getElementById('sh-fu').value=prefill?.fu||getFU(5);
+  document.getElementById('sh-li').value=prefill?.li||'';
+  document.getElementById('sh-notes').value=prefill?.notes||'';
+  document.getElementById('add-sheet').classList.add('on');
+}
+function closeSheet(){document.getElementById('add-sheet').classList.remove('on');}
+function maybeCloseSheet(e){if(e.target===document.getElementById('add-sheet'))closeSheet();}
+function saveSheet(){
+  const co=document.getElementById('sh-co').value.trim(),role=document.getElementById('sh-role').value.trim();
+  if(!co||!role){alert('Company & role required');return;}
+  const ex=editJobId?S.jobs.find(j=>j.id===editJobId):null;
+  const job={id:ex?.id||Date.now().toString(),co,role,stage:document.getElementById('sh-stage').value,loc:document.getElementById('sh-loc').value.trim(),dateApp:tod(),fu:document.getElementById('sh-fu').value,li:document.getElementById('sh-li').value.trim(),notes:document.getElementById('sh-notes').value.trim(),sal:ex?.sal||'',jurl:ex?.jurl||'',contacts:ex?.contacts||[],interviews:ex?.interviews||[],ts:ex?.ts||Date.now()};
+  if(ex)S.jobs=S.jobs.map(j=>j.id===ex.id?job:j);else S.jobs.push(job);
+  save();closeSheet();closeJobSheet();renderPipeline();updateStats();
+}
 
-    // ─── JOB DETAIL SHEET ─────────────────────────────────────────
-    function openJobSheet(id) {
-      const j = S.jobs.find(x => x.id === id); if (!j) return;
-      const st = alertSt(j.fu), d = daysFromNow(j.fu);
-      const fuLbl = j.fu ? (st === 'ov' ? `⚠ ${Math.abs(d)}d overdue` : st === 'ds' ? `⏰ Due ${d === 0 ? 'today' : 'in ' + d + 'd'}` : `Follow-up ${fmtD(j.fu)}`) : 'No follow-up set';
-      document.getElementById('job-sheet-inner').innerHTML = `
+// ─── JOB DETAIL SHEET ─────────────────────────────────────────
+function openJobSheet(id){
+  const j=S.jobs.find(x=>x.id===id);if(!j)return;
+  const st=alertSt(j.fu),d=daysFromNow(j.fu);
+  const fuLbl=j.fu?(st==='ov'?`⚠ ${Math.abs(d)}d overdue`:st==='ds'?`⏰ Due ${d===0?'today':'in '+d+'d'}`:`Follow-up ${fmtD(j.fu)}`):'No follow-up set';
+  document.getElementById('job-sheet-inner').innerHTML=`
     <div class="sheet-handle"></div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:3px">${j.co}</div>
     <div style="font-size:16px;font-weight:600;margin-bottom:14px">${j.role}</div>
     <div class="jd-sheet-stage">
-      ${Object.entries(SL).map(([v, l]) => `<button class="stage-opt ${j.stage === v ? 'on' : ''}" onclick="updateStage('${id}','${v}',this)">${l}</button>`).join('')}
+      ${Object.entries(SL).map(([v,l])=>`<button class="stage-opt ${j.stage===v?'on':''}" onclick="updateStage('${id}','${v}',this)">${l}</button>`).join('')}
     </div>
-    <div class="jd-sheet-field"><div class="jd-sf-label">Follow-Up</div><div class="jd-sf-val" style="color:${st === 'ov' ? 'var(--accent2)' : st === 'ds' ? 'var(--week3)' : 'var(--text)'}">${fuLbl}</div></div>
-    ${j.loc ? `<div class="jd-sheet-field"><div class="jd-sf-label">Location</div><div class="jd-sf-val">${j.loc}</div></div>` : ''}
-    ${j.sal ? `<div class="jd-sheet-field"><div class="jd-sf-label">Salary</div><div class="jd-sf-val">${j.sal}</div></div>` : ''}
-    ${j.notes ? `<div class="jd-sheet-field"><div class="jd-sf-label">Notes</div><div class="jd-sf-val">${j.notes}</div></div>` : ''}
-    ${j.jurl ? `<div class="jd-sheet-field"><div class="jd-sf-label">Job Posting</div><a href="${j.jurl}" target="_blank" class="li-open-m">Open Posting ↗</a></div>` : ''}
-    ${j.li ? `<div class="jd-sheet-field"><div class="jd-sf-label">LinkedIn</div><a href="${j.li}" target="_blank" class="li-open-m">Open LinkedIn ↗</a></div>` : ''}
+    <div class="jd-sheet-field"><div class="jd-sf-label">Follow-Up</div><div class="jd-sf-val" style="color:${st==='ov'?'var(--accent2)':st==='ds'?'var(--week3)':'var(--text)'}">${fuLbl}</div></div>
+    ${j.loc?`<div class="jd-sheet-field"><div class="jd-sf-label">Location</div><div class="jd-sf-val">${j.loc}</div></div>`:''}
+    ${j.sal?`<div class="jd-sheet-field"><div class="jd-sf-label">Salary</div><div class="jd-sf-val">${j.sal}</div></div>`:''}
+    ${j.notes?`<div class="jd-sheet-field"><div class="jd-sf-label">Notes</div><div class="jd-sf-val">${j.notes}</div></div>`:''}
+    ${j.jurl?`<div class="jd-sheet-field"><div class="jd-sf-label">Job Posting</div><a href="${j.jurl}" target="_blank" class="li-open-m">Open Posting ↗</a></div>`:''}
+    ${j.li?`<div class="jd-sheet-field"><div class="jd-sf-label">LinkedIn</div><a href="${j.li}" target="_blank" class="li-open-m">Open LinkedIn ↗</a></div>`:''}
     <div style="display:flex;gap:10px;margin-top:16px">
       <button class="sheet-cancel" style="flex:1" onclick="openEditSheet('${id}')">✎ Edit</button>
       <button class="sheet-save" style="flex:1;background:var(--accent)" onclick="closeJobSheet()">Done</button>
@@ -2701,343 +868,340 @@
       </div>
     </div>
     <button class="delete-btn-m" onclick="deleteJobConfirm('${id}')">Delete Application</button>`;
-      document.getElementById('job-sheet').classList.add('on');
-    }
-    function closeJobSheet() { document.getElementById('job-sheet').classList.remove('on'); }
-    function maybeCloseJobSheet(e) { if (e.target === document.getElementById('job-sheet')) closeJobSheet(); }
-    function updateStage(id, stage, el) { const j = S.jobs.find(x => x.id === id); if (!j) return; j.stage = stage; save(); document.querySelectorAll('.stage-opt').forEach(b => b.classList.remove('on')); el.classList.add('on'); renderPipeline(); updateStats(); }
-    function openEditSheet(id) { const j = S.jobs.find(x => x.id === id); if (!j) return; editJobId = id; closeJobSheet(); document.getElementById('sheet-ttl').textContent = 'EDIT APPLICATION'; document.getElementById('sh-co').value = j.co; document.getElementById('sh-role').value = j.role; document.getElementById('sh-stage').value = j.stage; document.getElementById('sh-loc').value = j.loc || ''; document.getElementById('sh-fu').value = j.fu || ''; document.getElementById('sh-li').value = j.li || ''; document.getElementById('sh-notes').value = j.notes || ''; document.getElementById('add-sheet').classList.add('on'); }
-    function deleteJobConfirm(id) { if (confirm('Remove this application?')) { S.jobs = S.jobs.filter(j => j.id !== id); save(); closeJobSheet(); renderPipeline(); renderHome(); updateStats(); } }
+  document.getElementById('job-sheet').classList.add('on');
+}
+function closeJobSheet(){document.getElementById('job-sheet').classList.remove('on');}
+function maybeCloseJobSheet(e){if(e.target===document.getElementById('job-sheet'))closeJobSheet();}
+function updateStage(id,stage,el){const j=S.jobs.find(x=>x.id===id);if(!j)return;j.stage=stage;save();document.querySelectorAll('.stage-opt').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderPipeline();updateStats();}
+function openEditSheet(id){const j=S.jobs.find(x=>x.id===id);if(!j)return;editJobId=id;closeJobSheet();document.getElementById('sheet-ttl').textContent='EDIT APPLICATION';document.getElementById('sh-co').value=j.co;document.getElementById('sh-role').value=j.role;document.getElementById('sh-stage').value=j.stage;document.getElementById('sh-loc').value=j.loc||'';document.getElementById('sh-fu').value=j.fu||'';document.getElementById('sh-li').value=j.li||'';document.getElementById('sh-notes').value=j.notes||'';document.getElementById('add-sheet').classList.add('on');}
+function deleteJobConfirm(id){if(confirm('Remove this application?')){S.jobs=S.jobs.filter(j=>j.id!==id);save();closeJobSheet();renderPipeline();renderHome();updateStats();}}
 
-    // ─── JOB DISCOVERY ────────────────────────────────────────────
-    let mJdResults = [], mJdFilters = { all: true, easy: false, remote: false, new: false };
-    let mApiKey = '', mJdReady = false;
-    function initJobSearch() {
-      mApiKey = localStorage.getItem('jd-api-key') || '';
-      S.savedSearches = S.savedSearches || [];
-      document.getElementById('jd-api-setup').style.display = mApiKey ? 'none' : 'block';
-      renderMSaved();
-    }
-    function mSaveApiKey() { const k = document.getElementById('m-api-key').value.trim(); if (!k) return; mApiKey = k; localStorage.setItem('jd-api-key', k); document.getElementById('jd-api-setup').style.display = 'none'; }
-    async function mSearch() {
-      if (!mApiKey) { document.getElementById('jd-api-setup').style.display = 'block'; return; }
-      const q = document.getElementById('m-jq').value.trim(), loc = document.getElementById('m-jloc').value.trim();
-      if (!q) return;
-      await mRunSearch(q, loc);
-    }
-    async function mRunSearch(q, loc) {
-      const btn = document.getElementById('m-sbtn'); btn.disabled = true; btn.textContent = '…';
-      document.getElementById('m-jd-results').innerHTML = '<div class="jd-loading-m"><div class="ld-spin"></div>Searching live jobs…</div>';
-      document.getElementById('m-filters').style.display = 'none';
-      try {
-        const query = loc ? `${q} in ${loc}` : q;
-        const res = await fetch(`https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query)}&num_pages=2&date_posted=all`, { headers: { 'x-rapidapi-host': 'jsearch.p.rapidapi.com', 'x-rapidapi-key': mApiKey } });
-        if (!res.ok) throw new Error('API error ' + res.status);
-        const data = await res.json();
-        mJdResults = data.data || [];
-        mJdFilters = { all: true, easy: false, remote: false, new: false };
-        mSyncFilterUI();
-        renderMResults();
-        document.getElementById('m-filters').style.display = 'flex';
-      } catch (e) { document.getElementById('m-jd-results').innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">⚠ ${e.message}<br>Check your API key</div>`; }
-      btn.disabled = false; btn.textContent = 'Go';
-    }
-    function mToggleFilter(f) { if (f === 'all') { mJdFilters = { all: true, easy: false, remote: false, new: false }; } else { mJdFilters.all = false; mJdFilters[f] = !mJdFilters[f]; if (!mJdFilters.easy && !mJdFilters.remote && !mJdFilters.new) mJdFilters.all = true; } mSyncFilterUI(); renderMResults(); }
-    function mSyncFilterUI() { ['all', 'easy', 'remote', 'new'].forEach(f => { document.getElementById('mf-' + f)?.classList.toggle('on', !!mJdFilters[f]); }); }
-    function mGetFiltered() { if (mJdFilters.all) return mJdResults; return mJdResults.filter(j => { if (mJdFilters.easy && !mIsEasy(j)) return false; if (mJdFilters.remote && !mIsRemote(j)) return false; if (mJdFilters.new && !mIsNew(j)) return false; return true; }); }
-    function mIsEasy(j) { return (j.job_apply_link || '').includes('linkedin') || j.job_apply_is_direct === false; }
-    function mIsRemote(j) { return j.job_is_remote || (j.job_city || '').toLowerCase().includes('remote'); }
-    function mIsNew(j) { if (!j.job_posted_at_timestamp) return false; return (Date.now() / 1000 - j.job_posted_at_timestamp) / 86400 <= 7; }
-    function mAlreadyApplied(j) { const t = (j.job_title || '').toLowerCase(), c = (j.employer_name || '').toLowerCase(); return S.jobs.some(x => x.co.toLowerCase() === c && x.role.toLowerCase() === t); }
-    function renderMResults() {
-      const filtered = mGetFiltered();
-      if (!filtered.length) { document.getElementById('m-jd-results').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">No jobs match these filters</div>'; return; }
-      document.getElementById('m-jd-results').innerHTML = filtered.map((j, i) => {
-        const easy = mIsEasy(j), remote = mIsRemote(j), fresh = mIsNew(j), applied = mAlreadyApplied(j);
-        const sal = j.job_min_salary ? `$${Math.round(j.job_min_salary / 1000)}k–$${Math.round(j.job_max_salary / 1000)}k` : '';
-        const desc = (j.job_description || '').slice(0, 120).replace(/\n/g, ' ');
-        return `<div class="jd-card-m">
-      ${applied ? '<div class="in-pipe-badge">✓ In Pipeline</div>' : ''}
-      <div class="jdc-co">${j.employer_name || 'Company'}</div>
-      <div class="jdc-title">${j.job_title || 'Role'}</div>
+// ─── JOB DISCOVERY ────────────────────────────────────────────
+let mJdResults=[],mJdFilters={all:true,easy:false,remote:false,new:false};
+let mApiKey='',mJdReady=false;
+function initJobSearch(){
+  mApiKey=localStorage.getItem('jd-api-key')||'';
+  S.savedSearches=S.savedSearches||[];
+  document.getElementById('jd-api-setup').style.display=mApiKey?'none':'block';
+  renderMSaved();
+}
+function mSaveApiKey(){const k=document.getElementById('m-api-key').value.trim();if(!k)return;mApiKey=k;localStorage.setItem('jd-api-key',k);document.getElementById('jd-api-setup').style.display='none';}
+async function mSearch(){
+  if(!mApiKey){document.getElementById('jd-api-setup').style.display='block';return;}
+  const q=document.getElementById('m-jq').value.trim(),loc=document.getElementById('m-jloc').value.trim();
+  if(!q)return;
+  await mRunSearch(q,loc);
+}
+async function mRunSearch(q,loc){
+  const btn=document.getElementById('m-sbtn');btn.disabled=true;btn.textContent='…';
+  document.getElementById('m-jd-results').innerHTML='<div class="jd-loading-m"><div class="ld-spin"></div>Searching live jobs…</div>';
+  document.getElementById('m-filters').style.display='none';
+  try{
+    const query=loc?`${q} in ${loc}`:q;
+    const res=await fetch(`https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(query)}&num_pages=2&date_posted=all`,{headers:{'x-rapidapi-host':'jsearch.p.rapidapi.com','x-rapidapi-key':mApiKey}});
+    if(!res.ok)throw new Error('API error '+res.status);
+    const data=await res.json();
+    mJdResults=data.data||[];
+    mJdFilters={all:true,easy:false,remote:false,new:false};
+    mSyncFilterUI();
+    renderMResults();
+    document.getElementById('m-filters').style.display='flex';
+  }catch(e){document.getElementById('m-jd-results').innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">⚠ ${e.message}<br>Check your API key</div>`;}
+  btn.disabled=false;btn.textContent='Go';
+}
+function mToggleFilter(f){if(f==='all'){mJdFilters={all:true,easy:false,remote:false,new:false};}else{mJdFilters.all=false;mJdFilters[f]=!mJdFilters[f];if(!mJdFilters.easy&&!mJdFilters.remote&&!mJdFilters.new)mJdFilters.all=true;}mSyncFilterUI();renderMResults();}
+function mSyncFilterUI(){['all','easy','remote','new'].forEach(f=>{document.getElementById('mf-'+f)?.classList.toggle('on',!!mJdFilters[f]);});}
+function mGetFiltered(){if(mJdFilters.all)return mJdResults;return mJdResults.filter(j=>{if(mJdFilters.easy&&!mIsEasy(j))return false;if(mJdFilters.remote&&!mIsRemote(j))return false;if(mJdFilters.new&&!mIsNew(j))return false;return true;});}
+function mIsEasy(j){return(j.job_apply_link||'').includes('linkedin')||j.job_apply_is_direct===false;}
+function mIsRemote(j){return j.job_is_remote||(j.job_city||'').toLowerCase().includes('remote');}
+function mIsNew(j){if(!j.job_posted_at_timestamp)return false;return(Date.now()/1000-j.job_posted_at_timestamp)/86400<=7;}
+function mAlreadyApplied(j){const t=(j.job_title||'').toLowerCase(),c=(j.employer_name||'').toLowerCase();return S.jobs.some(x=>x.co.toLowerCase()===c&&x.role.toLowerCase()===t);}
+function renderMResults(){
+  const filtered=mGetFiltered();
+  if(!filtered.length){document.getElementById('m-jd-results').innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">No jobs match these filters</div>';return;}
+  document.getElementById('m-jd-results').innerHTML=filtered.map((j,i)=>{
+    const easy=mIsEasy(j),remote=mIsRemote(j),fresh=mIsNew(j),applied=mAlreadyApplied(j);
+    const sal=j.job_min_salary?`$${Math.round(j.job_min_salary/1000)}k–$${Math.round(j.job_max_salary/1000)}k`:'';
+    const desc=(j.job_description||'').slice(0,120).replace(/\n/g,' ');
+    return`<div class="jd-card-m">
+      ${applied?'<div class="in-pipe-badge">✓ In Pipeline</div>':''}
+      <div class="jdc-co">${j.employer_name||'Company'}</div>
+      <div class="jdc-title">${j.job_title||'Role'}</div>
       <div class="jdc-tags">
-        ${easy ? '<span class="jt ea">⚡ Easy Apply</span>' : ''}
-        ${remote ? '<span class="jt rm">🌐 Remote</span>' : ''}
-        ${fresh ? '<span class="jt nw">🟢 New</span>' : ''}
-        ${j.job_city ? `<span class="jt">${j.job_city}</span>` : ''}
-        ${sal ? `<span class="jt">${sal}</span>` : ''}
+        ${easy?'<span class="jt ea">⚡ Easy Apply</span>':''}
+        ${remote?'<span class="jt rm">🌐 Remote</span>':''}
+        ${fresh?'<span class="jt nw">🟢 New</span>':''}
+        ${j.job_city?`<span class="jt">${j.job_city}</span>`:''}
+        ${sal?`<span class="jt">${sal}</span>`:''}
       </div>
-      <div class="jdc-desc">${desc}${desc.length >= 120 ? '…' : ''}</div>
+      <div class="jdc-desc">${desc}${desc.length>=120?'…':''}</div>
       <div class="jdc-foot">
         <div class="jdc-meta">${timeAgo(j.job_posted_at_datetime_utc)}</div>
         <div style="display:flex;gap:8px">
           <button class="skip-btn-m" onclick="mSkip(${i})">Skip</button>
-          <button class="apply-btn-m ${applied ? 'done' : ''}" onclick="${applied ? '' : 'mApply(' + i + ')'}">
-            ${applied ? '✓ Applied' : '⚡ Apply'}
+          <button class="apply-btn-m ${applied?'done':''}" onclick="${applied?'':'mApply('+i+')'}">
+            ${applied?'✓ Applied':'⚡ Apply'}
           </button>
         </div>
       </div>
     </div>`;
-      }).join('');
-    }
-    function mApply(idx) {
-      const f = mGetFiltered(), j = f[idx]; if (!j) return;
-      const url = j.job_apply_link || j.job_url; if (url) window.open(url, '_blank');
-      const job = { id: Date.now().toString(), co: j.employer_name || 'Unknown', role: j.job_title || 'Role', stage: 'applied', loc: j.job_is_remote ? 'Remote' : (j.job_city || ''), dateApp: tod(), fu: getFU(5), sal: j.job_min_salary ? `$${Math.round(j.job_min_salary / 1000)}k–$${Math.round(j.job_max_salary / 1000)}k` : '', jurl: j.job_apply_link || j.job_url || '', li: '', notes: `Via JSearch · Easy Apply: ${mIsEasy(j) ? 'Yes' : 'No'}`, contacts: [], interviews: [], ts: Date.now() };
-      S.jobs.push(job); save(); updateStats(); renderMResults();
-      // Brief haptic-style visual feedback
-      const cards = document.querySelectorAll('.jd-card-m'); cards[idx] && (cards[idx].style.borderColor = 'var(--accent)');
-      setTimeout(() => { if (cards[idx]) cards[idx].style.borderColor = ''; }, 600);
-    }
-    function mSkip(idx) { const f = mGetFiltered(), j = f[idx]; if (!j) return; const gi = mJdResults.indexOf(j); if (gi > -1) mJdResults.splice(gi, 1); renderMResults(); }
-    function mSaveSearch() { const q = document.getElementById('m-jq').value.trim(), loc = document.getElementById('m-jloc').value.trim(); if (!q) return; S.savedSearches = S.savedSearches || []; if (S.savedSearches.length >= 5) return; if (!S.savedSearches.find(s => s.q === q && s.loc === loc)) { S.savedSearches.push({ q, loc }); save(); renderMSaved(); } }
-    function renderMSaved() { const el = document.getElementById('m-saved'); if (!el) return; S.savedSearches = S.savedSearches || []; el.innerHTML = S.savedSearches.map((s, i) => `<div class="sv-chip" onclick="mLoadSaved(${i})">⭐ ${s.q}${s.loc ? ' · ' + s.loc : ''}<span class="sv-x" onclick="mDelSaved(${i},event)"> ×</span></div>`).join(''); }
-    function mLoadSaved(i) { const s = S.savedSearches[i]; document.getElementById('m-jq').value = s.q; document.getElementById('m-jloc').value = s.loc || ''; mRunSearch(s.q, s.loc); }
-    function mDelSaved(i, e) { e.stopPropagation(); S.savedSearches.splice(i, 1); save(); renderMSaved(); }
+  }).join('');
+}
+function mApply(idx){
+  const f=mGetFiltered(),j=f[idx];if(!j)return;
+  const url=j.job_apply_link||j.job_url;if(url)window.open(url,'_blank');
+  const job={id:Date.now().toString(),co:j.employer_name||'Unknown',role:j.job_title||'Role',stage:'applied',loc:j.job_is_remote?'Remote':(j.job_city||''),dateApp:tod(),fu:getFU(5),sal:j.job_min_salary?`$${Math.round(j.job_min_salary/1000)}k–$${Math.round(j.job_max_salary/1000)}k`:'',jurl:j.job_apply_link||j.job_url||'',li:'',notes:`Via JSearch · Easy Apply: ${mIsEasy(j)?'Yes':'No'}`,contacts:[],interviews:[],ts:Date.now()};
+  S.jobs.push(job);save();updateStats();renderMResults();
+  // Brief haptic-style visual feedback
+  const cards=document.querySelectorAll('.jd-card-m');cards[idx]&&(cards[idx].style.borderColor='var(--accent)');
+  setTimeout(()=>{if(cards[idx])cards[idx].style.borderColor='';},600);
+}
+function mSkip(idx){const f=mGetFiltered(),j=f[idx];if(!j)return;const gi=mJdResults.indexOf(j);if(gi>-1)mJdResults.splice(gi,1);renderMResults();}
+function mSaveSearch(){const q=document.getElementById('m-jq').value.trim(),loc=document.getElementById('m-jloc').value.trim();if(!q)return;S.savedSearches=S.savedSearches||[];if(S.savedSearches.length>=5)return;if(!S.savedSearches.find(s=>s.q===q&&s.loc===loc)){S.savedSearches.push({q,loc});save();renderMSaved();}}
+function renderMSaved(){const el=document.getElementById('m-saved');if(!el)return;S.savedSearches=S.savedSearches||[];el.innerHTML=S.savedSearches.map((s,i)=>`<div class="sv-chip" onclick="mLoadSaved(${i})">⭐ ${s.q}${s.loc?' · '+s.loc:''}<span class="sv-x" onclick="mDelSaved(${i},event)"> ×</span></div>`).join('');}
+function mLoadSaved(i){const s=S.savedSearches[i];document.getElementById('m-jq').value=s.q;document.getElementById('m-jloc').value=s.loc||'';mRunSearch(s.q,s.loc);}
+function mDelSaved(i,e){e.stopPropagation();S.savedSearches.splice(i,1);save();renderMSaved();}
 
-    // ─── MOBILE AI ENGINE ────────────────────────────────────────
-    let mAIKey = '', mCurrentTool = '', mLIProfile = null;
-    const M_TOOL_LABELS = { resume: 'RESUME BULLETS', cover: 'COVER LETTER', recruiter: 'RECRUITER MESSAGE', hiringmgr: 'HIRING MANAGER' };
+// ─── MOBILE AI ENGINE ────────────────────────────────────────
+let mAIKey = '', mCurrentTool = '', mLIProfile = null;
+const M_TOOL_LABELS = { resume:'RESUME BULLETS', cover:'COVER LETTER', recruiter:'RECRUITER MESSAGE', hiringmgr:'HIRING MANAGER' };
 
-    function initMobileAI() {
-      mAIKey = localStorage.getItem('ai-anthropic-key') || '';
-      if (mAIKey) document.getElementById('m-ai-key').value = '••••••••••••';
-      // Load LinkedIn profile from synced state or localStorage
-      mLIProfile = S.liProfile || JSON.parse(localStorage.getItem('li-profile') || 'null');
-      if (mLIProfile) renderMLICard();
-      // Load manual profile
-      const p = JSON.parse(localStorage.getItem('ai-profile') || 'null');
-      if (p) {
-        document.getElementById('m-prof-role').value = p.role || '';
-        document.getElementById('m-prof-yoe').value = p.yoe || '';
-        document.getElementById('m-prof-ach').value = p.achievements || '';
-        document.getElementById('m-prof-skills').value = p.skills || '';
-      }
-    }
+function initMobileAI() {
+  mAIKey = localStorage.getItem('ai-anthropic-key') || '';
+  if (mAIKey) document.getElementById('m-ai-key').value = '••••••••••••';
+  // Load LinkedIn profile from synced state or localStorage
+  mLIProfile = S.liProfile || JSON.parse(localStorage.getItem('li-profile') || 'null');
+  if (mLIProfile) renderMLICard();
+  // Load manual profile
+  const p = JSON.parse(localStorage.getItem('ai-profile') || 'null');
+  if (p) {
+    document.getElementById('m-prof-role').value = p.role || '';
+    document.getElementById('m-prof-yoe').value = p.yoe || '';
+    document.getElementById('m-prof-ach').value = p.achievements || '';
+    document.getElementById('m-prof-skills').value = p.skills || '';
+  }
+}
 
-    function mSaveAIKey() {
-      const k = document.getElementById('m-ai-key').value.trim();
-      if (!k || k.startsWith('•')) { alert('Enter a valid key'); return; }
-      mAIKey = k;
-      localStorage.setItem('ai-anthropic-key', k);
-      document.getElementById('m-ai-key').value = '••••••••••••';
-      toast('API key saved ✓');
-    }
+function mSaveAIKey() {
+  const k = document.getElementById('m-ai-key').value.trim();
+  if (!k || k.startsWith('•')) { alert('Enter a valid key'); return; }
+  mAIKey = k;
+  localStorage.setItem('ai-anthropic-key', k);
+  document.getElementById('m-ai-key').value = '••••••••••••';
+  toast('API key saved ✓');
+}
 
-    function mSaveProfile() {
-      const p = {
-        role: document.getElementById('m-prof-role').value.trim(),
-        yoe: document.getElementById('m-prof-yoe').value.trim(),
-        achievements: document.getElementById('m-prof-ach').value.trim(),
-        skills: document.getElementById('m-prof-skills').value.trim()
-      };
-      localStorage.setItem('ai-profile', JSON.stringify(p));
-      const el = document.getElementById('m-prof-saved');
-      el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 2000);
-    }
+function mSaveProfile() {
+  const p = {
+    role: document.getElementById('m-prof-role').value.trim(),
+    yoe: document.getElementById('m-prof-yoe').value.trim(),
+    achievements: document.getElementById('m-prof-ach').value.trim(),
+    skills: document.getElementById('m-prof-skills').value.trim()
+  };
+  localStorage.setItem('ai-profile', JSON.stringify(p));
+  const el = document.getElementById('m-prof-saved');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 2000);
+}
 
-    async function mHandleLIPDF(file) {
-      if (!file || file.type !== 'application/pdf') { toast('Upload a PDF file'); return; }
-      mAIKey = localStorage.getItem('ai-anthropic-key') || '';
-      if (!mAIKey) { toast('Add your Claude API key first'); return; }
-      document.getElementById('m-li-drop-txt').textContent = file.name;
-      document.getElementById('m-li-parsing').classList.add('on');
-      document.getElementById('m-li-card').classList.remove('on');
+async function mHandleLIPDF(file) {
+  if (!file || file.type !== 'application/pdf') { toast('Upload a PDF file'); return; }
+  mAIKey = localStorage.getItem('ai-anthropic-key') || '';
+  if (!mAIKey) { toast('Add your Claude API key first'); return; }
+  document.getElementById('m-li-drop-txt').textContent = file.name;
+  document.getElementById('m-li-parsing').classList.add('on');
+  document.getElementById('m-li-card').classList.remove('on');
+  try {
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': mAIKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+          { type: 'text', text: 'Extract from this LinkedIn PDF and respond ONLY with valid JSON, no markdown:\n{"name":"full name","headline":"title","work":"formatted work history with company, title, dates, bullets","skills":"comma-separated skills","edu":"education entries","summary":"about section"}' }
+        ]}]
+      })
+    });
+    if (!resp.ok) { const e = await resp.json(); throw new Error(e.error?.message || 'API error'); }
+    const data = await resp.json();
+    const parsed = JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    mLIProfile = parsed;
+    S.liProfile = parsed;
+    save();
+    localStorage.setItem('li-profile', JSON.stringify(parsed));
+    renderMLICard();
+    toast('LinkedIn profile loaded ✓');
+  } catch(e) { toast('Parse failed: ' + e.message); }
+  document.getElementById('m-li-parsing').classList.remove('on');
+}
+
+function renderMLICard() {
+  if (!mLIProfile) return;
+  document.getElementById('m-li-name').textContent = mLIProfile.name + (mLIProfile.headline ? ' · ' + mLIProfile.headline : '');
+  document.getElementById('m-li-work').textContent = (mLIProfile.work || '').slice(0, 300) + (mLIProfile.work?.length > 300 ? '…' : '');
+  document.getElementById('m-li-skills').textContent = mLIProfile.skills || '—';
+  document.getElementById('m-li-card').classList.add('on');
+  document.getElementById('m-li-badge').style.display = 'inline-flex';
+}
+
+function mClearLI() {
+  mLIProfile = null; S.liProfile = null; save();
+  localStorage.removeItem('li-profile');
+  document.getElementById('m-li-card').classList.remove('on');
+  document.getElementById('m-li-badge').style.display = 'none';
+  document.getElementById('m-li-drop-txt').textContent = 'Tap to upload LinkedIn PDF';
+  toast('Removed');
+}
+
+function mOpenTool(tool) {
+  mCurrentTool = tool;
+  document.getElementById('m-ai-selector').style.display = 'none';
+  document.getElementById('m-ai-gen-panel').classList.add('on');
+  document.getElementById('m-ai-gen-title').textContent = M_TOOL_LABELS[tool];
+  document.getElementById('m-ai-output').classList.remove('on');
+}
+
+function mCloseTool() {
+  document.getElementById('m-ai-selector').style.display = 'block';
+  document.getElementById('m-ai-gen-panel').classList.remove('on');
+}
+
+async function mRunGen() {
+  const co = document.getElementById('m-ai-co').value.trim();
+  const role = document.getElementById('m-ai-role').value.trim();
+  const jd = document.getElementById('m-ai-jd').value.trim();
+  if (!co || !role) { toast('Enter company and role'); return; }
+  await mGenerate(mCurrentTool, co, role, jd, 'm-ai-out-text', 'm-ai-out-label', 'm-ai-output', 'm-ai-go');
+}
+
+async function jdAIGen(tool, jobId, btnEl) {
+  mAIKey = localStorage.getItem('ai-anthropic-key') || '';
+  if (!mAIKey) { toast('Add Claude API key in ✨ AI tab'); return; }
+  const job = S.jobs.find(j => j.id === jobId);
+  if (!job) return;
+  const jd = document.getElementById(`jd-ai-jd-${jobId}`)?.value.trim() || '';
+  btnEl.textContent = '⏳ Generating…';
+  btnEl.classList.add('generating');
+  const out = document.getElementById(`jd-ai-out-${jobId}`);
+  const outText = document.getElementById(`jd-ai-out-text-${jobId}`);
+  const outLabel = document.getElementById(`jd-ai-out-label-${jobId}`);
+  out.classList.add('on');
+  outLabel.textContent = M_TOOL_LABELS[tool];
+  outText.innerHTML = '<span class="ai-cursor"></span>';
+  const p = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+  const prompt = mBuildPrompt(tool, job.co, job.role, jd, p);
+  try {
+    const fullText = await mStream(prompt, outText);
+    outText.innerHTML = fullText.replace(/\n/g,'<br>');
+    toast(`${M_TOOL_LABELS[tool]} ready ✓`);
+  } catch(e) {
+    outText.innerHTML = `<span style="color:var(--accent2)">${e.message}</span>`;
+  }
+  btnEl.textContent = ['resume','cover','recruiter','hiringmgr'].indexOf(tool) === 0 ? '📄 Resume' : tool === 'cover' ? '✉️ Cover' : tool === 'recruiter' ? '💬 Recruiter' : '🎯 HM';
+  btnEl.classList.remove('generating');
+}
+
+async function mGenerate(tool, co, role, jd, outId, labelId, boxId, btnId) {
+  mAIKey = localStorage.getItem('ai-anthropic-key') || '';
+  if (!mAIKey) { toast('Add your Claude API key first'); return; }
+  const btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="ai-spin-sm"></div> Generating…'; }
+  const box = document.getElementById(boxId);
+  const outText = document.getElementById(outId);
+  const label = document.getElementById(labelId);
+  box.classList.add('on');
+  if (label) label.textContent = M_TOOL_LABELS[tool];
+  outText.innerHTML = '<span class="ai-cursor"></span>';
+  const p = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+  const prompt = mBuildPrompt(tool, co, role, jd, p);
+  try {
+    const fullText = await mStream(prompt, outText);
+    outText.innerHTML = fullText.replace(/\n/g,'<br>');
+    toast('Generated ✓');
+  } catch(e) {
+    outText.innerHTML = `<span style="color:var(--accent2)">${e.message}</span>`;
+  }
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span>✨ Generate</span>'; }
+}
+
+async function mStream(prompt, outEl) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': mAIKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1024, stream:true, messages:[{ role:'user', content:prompt }] })
+  });
+  if (!response.ok) { const e = await response.json(); throw new Error(e.error?.message || 'API error ' + response.status); }
+  let fullText = '';
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    for (const line of decoder.decode(value).split('\n').filter(l => l.startsWith('data: '))) {
+      const data = line.slice(6);
+      if (data === '[DONE]') continue;
       try {
-        const base64 = await new Promise((res, rej) => {
-          const r = new FileReader();
-          r.onload = () => res(r.result.split(',')[1]);
-          r.onerror = rej;
-          r.readAsDataURL(file);
-        });
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-api-key': mAIKey, 'anthropic-version': '2023-06-01' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-            messages: [{
-              role: 'user', content: [
-                { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-                { type: 'text', text: 'Extract from this LinkedIn PDF and respond ONLY with valid JSON, no markdown:\n{"name":"full name","headline":"title","work":"formatted work history with company, title, dates, bullets","skills":"comma-separated skills","edu":"education entries","summary":"about section"}' }
-              ]
-            }]
-          })
-        });
-        if (!resp.ok) { const e = await resp.json(); throw new Error(e.error?.message || 'API error'); }
-        const data = await resp.json();
-        const parsed = JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
-        mLIProfile = parsed;
-        S.liProfile = parsed;
-        save();
-        localStorage.setItem('li-profile', JSON.stringify(parsed));
-        renderMLICard();
-        toast('LinkedIn profile loaded ✓');
-      } catch (e) { toast('Parse failed: ' + e.message); }
-      document.getElementById('m-li-parsing').classList.remove('on');
-    }
-
-    function renderMLICard() {
-      if (!mLIProfile) return;
-      document.getElementById('m-li-name').textContent = mLIProfile.name + (mLIProfile.headline ? ' · ' + mLIProfile.headline : '');
-      document.getElementById('m-li-work').textContent = (mLIProfile.work || '').slice(0, 300) + (mLIProfile.work?.length > 300 ? '…' : '');
-      document.getElementById('m-li-skills').textContent = mLIProfile.skills || '—';
-      document.getElementById('m-li-card').classList.add('on');
-      document.getElementById('m-li-badge').style.display = 'inline-flex';
-    }
-
-    function mClearLI() {
-      mLIProfile = null; S.liProfile = null; save();
-      localStorage.removeItem('li-profile');
-      document.getElementById('m-li-card').classList.remove('on');
-      document.getElementById('m-li-badge').style.display = 'none';
-      document.getElementById('m-li-drop-txt').textContent = 'Tap to upload LinkedIn PDF';
-      toast('Removed');
-    }
-
-    function mOpenTool(tool) {
-      mCurrentTool = tool;
-      document.getElementById('m-ai-selector').style.display = 'none';
-      document.getElementById('m-ai-gen-panel').classList.add('on');
-      document.getElementById('m-ai-gen-title').textContent = M_TOOL_LABELS[tool];
-      document.getElementById('m-ai-output').classList.remove('on');
-    }
-
-    function mCloseTool() {
-      document.getElementById('m-ai-selector').style.display = 'block';
-      document.getElementById('m-ai-gen-panel').classList.remove('on');
-    }
-
-    async function mRunGen() {
-      const co = document.getElementById('m-ai-co').value.trim();
-      const role = document.getElementById('m-ai-role').value.trim();
-      const jd = document.getElementById('m-ai-jd').value.trim();
-      if (!co || !role) { toast('Enter company and role'); return; }
-      await mGenerate(mCurrentTool, co, role, jd, 'm-ai-out-text', 'm-ai-out-label', 'm-ai-output', 'm-ai-go');
-    }
-
-    async function jdAIGen(tool, jobId, btnEl) {
-      mAIKey = localStorage.getItem('ai-anthropic-key') || '';
-      if (!mAIKey) { toast('Add Claude API key in ✨ AI tab'); return; }
-      const job = S.jobs.find(j => j.id === jobId);
-      if (!job) return;
-      const jd = document.getElementById(`jd-ai-jd-${jobId}`)?.value.trim() || '';
-      btnEl.textContent = '⏳ Generating…';
-      btnEl.classList.add('generating');
-      const out = document.getElementById(`jd-ai-out-${jobId}`);
-      const outText = document.getElementById(`jd-ai-out-text-${jobId}`);
-      const outLabel = document.getElementById(`jd-ai-out-label-${jobId}`);
-      out.classList.add('on');
-      outLabel.textContent = M_TOOL_LABELS[tool];
-      outText.innerHTML = '<span class="ai-cursor"></span>';
-      const p = JSON.parse(localStorage.getItem('ai-profile') || '{}');
-      const prompt = mBuildPrompt(tool, job.co, job.role, jd, p);
-      try {
-        const fullText = await mStream(prompt, outText);
-        outText.innerHTML = fullText.replace(/\n/g, '<br>');
-        toast(`${M_TOOL_LABELS[tool]} ready ✓`);
-      } catch (e) {
-        outText.innerHTML = `<span style="color:var(--accent2)">${e.message}</span>`;
-      }
-      btnEl.textContent = ['resume', 'cover', 'recruiter', 'hiringmgr'].indexOf(tool) === 0 ? '📄 Resume' : tool === 'cover' ? '✉️ Cover' : tool === 'recruiter' ? '💬 Recruiter' : '🎯 HM';
-      btnEl.classList.remove('generating');
-    }
-
-    async function mGenerate(tool, co, role, jd, outId, labelId, boxId, btnId) {
-      mAIKey = localStorage.getItem('ai-anthropic-key') || '';
-      if (!mAIKey) { toast('Add your Claude API key first'); return; }
-      const btn = document.getElementById(btnId);
-      if (btn) { btn.disabled = true; btn.innerHTML = '<div class="ai-spin-sm"></div> Generating…'; }
-      const box = document.getElementById(boxId);
-      const outText = document.getElementById(outId);
-      const label = document.getElementById(labelId);
-      box.classList.add('on');
-      if (label) label.textContent = M_TOOL_LABELS[tool];
-      outText.innerHTML = '<span class="ai-cursor"></span>';
-      const p = JSON.parse(localStorage.getItem('ai-profile') || '{}');
-      const prompt = mBuildPrompt(tool, co, role, jd, p);
-      try {
-        const fullText = await mStream(prompt, outText);
-        outText.innerHTML = fullText.replace(/\n/g, '<br>');
-        toast('Generated ✓');
-      } catch (e) {
-        outText.innerHTML = `<span style="color:var(--accent2)">${e.message}</span>`;
-      }
-      if (btn) { btn.disabled = false; btn.innerHTML = '<span>✨ Generate</span>'; }
-    }
-
-    async function mStream(prompt, outEl) {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': mAIKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1024, stream: true, messages: [{ role: 'user', content: prompt }] })
-      });
-      if (!response.ok) { const e = await response.json(); throw new Error(e.error?.message || 'API error ' + response.status); }
-      let fullText = '';
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        for (const line of decoder.decode(value).split('\n').filter(l => l.startsWith('data: '))) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          try {
-            const p = JSON.parse(data);
-            if (p.type === 'content_block_delta' && p.delta?.text) {
-              fullText += p.delta.text;
-              outEl.innerHTML = fullText.replace(/\n/g, '<br>') + '<span class="ai-cursor"></span>';
-              outEl.scrollTop = outEl.scrollHeight;
-            }
-          } catch (e) { }
+        const p = JSON.parse(data);
+        if (p.type === 'content_block_delta' && p.delta?.text) {
+          fullText += p.delta.text;
+          outEl.innerHTML = fullText.replace(/\n/g,'<br>') + '<span class="ai-cursor"></span>';
+          outEl.scrollTop = outEl.scrollHeight;
         }
-      }
-      return fullText;
+      } catch(e) {}
     }
+  }
+  return fullText;
+}
 
-    function mBuildPrompt(tool, co, role, jd, profile) {
-      const li = mLIProfile || S.liProfile;
-      const liSection = li ? `\nLINKEDIN PROFILE (primary source):\nName: ${li.name || ''}\nHeadline: ${li.headline || ''}\nWork:\n${li.work || ''}\nSkills: ${li.skills || ''}\nEducation: ${li.edu || ''}\nSummary: ${li.summary || ''}` : '';
-      const base = `You are an expert job search coach.\n${liSection}\nManual profile additions:\n- Role: ${profile.role || 'N/A'}\n- YOE: ${profile.yoe || 'N/A'}\n- Achievements: ${profile.achievements || 'N/A'}\n- Skills: ${profile.skills || 'N/A'}\n\nTarget Company: ${co}\nTarget Role: ${role}\nJob Description: ${jd || 'Not provided'}${li ? ' IMPORTANT: Use real companies, titles, and results from the LinkedIn profile.' : ''}`;
-      const prompts = {
-        resume: `${base}\n\nGenerate 5–6 resume bullets for the ${role} role at ${co}.\n- Start each with a strong action verb\n- Include specific metrics from their real background\n- Mirror JD keywords for ATS\n- Under 120 chars each\nFormat: just bullets starting with •, no preamble.`,
-        cover: `${base}\n\nWrite a cover letter for ${role} at ${co}. Structure: 1) Specific hook about ${co} (1-2 sentences) 2) Strongest achievement with metric (2-3 sentences) 3) Why this role/company (2-3 sentences) 4) Clear CTA (1 sentence). Under 250 words. No "I am writing to apply..." openers.`,
-        recruiter: `${base}\n\nWrite a LinkedIn message to the recruiter at ${co} for the ${role} role. Under 100 words. Lead with one specific result. Ask for a 15-min call. No filler openers. Just the message.`,
-        hiringmgr: `${base}\n\nWrite a LinkedIn message to the hiring manager for ${role} at ${co}. Under 120 words. Lead with a challenge they likely face (infer from JD). Connect one real result from candidate background. Peer-to-peer tone. Soft ask. Just the message.`
-      };
-      return prompts[tool];
-    }
+function mBuildPrompt(tool, co, role, jd, profile) {
+  const li = mLIProfile || S.liProfile;
+  const liSection = li ? `\nLINKEDIN PROFILE (primary source):\nName: ${li.name||''}\nHeadline: ${li.headline||''}\nWork:\n${li.work||''}\nSkills: ${li.skills||''}\nEducation: ${li.edu||''}\nSummary: ${li.summary||''}` : '';
+  const base = `You are an expert job search coach.\n${liSection}\nManual profile additions:\n- Role: ${profile.role||'N/A'}\n- YOE: ${profile.yoe||'N/A'}\n- Achievements: ${profile.achievements||'N/A'}\n- Skills: ${profile.skills||'N/A'}\n\nTarget Company: ${co}\nTarget Role: ${role}\nJob Description: ${jd||'Not provided'}${li?' IMPORTANT: Use real companies, titles, and results from the LinkedIn profile.':''}`;
+  const prompts = {
+    resume:`${base}\n\nGenerate 5–6 resume bullets for the ${role} role at ${co}.\n- Start each with a strong action verb\n- Include specific metrics from their real background\n- Mirror JD keywords for ATS\n- Under 120 chars each\nFormat: just bullets starting with •, no preamble.`,
+    cover:`${base}\n\nWrite a cover letter for ${role} at ${co}. Structure: 1) Specific hook about ${co} (1-2 sentences) 2) Strongest achievement with metric (2-3 sentences) 3) Why this role/company (2-3 sentences) 4) Clear CTA (1 sentence). Under 250 words. No "I am writing to apply..." openers.`,
+    recruiter:`${base}\n\nWrite a LinkedIn message to the recruiter at ${co} for the ${role} role. Under 100 words. Lead with one specific result. Ask for a 15-min call. No filler openers. Just the message.`,
+    hiringmgr:`${base}\n\nWrite a LinkedIn message to the hiring manager for ${role} at ${co}. Under 120 words. Lead with a challenge they likely face (infer from JD). Connect one real result from candidate background. Peer-to-peer tone. Soft ask. Just the message.`
+  };
+  return prompts[tool];
+}
 
-    function mCopyOutput(id) {
-      const text = document.getElementById(id)?.innerText || '';
-      navigator.clipboard.writeText(text).then(() => toast('Copied ✓'));
-    }
+function mCopyOutput(id) {
+  const text = document.getElementById(id)?.innerText || '';
+  navigator.clipboard.writeText(text).then(() => toast('Copied ✓'));
+}
 
-    // ─── BOOT ─────────────────────────────────────────────────────
-    async function boot() {
-      sb.auth.onAuthStateChange(async (event, session) => {
-        if (session?.user) {
-          user = session.user;
-          const initials = user.email[0].toUpperCase();
-          document.getElementById('tb-user-btn').textContent = initials;
-          document.getElementById('um-email').textContent = user.email;
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('auth').style.display = 'none';
-          document.getElementById('app').style.display = 'flex';
-          await loadDB();
-          // Restore LinkedIn profile from synced state
-          if (S.liProfile) { mLIProfile = S.liProfile; }
-          renderHome();
-        } else {
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('auth').style.display = 'flex';
-        }
-      });
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { document.getElementById('loading').style.display = 'none'; document.getElementById('auth').style.display = 'flex'; }
+// ─── BOOT ─────────────────────────────────────────────────────
+async function boot(){
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(session?.user){
+      user=session.user;
+      const initials=user.email[0].toUpperCase();
+      document.getElementById('tb-user-btn').textContent=initials;
+      document.getElementById('um-email').textContent=user.email;
+      document.getElementById('loading').style.display='none';
+      document.getElementById('auth').style.display='none';
+      document.getElementById('app').style.display='flex';
+      await loadDB();
+      // Restore LinkedIn profile from synced state
+      if (S.liProfile) { mLIProfile = S.liProfile; }
+      renderHome();
+    }else{
+      document.getElementById('loading').style.display='none';
+      document.getElementById('auth').style.display='flex';
     }
-    boot();
-  </script>
+  });
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session){document.getElementById('loading').style.display='none';document.getElementById('auth').style.display='flex';}
+}
+boot();
+</script>
 </body>
-
 </html>
