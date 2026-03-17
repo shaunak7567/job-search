@@ -4176,31 +4176,22 @@
 
           <!-- CONTACT FINDER SETUP -->
           <div class="cf-setup" id="cf-setup-box">
-            <div class="cf-setup-title">🔗 Contact Finder — API Keys</div>
-            <div class="cf-keys-row">
+            <div class="cf-setup-title">🔗 Contact Finder — API Key</div>
+            <div class="cf-keys-row" style="grid-template-columns:1fr">
               <div class="cf-key-group">
-                <div class="cf-key-label">Hunter.io Key <span style="color:var(--text-muted)">(free 25/mo)</span></div>
+                <div class="cf-key-label">Hunter.io Key <span style="color:var(--text-muted)">(free 25/mo — finds work
+                    emails)</span></div>
                 <div class="cf-key-row">
                   <input class="cf-key-inp" id="hunter-key-inp" type="password" placeholder="hunter.io API key">
                   <button class="cf-key-save" onclick="saveCFKey('hunter')">Save</button>
                 </div>
                 <div class="cf-key-status" id="hunter-key-status">✓ Saved</div>
               </div>
-              <div class="cf-key-group">
-                <div class="cf-key-label">People Data Labs Key <span style="color:var(--text-muted)">(free
-                    100/mo)</span></div>
-                <div class="cf-key-row">
-                  <input class="cf-key-inp" id="pdl-key-inp" type="password" placeholder="PDL API key">
-                  <button class="cf-key-save" onclick="saveCFKey('pdl')">Save</button>
-                </div>
-                <div class="cf-key-status" id="pdl-key-status">✓ Saved</div>
-              </div>
             </div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:10px;font-family:'DM Mono',monospace">
-              Get free keys: <a href="https://hunter.io/api" target="_blank"
-                style="color:var(--accent3)">hunter.io/api</a> &nbsp;·&nbsp; <a href="https://www.peopledatalabs.com"
-                target="_blank" style="color:var(--accent3)">peopledatalabs.com</a> &nbsp;·&nbsp; Claude web search used
-              automatically (no extra key)
+              Get free key: <a href="https://hunter.io/api" target="_blank"
+                style="color:var(--accent3)">hunter.io/api</a> &nbsp;·&nbsp; Claude web search used automatically for
+              LinkedIn profiles (no extra key needed)
             </div>
           </div>
 
@@ -5451,23 +5442,20 @@ Respond ONLY with valid JSON, no markdown:
 
     function initContactFinder() {
       cfHunterKey = localStorage.getItem('cf-hunter-key') || '';
-      cfPDLKey = localStorage.getItem('cf-pdl-key') || '';
+      cfPDLKey = '';
       if (cfHunterKey) { document.getElementById('hunter-key-inp').value = '••••••••••••'; document.getElementById('hunter-key-status').classList.add('on'); }
-      if (cfPDLKey) { document.getElementById('pdl-key-inp').value = '••••••••••••'; document.getElementById('pdl-key-status').classList.add('on'); }
-      // Hide setup box if both keys saved
-      if (cfHunterKey && cfPDLKey) document.getElementById('cf-setup-box').style.display = 'none';
+      if (cfHunterKey) document.getElementById('cf-setup-box').style.display = 'none';
     }
 
     function saveCFKey(type) {
-      const inp = document.getElementById(type === 'hunter' ? 'hunter-key-inp' : 'pdl-key-inp');
+      const inp = document.getElementById('hunter-key-inp');
       const val = inp.value.trim();
       if (!val || val.startsWith('•')) { toast('Enter a valid key'); return; }
-      if (type === 'hunter') { cfHunterKey = val; localStorage.setItem('cf-hunter-key', val); }
-      else { cfPDLKey = val; localStorage.setItem('cf-pdl-key', val); }
+      cfHunterKey = val; localStorage.setItem('cf-hunter-key', val);
       inp.value = '••••••••••••';
-      document.getElementById(type + '-key-status').classList.add('on');
-      if (cfHunterKey && cfPDLKey) document.getElementById('cf-setup-box').style.display = 'none';
-      toast(type === 'hunter' ? 'Hunter key saved ✓' : 'PDL key saved ✓');
+      document.getElementById('hunter-key-status').classList.add('on');
+      document.getElementById('cf-setup-box').style.display = 'none';
+      toast('Hunter key saved ✓');
     }
 
     // ── CONTACT TYPES ─────────────────────────────────────────────
@@ -5518,16 +5506,14 @@ Respond ONLY with valid JSON, no markdown:
       const domain = extractDomain(j.job_apply_link || j.job_url || '');
 
       try {
-        // Fire all 3 in parallel
-        const [pdlContacts, hunterContacts, claudeContacts] = await Promise.allSettled([
-          fetchPDLContacts(company, role),
+        // Fire both in parallel (Hunter + Claude web search)
+        const [hunterContacts, claudeContacts] = await Promise.allSettled([
           fetchHunterContacts(domain, company),
           fetchClaudeContacts(company, role)
         ]);
 
-        // Merge all results
+        // Merge results
         let all = [];
-        if (pdlContacts.status === 'fulfilled') all.push(...pdlContacts.value);
         if (hunterContacts.status === 'fulfilled') all.push(...hunterContacts.value);
         if (claudeContacts.status === 'fulfilled') all.push(...claudeContacts.value);
 
@@ -5578,50 +5564,7 @@ Respond ONLY with valid JSON, no markdown:
       try { return new URL(url).hostname.replace('www.', ''); } catch (e) { return ''; }
     }
 
-    // ── SOURCE 1: PEOPLE DATA LABS ────────────────────────────────
-    async function fetchPDLContacts(company, role) {
-      if (!cfPDLKey) return [];
-      const titleKeywords = 'recruiter OR "hiring manager" OR "engineering manager" OR "product manager" OR "talent acquisition" OR "team lead" OR "hr manager" OR "people operations"';
-      const url = `https://api.peopledatalabs.com/v5/person/search`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Api-Key': cfPDLKey },
-        body: JSON.stringify({
-          query: {
-            bool: {
-              must: [
-                { match: { job_company_name: company } },
-                {
-                  bool: {
-                    should: [
-                      { match: { job_title: 'recruiter' } },
-                      { match: { job_title: 'hiring manager' } },
-                      { match: { job_title: 'engineering manager' } },
-                      { match: { job_title: 'product manager' } },
-                      { match: { job_title: 'talent acquisition' } },
-                      { match: { job_title: 'team lead' } },
-                      { match: { job_title: 'hr' } },
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          size: 5, pretty: true
-        })
-      });
-      if (!res.ok) return [];
-      const data = await res.json();
-      return (data.data || []).map(p => ({
-        name: [p.first_name, p.last_name].filter(Boolean).join(' '),
-        title: p.job_title || '',
-        linkedin: p.linkedin_url ? `https://linkedin.com/in/${p.linkedin_url}` : '',
-        email: p.work_email || '',
-        source: 'PDL'
-      }));
-    }
-
-    // ── SOURCE 2: HUNTER.IO ───────────────────────────────────────
+    // ── SOURCE 1: HUNTER.IO ───────────────────────────────────────
     async function fetchHunterContacts(domain, company) {
       if (!cfHunterKey || !domain) return [];
       const url = `https://api.hunter.io/v2/domain-search?domain=${encodeURIComponent(domain)}&limit=10&api_key=${cfHunterKey}`;
