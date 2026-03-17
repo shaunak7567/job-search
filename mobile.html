@@ -2885,7 +2885,7 @@
 
         <!-- Contact Finder Keys -->
         <div class="m-cf-setup" id="m-cf-setup">
-          <div class="m-cf-setup-title">🔗 Contact Finder Keys</div>
+          <div class="m-cf-setup-title">🔗 Contact Finder Key</div>
           <div class="m-cf-key-group">
             <label class="m-cf-key-label">Hunter.io Key <span style="color:var(--muted)">(free 25/mo —
                 hunter.io/api)</span></label>
@@ -2894,14 +2894,8 @@
               <button class="m-cf-key-save" onclick="mSaveCFKey('hunter')">Save</button>
             </div>
           </div>
-          <div class="m-cf-key-group">
-            <label class="m-cf-key-label">People Data Labs Key <span style="color:var(--muted)">(free 100/mo —
-                peopledatalabs.com)</span></label>
-            <div class="m-cf-key-row">
-              <input class="m-cf-key-inp" id="m-pdl-inp" type="password" placeholder="PDL API key">
-              <button class="m-cf-key-save" onclick="mSaveCFKey('pdl')">Save</button>
-            </div>
-          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace">Claude web
+            search finds LinkedIn profiles automatically</div>
         </div>
 
         <div class="search-box">
@@ -3964,20 +3958,18 @@
 
     function initMContactFinder() {
       mCFHunterKey = localStorage.getItem('cf-hunter-key') || '';
-      mCFPDLKey = localStorage.getItem('cf-pdl-key') || '';
+      mCFPDLKey = '';
       if (mCFHunterKey) { document.getElementById('m-hunter-inp').value = '••••••••••••'; }
-      if (mCFPDLKey) { document.getElementById('m-pdl-inp').value = '••••••••••••'; }
-      if (mCFHunterKey && mCFPDLKey) document.getElementById('m-cf-setup').style.display = 'none';
+      if (mCFHunterKey) document.getElementById('m-cf-setup').style.display = 'none';
     }
 
     function mSaveCFKey(type) {
-      const inp = document.getElementById(type === 'hunter' ? 'm-hunter-inp' : 'm-pdl-inp');
+      const inp = document.getElementById('m-hunter-inp');
       const val = inp.value.trim(); if (!val || val.startsWith('•')) return;
-      if (type === 'hunter') { mCFHunterKey = val; localStorage.setItem('cf-hunter-key', val); }
-      else { mCFPDLKey = val; localStorage.setItem('cf-pdl-key', val); }
+      mCFHunterKey = val; localStorage.setItem('cf-hunter-key', val);
       inp.value = '••••••••••••';
-      if (mCFHunterKey && mCFPDLKey) document.getElementById('m-cf-setup').style.display = 'none';
-      toast(type === 'hunter' ? 'Hunter key saved ✓' : 'PDL key saved ✓');
+      document.getElementById('m-cf-setup').style.display = 'none';
+      toast('Hunter key saved ✓');
     }
 
     async function mFindContacts(idx) {
@@ -3989,9 +3981,8 @@
       res.innerHTML = '<div class="m-cf-loading"><div class="m-cf-spin"></div>Searching 3 sources…</div>';
       const company = j.employer_name || '', role = j.job_title || '', domain = mExtractDomain(j.job_apply_link || j.job_url || '');
       try {
-        const [pdl, hunter, claude] = await Promise.allSettled([mFetchPDL(company, role), mFetchHunter(domain, company), mFetchClaude(company, role)]);
+        const [hunter, claude] = await Promise.allSettled([mFetchHunter(domain, company), mFetchClaude(company, role)]);
         let all = [];
-        if (pdl.status === 'fulfilled') all.push(...pdl.value);
         if (hunter.status === 'fulfilled') all.push(...hunter.value);
         if (claude.status === 'fulfilled') all.push(...claude.value);
         const seen = new Set();
@@ -4008,14 +3999,6 @@
         }
       } catch (e) { res.innerHTML = `<div style="font-size:11px;color:var(--muted);padding:8px 0">Error: ${e.message}</div>`; }
       btn.disabled = false; btn.textContent = '🔗 Refresh Contacts';
-    }
-
-    async function mFetchPDL(company, role) {
-      if (!mCFPDLKey) return [];
-      const res = await fetch('https://api.peopledatalabs.com/v5/person/search', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Api-Key': mCFPDLKey }, body: JSON.stringify({ query: { bool: { must: [{ match: { job_company_name: company } }, { bool: { should: [{ match: { job_title: 'recruiter' } }, { match: { job_title: 'hiring manager' } }, { match: { job_title: 'engineering manager' } }, { match: { job_title: 'product manager' } }, { match: { job_title: 'talent acquisition' } }, { match: { job_title: 'team lead' } }, { match: { job_title: 'hr' } }] } }] } }, size: 4 }) });
-      if (!res.ok) return [];
-      const data = await res.json();
-      return (data.data || []).map(p => ({ name: [p.first_name, p.last_name].filter(Boolean).join(' '), title: p.job_title || '', linkedin: p.linkedin_url ? `https://linkedin.com/in/${p.linkedin_url}` : '', email: p.work_email || '', source: 'PDL' }));
     }
 
     async function mFetchHunter(domain, company) {
