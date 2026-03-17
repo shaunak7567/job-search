@@ -3327,6 +3327,368 @@
       cursor: pointer;
     }
 
+    /* ── CONTACT FINDER ── */
+    .cf-setup {
+      background: rgba(71, 196, 255, 0.05);
+      border: 1px solid rgba(71, 196, 255, 0.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .cf-setup-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--accent3);
+      margin-bottom: 10px;
+    }
+
+    .cf-keys-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .cf-key-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cf-key-label {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .cf-key-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cf-key-inp {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid rgba(71, 196, 255, 0.25);
+      border-radius: 5px;
+      padding: 7px 10px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .cf-key-save {
+      background: var(--accent3);
+      color: #000;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cf-key-status {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      margin-top: 3px;
+      display: none;
+    }
+
+    .cf-key-status.on {
+      display: block;
+    }
+
+    .find-contacts-btn {
+      background: rgba(71, 196, 255, 0.1);
+      border: 1px solid rgba(71, 196, 255, 0.25);
+      color: var(--accent3);
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .find-contacts-btn:hover {
+      background: rgba(71, 196, 255, 0.2);
+    }
+
+    .find-contacts-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .cf-loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .cf-spin {
+      width: 13px;
+      height: 13px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent3);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .cf-results {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cf-contact {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.15s;
+    }
+
+    .cf-contact:hover {
+      border-color: var(--text-muted);
+    }
+
+    .cf-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent3), var(--week4));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .cf-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cf-name {
+      font-weight: 600;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cf-title {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cf-email {
+      font-size: 10px;
+      color: var(--accent3);
+      font-family: 'DM Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .cf-type-badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'DM Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .cf-type-badge.recruiter {
+      background: rgba(71, 196, 255, 0.15);
+      color: var(--accent3);
+    }
+
+    .cf-type-badge.hiring {
+      background: rgba(232, 255, 71, 0.15);
+      color: var(--accent);
+    }
+
+    .cf-type-badge.lead {
+      background: rgba(196, 71, 255, 0.15);
+      color: var(--week4);
+    }
+
+    .cf-type-badge.hr {
+      background: rgba(71, 255, 179, 0.15);
+      color: #47ffb3;
+    }
+
+    .cf-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .cf-li-btn {
+      background: rgba(71, 196, 255, 0.1);
+      border: 1px solid rgba(71, 196, 255, 0.2);
+      color: var(--accent3);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .cf-li-btn:hover {
+      background: rgba(71, 196, 255, 0.2);
+    }
+
+    .cf-msg-btn {
+      background: rgba(232, 255, 71, 0.1);
+      border: 1px solid rgba(232, 255, 71, 0.2);
+      color: var(--accent);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      transition: all 0.15s;
+    }
+
+    .cf-msg-btn:hover {
+      background: rgba(232, 255, 71, 0.2);
+    }
+
+    .cf-source {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      text-align: center;
+      padding: 4px 0;
+    }
+
+    .cf-no-results {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 12px 0;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* contact message modal */
+    .cf-msg-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cf-msg-modal.on {
+      display: flex;
+    }
+
+    .cf-msg-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      width: 500px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .cf-msg-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .cf-msg-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .cf-msg-type-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .cf-msg-type-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .cf-msg-type-btn.on {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(232, 255, 71, 0.08);
+    }
+
+    .cf-msg-output {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 14px;
+      min-height: 120px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .cf-msg-output.on {
+      display: block;
+    }
+
+    .cf-msg-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: flex-end;
+    }
+
     /* ── MISC ── */
     ::-webkit-scrollbar {
       width: 5px;
@@ -3809,6 +4171,36 @@
                 <input class="api-input" id="jd-api-key" type="password" placeholder="Paste your RapidAPI key here...">
               </div>
               <button class="api-save-btn" onclick="saveApiKey()">Save Key & Search</button>
+            </div>
+          </div>
+
+          <!-- CONTACT FINDER SETUP -->
+          <div class="cf-setup" id="cf-setup-box">
+            <div class="cf-setup-title">🔗 Contact Finder — API Keys</div>
+            <div class="cf-keys-row">
+              <div class="cf-key-group">
+                <div class="cf-key-label">Hunter.io Key <span style="color:var(--text-muted)">(free 25/mo)</span></div>
+                <div class="cf-key-row">
+                  <input class="cf-key-inp" id="hunter-key-inp" type="password" placeholder="hunter.io API key">
+                  <button class="cf-key-save" onclick="saveCFKey('hunter')">Save</button>
+                </div>
+                <div class="cf-key-status" id="hunter-key-status">✓ Saved</div>
+              </div>
+              <div class="cf-key-group">
+                <div class="cf-key-label">People Data Labs Key <span style="color:var(--text-muted)">(free
+                    100/mo)</span></div>
+                <div class="cf-key-row">
+                  <input class="cf-key-inp" id="pdl-key-inp" type="password" placeholder="PDL API key">
+                  <button class="cf-key-save" onclick="saveCFKey('pdl')">Save</button>
+                </div>
+                <div class="cf-key-status" id="pdl-key-status">✓ Saved</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:10px;font-family:'DM Mono',monospace">
+              Get free keys: <a href="https://hunter.io/api" target="_blank"
+                style="color:var(--accent3)">hunter.io/api</a> &nbsp;·&nbsp; <a href="https://www.peopledatalabs.com"
+                target="_blank" style="color:var(--accent3)">peopledatalabs.com</a> &nbsp;·&nbsp; Claude web search used
+              automatically (no extra key)
             </div>
           </div>
 
@@ -4648,6 +5040,7 @@ Write only the message itself. No preamble.`
       S.savedSearches = S.savedSearches || [];
       if (jdApiKey) document.getElementById('jd-setup-box').style.display = 'none';
       renderSavedSearches();
+      initContactFinder();
 
       // ── RESTORE CACHED RESULTS ──────────────────────────────────
       const cached = loadCachedResults();
@@ -4939,6 +5332,8 @@ Respond ONLY with valid JSON, no markdown:
         </div>
         <div class="jd-card-desc">${desc}${desc.length >= 180 ? '…' : ''}</div>
         ${matchHTML}
+        <button class="find-contacts-btn" id="cf-btn-${i}" onclick="findContacts(${i})">🔗 Find Contacts at ${j.employer_name || 'this company'}</button>
+        <div id="cf-results-${i}"></div>
       </div></div>
       <div class="jd-card-footer">
         <div class="jd-card-meta">${postedAgo ? 'Posted ' + postedAgo : ''}</div>
@@ -5047,6 +5442,302 @@ Respond ONLY with valid JSON, no markdown:
       document.getElementById('jd-q').value = s.q;
       document.getElementById('jd-loc').value = s.loc || '';
       runSearch(s.q, s.loc, false);
+    }
+
+    // ─── CONTACT FINDER ───────────────────────────────────────────
+    let cfHunterKey = '';
+    let cfPDLKey = '';
+    let cfMsgContext = {}; // { name, title, company, role, liUrl, msgType }
+
+    function initContactFinder() {
+      cfHunterKey = localStorage.getItem('cf-hunter-key') || '';
+      cfPDLKey = localStorage.getItem('cf-pdl-key') || '';
+      if (cfHunterKey) { document.getElementById('hunter-key-inp').value = '••••••••••••'; document.getElementById('hunter-key-status').classList.add('on'); }
+      if (cfPDLKey) { document.getElementById('pdl-key-inp').value = '••••••••••••'; document.getElementById('pdl-key-status').classList.add('on'); }
+      // Hide setup box if both keys saved
+      if (cfHunterKey && cfPDLKey) document.getElementById('cf-setup-box').style.display = 'none';
+    }
+
+    function saveCFKey(type) {
+      const inp = document.getElementById(type === 'hunter' ? 'hunter-key-inp' : 'pdl-key-inp');
+      const val = inp.value.trim();
+      if (!val || val.startsWith('•')) { toast('Enter a valid key'); return; }
+      if (type === 'hunter') { cfHunterKey = val; localStorage.setItem('cf-hunter-key', val); }
+      else { cfPDLKey = val; localStorage.setItem('cf-pdl-key', val); }
+      inp.value = '••••••••••••';
+      document.getElementById(type + '-key-status').classList.add('on');
+      if (cfHunterKey && cfPDLKey) document.getElementById('cf-setup-box').style.display = 'none';
+      toast(type === 'hunter' ? 'Hunter key saved ✓' : 'PDL key saved ✓');
+    }
+
+    // ── CONTACT TYPES ─────────────────────────────────────────────
+    const HIRING_TITLES = [
+      'hiring manager', 'engineering manager', 'product manager', 'vp engineering',
+      'vp product', 'director of engineering', 'director of product', 'head of engineering',
+      'head of product', 'team lead', 'tech lead', 'senior engineer', 'principal engineer'
+    ];
+    const RECRUITER_TITLES = ['recruiter', 'talent acquisition', 'technical recruiter', 'senior recruiter', 'recruiting manager'];
+    const HR_TITLES = ['hr', 'human resources', 'people operations', 'people partner', 'hr manager'];
+
+    function classifyTitle(title) {
+      const t = (title || '').toLowerCase();
+      if (RECRUITER_TITLES.some(r => t.includes(r))) return 'recruiter';
+      if (HR_TITLES.some(r => t.includes(r))) return 'hr';
+      if (HIRING_TITLES.some(r => t.includes(r))) return 'hiring';
+      return 'lead';
+    }
+
+    function contactTypeBadge(type) {
+      const labels = { recruiter: 'Recruiter', hiring: 'Hiring Mgr', lead: 'Team Lead', hr: 'HR/People' };
+      return `<span class="cf-type-badge ${type}">${labels[type] || type}</span>`;
+    }
+
+    function rankContacts(contacts) {
+      const order = { hiring: 0, recruiter: 1, lead: 2, hr: 3 };
+      return contacts.sort((a, b) => (order[a.type] ?? 9) - (order[b.type] ?? 9));
+    }
+
+    // ── MAIN FIND CONTACTS FUNCTION ───────────────────────────────
+    async function findContacts(jobIdx) {
+      const filtered = getFilteredResults();
+      const j = filtered[jobIdx];
+      if (!j) return;
+
+      const btnId = `cf-btn-${jobIdx}`;
+      const resultId = `cf-results-${jobIdx}`;
+      const btn = document.getElementById(btnId);
+      const resultEl = document.getElementById(resultId);
+      if (!btn || !resultEl) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Searching…';
+      resultEl.innerHTML = `<div class="cf-loading"><div class="cf-spin"></div>Searching across 3 sources…</div>`;
+
+      const company = j.employer_name || '';
+      const role = j.job_title || '';
+      const domain = extractDomain(j.job_apply_link || j.job_url || '');
+
+      try {
+        // Fire all 3 in parallel
+        const [pdlContacts, hunterContacts, claudeContacts] = await Promise.allSettled([
+          fetchPDLContacts(company, role),
+          fetchHunterContacts(domain, company),
+          fetchClaudeContacts(company, role)
+        ]);
+
+        // Merge all results
+        let all = [];
+        if (pdlContacts.status === 'fulfilled') all.push(...pdlContacts.value);
+        if (hunterContacts.status === 'fulfilled') all.push(...hunterContacts.value);
+        if (claudeContacts.status === 'fulfilled') all.push(...claudeContacts.value);
+
+        // Deduplicate by name (case-insensitive)
+        const seen = new Set();
+        all = all.filter(c => {
+          const key = (c.name || '').toLowerCase().trim();
+          if (!key || seen.has(key)) return false;
+          seen.add(key); return true;
+        });
+
+        // Classify and rank
+        all = all.map(c => ({ ...c, type: c.type || classifyTitle(c.title) }));
+        all = rankContacts(all).slice(0, 6); // max 6 contacts
+
+        if (!all.length) {
+          resultEl.innerHTML = `<div class="cf-no-results">No contacts found. Try the Research Bot to search manually.</div>`;
+        } else {
+          const sources = [...new Set(all.map(c => c.source).filter(Boolean))].join(' · ');
+          resultEl.innerHTML = `
+        <div class="cf-results">
+          ${all.map((c, i) => `
+            <div class="cf-contact">
+              <div class="cf-avatar">${(c.name || '?')[0].toUpperCase()}</div>
+              <div class="cf-info">
+                <div class="cf-name">${c.name || 'Unknown'}</div>
+                <div class="cf-title">${c.title || ''}</div>
+                ${c.email ? `<div class="cf-email">✉ ${c.email}</div>` : ''}
+              </div>
+              ${contactTypeBadge(c.type)}
+              <div class="cf-actions">
+                ${c.linkedin ? `<a href="${c.linkedin}" target="_blank" class="cf-li-btn">in ↗</a>` : ''}
+                <button class="cf-msg-btn" onclick="openCFModal(${JSON.stringify(JSON.stringify({ name: c.name, title: c.title, company: '${company}', role: '${role}', liUrl: c.linkedin || '', msgType: c.type === 'recruiter' || c.type === 'hr' ? 'recruiter' : 'hiringmgr' }))})">✉ Message</button>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="cf-source">Sources: ${sources}</div>`;
+        }
+      } catch (e) {
+        resultEl.innerHTML = `<div class="cf-no-results">Search failed: ${e.message}</div>`;
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '🔗 Refresh Contacts';
+    }
+
+    function extractDomain(url) {
+      try { return new URL(url).hostname.replace('www.', ''); } catch (e) { return ''; }
+    }
+
+    // ── SOURCE 1: PEOPLE DATA LABS ────────────────────────────────
+    async function fetchPDLContacts(company, role) {
+      if (!cfPDLKey) return [];
+      const titleKeywords = 'recruiter OR "hiring manager" OR "engineering manager" OR "product manager" OR "talent acquisition" OR "team lead" OR "hr manager" OR "people operations"';
+      const url = `https://api.peopledatalabs.com/v5/person/search`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': cfPDLKey },
+        body: JSON.stringify({
+          query: {
+            bool: {
+              must: [
+                { match: { job_company_name: company } },
+                {
+                  bool: {
+                    should: [
+                      { match: { job_title: 'recruiter' } },
+                      { match: { job_title: 'hiring manager' } },
+                      { match: { job_title: 'engineering manager' } },
+                      { match: { job_title: 'product manager' } },
+                      { match: { job_title: 'talent acquisition' } },
+                      { match: { job_title: 'team lead' } },
+                      { match: { job_title: 'hr' } },
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          size: 5, pretty: true
+        })
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.data || []).map(p => ({
+        name: [p.first_name, p.last_name].filter(Boolean).join(' '),
+        title: p.job_title || '',
+        linkedin: p.linkedin_url ? `https://linkedin.com/in/${p.linkedin_url}` : '',
+        email: p.work_email || '',
+        source: 'PDL'
+      }));
+    }
+
+    // ── SOURCE 2: HUNTER.IO ───────────────────────────────────────
+    async function fetchHunterContacts(domain, company) {
+      if (!cfHunterKey || !domain) return [];
+      const url = `https://api.hunter.io/v2/domain-search?domain=${encodeURIComponent(domain)}&limit=10&api_key=${cfHunterKey}`;
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const emails = data.data?.emails || [];
+      // Filter to hiring-relevant roles
+      return emails
+        .filter(e => {
+          const pos = (e.position || '').toLowerCase();
+          return HIRING_TITLES.some(t => pos.includes(t)) || RECRUITER_TITLES.some(t => pos.includes(t)) || HR_TITLES.some(t => pos.includes(t));
+        })
+        .slice(0, 4)
+        .map(e => ({
+          name: [e.first_name, e.last_name].filter(Boolean).join(' '),
+          title: e.position || '',
+          email: e.value || '',
+          linkedin: e.linkedin || '',
+          source: 'Hunter'
+        }));
+    }
+
+    // ── SOURCE 3: CLAUDE WEB SEARCH ───────────────────────────────
+    async function fetchClaudeContacts(company, role) {
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) return [];
+      const prompt = `Search LinkedIn for people who work at "${company}" in roles relevant to hiring for "${role}". 
+Find up to 4 real people with these types of roles: Recruiter, Talent Acquisition, Hiring Manager, Engineering Manager, Team Lead, HR/People Operations.
+
+Search for: site:linkedin.com/in "${company}" recruiter OR "hiring manager" OR "talent acquisition" OR "engineering manager"
+
+Return ONLY valid JSON array, no markdown:
+[{"name":"Full Name","title":"Their Title","linkedin":"https://linkedin.com/in/their-profile","source":"LinkedIn"}]
+
+If you find fewer than 4, that is fine. Only include people you actually find, no hallucinations.`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 600,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+      try {
+        const cleaned = text.replace(/```json|```/g, '').trim();
+        const arr = JSON.parse(cleaned);
+        return Array.isArray(arr) ? arr.map(c => ({ ...c, source: 'LinkedIn' })) : [];
+      } catch (e) { return []; }
+    }
+
+    // ── MESSAGE MODAL ─────────────────────────────────────────────
+    let cfCurrentMsgType = 'recruiter';
+
+    function openCFModal(ctxStr) {
+      const ctx = JSON.parse(ctxStr);
+      cfMsgContext = ctx;
+      cfCurrentMsgType = ctx.msgType || 'recruiter';
+      document.getElementById('cf-msg-title').textContent = `MESSAGE — ${(ctx.name || '').toUpperCase()}`;
+      document.getElementById('cf-msg-sub').textContent = `${ctx.title || ''} at ${ctx.company || ''}`;
+      document.getElementById('cf-msg-output').classList.remove('on');
+      document.getElementById('cf-msg-output').textContent = '';
+      document.getElementById('cf-copy-btn').style.display = 'none';
+      // Set active type button
+      document.getElementById('cfmt-recruiter').classList.toggle('on', cfCurrentMsgType === 'recruiter');
+      document.getElementById('cfmt-hiringmgr').classList.toggle('on', cfCurrentMsgType === 'hiringmgr');
+      document.getElementById('cf-msg-modal').classList.add('on');
+    }
+
+    function closeCFModal() { document.getElementById('cf-msg-modal').classList.remove('on'); }
+
+    function setCFMsgType(type, el) {
+      cfCurrentMsgType = type;
+      document.querySelectorAll('.cf-msg-type-btn').forEach(b => b.classList.remove('on'));
+      el.classList.add('on');
+    }
+
+    async function generateCFMessage() {
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude API key in AI Tools first'); return; }
+      const btn = document.getElementById('cf-gen-btn');
+      btn.disabled = true; btn.innerHTML = '<div class="ai-spinner-inline"></div> Generating…';
+      const out = document.getElementById('cf-msg-output');
+      out.classList.add('on'); out.innerHTML = '<span class="ai-streaming-cursor"></span>';
+      const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+      const li = liProfile || S.liProfile;
+      const ctx = cfMsgContext;
+      const prompt = buildPrompt(cfCurrentMsgType, ctx.company, ctx.role,
+        `This message is specifically for ${ctx.name}, ${ctx.title} at ${ctx.company}.${ctx.liUrl ? ` Their LinkedIn: ${ctx.liUrl}` : ''}`,
+        profile);
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+          body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 400, stream: true, messages: [{ role: 'user', content: prompt }] })
+        });
+        if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'err'); }
+        let full = '';
+        const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+        while (true) { const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true }); const lines = buf.split('\n'); buf = lines.pop() || ''; for (const line of lines) { if (!line.startsWith('data: ')) continue; try { const p = JSON.parse(line.slice(6)); if (p.type === 'content_block_delta' && p.delta?.text) { full += p.delta.text; out.innerHTML = full.replace(/\n/g, '<br>') + '<span class="ai-streaming-cursor"></span>'; } } catch (e) { } } }
+        out.innerHTML = full.replace(/\n/g, '<br>');
+        document.getElementById('cf-copy-btn').style.display = 'inline-flex';
+      } catch (e) {
+        out.innerHTML = `<span style="color:var(--accent2)">Error: ${e.message}</span>`;
+      }
+      btn.disabled = false; btn.innerHTML = '✨ Re-Generate';
+    }
+
+    function copyCFMessage() {
+      const text = document.getElementById('cf-msg-output').innerText;
+      navigator.clipboard.writeText(text).then(() => toast('Copied ✓'));
     }
 
     // ─── RESEARCH CHATBOT ────────────────────────────────────────
@@ -5269,6 +5960,27 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
     }
     boot();
   </script>
+
+  <!-- CONTACT MESSAGE MODAL -->
+  <div class="cf-msg-modal" id="cf-msg-modal" onclick="if(event.target===this)closeCFModal()">
+    <div class="cf-msg-box">
+      <div class="cf-msg-title" id="cf-msg-title">GENERATE MESSAGE</div>
+      <div class="cf-msg-sub" id="cf-msg-sub">Generating outreach for this contact…</div>
+      <div class="cf-msg-type-row">
+        <button class="cf-msg-type-btn on" id="cfmt-recruiter" onclick="setCFMsgType('recruiter',this)">💬
+          Recruiter</button>
+        <button class="cf-msg-type-btn" id="cfmt-hiringmgr" onclick="setCFMsgType('hiringmgr',this)">🎯 Hiring
+          Manager</button>
+      </div>
+      <button class="btn-a" id="cf-gen-btn" onclick="generateCFMessage()" style="width:100%;margin-bottom:12px">✨
+        Generate Message</button>
+      <div class="cf-msg-output" id="cf-msg-output"></div>
+      <div class="cf-msg-actions">
+        <button class="btn-cancel" onclick="closeCFModal()">Close</button>
+        <button class="btn-s" onclick="copyCFMessage()" id="cf-copy-btn" style="display:none">📋 Copy</button>
+      </div>
+    </div>
+  </div>
 
   <!-- RESEARCH CHATBOT -->
   <div class="chat-bubble" id="chat-bubble" onclick="toggleChat()" title="Research Assistant">
