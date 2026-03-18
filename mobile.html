@@ -14,7 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docx@9.5.3/build/index.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     :root {
       --bg: #0a0a0a;
@@ -5102,42 +5102,37 @@ Respond ONLY with valid JSON:
       const job = S.jobs.find(j => j.id === jobId);
       const tr = job?.aiPkg?.tailored_resume;
       if (!tr) { toast('No tailored resume yet'); return; }
-      const { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } = docx;
-      const NAME = (t) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: t, bold: true, size: 32, font: 'Calibri' })] });
-      const CONTACT = (t) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [new TextRun({ text: t, size: 18, font: 'Calibri', color: '444444' })] });
-      const SECTION = (t) => new Paragraph({ spacing: { before: 200, after: 60 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000' } }, children: [new TextRun({ text: t.toUpperCase(), bold: true, size: 22, font: 'Calibri' })] });
-      const BODY = (t) => new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: t, size: 20, font: 'Calibri' })] });
-      const BULLET = (t) => new Paragraph({ spacing: { after: 40 }, indent: { left: 360 }, children: [new TextRun({ text: '• ' + t, size: 20, font: 'Calibri' })] });
-      const ROLE = (t) => new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: t, bold: true, size: 20, font: 'Calibri' })] });
-      function parse(text) {
-        return (text || '').split('\n').filter(l => l.trim()).map(l => {
-          const t = l.trim();
-          if (t.startsWith('•')) return BULLET(t.slice(1).trim());
-          if (t.includes('|')) return ROLE(t);
-          return BODY(t);
-        });
+      const esc = (s) => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      function para(text, opts = {}) {
+        const { bold = false, size = 20, center = false, indent = 0, color = '000000', border = false, spaceBefore = 0, spaceAfter = 60, italics = false } = opts;
+        const pPr = `<w:pPr>${center ? '<w:jc w:val="center"/>' : ''}${indent ? `<w:ind w:left="${indent}"/>` : ''}${border ? '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="000000"/></w:pBdr>' : ''}${spaceBefore || spaceAfter ? `<w:spacing w:before="${spaceBefore}" w:after="${spaceAfter}"/>` : ''}${bold ? '<w:rPr><w:b/></w:rPr>' : ''}</w:pPr>`;
+        const rPr = `<w:rPr>${bold ? '<w:b/>' : ''}${size !== 20 ? `<w:sz w:val="${size}"/>` : ''}${color !== '000000' ? `<w:color w:val="${color}"/>` : ''}${italics ? '<w:i/>' : ''}</w:rPr>`;
+        return `<w:p>${pPr}<w:r>${rPr}<w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
       }
-      const document = new Document({
-        styles: { default: { document: { run: { font: 'Calibri', size: 20 } } } },
-        sections: [{
-          properties: { page: { margin: { top: 720, right: 900, bottom: 720, left: 900 } } }, children: [
-            NAME(tr.name || ''), CONTACT(tr.contact || ''),
-            SECTION('Summary'), BODY(tr.summary || ''),
-            SECTION('Experience'), ...parse(tr.experience),
-            SECTION('Skills'), BODY(tr.skills || ''),
-            SECTION('Projects'), ...parse(tr.projects || ''),
-            ...(tr.education ? [SECTION('Education'), ...parse(tr.education)] : []),
-            ...(tr.certifications ? [SECTION('Certifications'), BODY(tr.certifications)] : []),
-            new Paragraph({ spacing: { before: 200 }, children: [new TextRun({ text: `ATS Keywords: ${tr.ats_keywords || ''}`, size: 16, color: '888888', italics: true, font: 'Calibri' })] })
-          ]
-        }]
-      });
-      Packer.toBlob(document).then(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `${(tr.name || 'Resume').replace(/\s+/g, '-')}_${(job?.co || '').replace(/\s+/g, '-')}.docx`;
-        a.click(); URL.revokeObjectURL(url); toast('DOCX downloaded ✓');
-      });
+      function section(t) { return para(t.toUpperCase(), { bold: true, size: 22, border: true, spaceBefore: 200, spaceAfter: 60 }); }
+      function parseContent(text) { return (text || '').split('\n').filter(l => l.trim()).map(l => { const t = l.trim(); if (t.startsWith('•')) return para('• ' + t.slice(1).trim(), { indent: 360, spaceAfter: 40 }); if (t.includes('|')) return para(t, { bold: true, spaceAfter: 40 }); return para(t, { spaceAfter: 40 }); }).join(''); }
+      const body = [
+        para(tr.name || '', { bold: true, size: 32, center: true, spaceAfter: 40 }),
+        para((tr.contact || '').replace(/\|/g, ' · '), { size: 18, center: true, color: '444444', spaceAfter: 160 }),
+        section('Summary'), para(tr.summary || '', { spaceAfter: 80 }),
+        section('Experience'), parseContent(tr.experience),
+        section('Skills'), para(tr.skills || '', { spaceAfter: 80 }),
+        section('Projects'), parseContent(tr.projects),
+        ...(tr.education ? [section('Education'), parseContent(tr.education)] : []),
+        ...(tr.certifications ? [section('Certifications'), para(tr.certifications)] : []),
+        para(`ATS Keywords: ${tr.ats_keywords || ''}`, { size: 16, color: '888888', italics: true, spaceBefore: 200 }),
+      ].join('');
+      const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900"/></w:sectPr></w:body></w:document>`;
+      const files = { '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`, '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`, 'word/document.xml': xml, 'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>` };
+      if (typeof JSZip !== 'undefined') {
+        const zip = new JSZip(); Object.entries(files).forEach(([p, c]) => zip.file(p, c));
+        zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }).then(blob => {
+          const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${(tr.name || 'Resume').replace(/\s+/g, '-')}_${(job?.co || '').replace(/\s+/g, '-')}.docx`; a.click(); URL.revokeObjectURL(url); toast('DOCX downloaded ✓');
+        });
+      } else {
+        const htmlDoc = `<html><head><meta charset="UTF-8"><style>body{font-family:Calibri;font-size:11pt;margin:1in;}h1{text-align:center;font-size:18pt;}h2{font-size:11pt;text-transform:uppercase;border-bottom:1.5px solid #000;}.contact{text-align:center;font-size:10pt;color:#444;}.role{font-weight:700;}.bul{margin-left:16px;}.bul::before{content:"• ";}</style></head><body><h1>${esc(tr.name || '')}</h1><div class="contact">${esc((tr.contact || '').replace(/\|/g, ' · '))}</div><h2>Summary</h2><p>${esc(tr.summary || '')}</p><h2>Experience</h2>${(tr.experience || '').split('\n').map(l => { const t = l.trim(); if (!t) return ''; if (t.startsWith('•')) return `<div class="bul">${esc(t.slice(1).trim())}</div>`; if (t.includes('|')) return `<div class="role">${esc(t)}</div>`; return `<p>${esc(t)}</p>`; }).join('')}<h2>Skills</h2><p>${esc(tr.skills || '')}</p></body></html>`;
+        const blob = new Blob([htmlDoc], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${(tr.name || 'Resume').replace(/\s+/g, '-')}_${(job?.co || '').replace(/\s+/g, '-')}.doc`; a.click(); URL.revokeObjectURL(url); toast('Downloaded as .doc ✓');
+      }
     }
 
     function mDlResumePDF(jobId) {
