@@ -3018,7 +3018,153 @@
       background: rgba(71, 196, 255, 0.1);
     }
 
-    /* ── RESEARCH CHATBOT ── */
+    /* ── MOTIVATIONAL BANNER ── */
+    .motiv-banner {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      padding: 0 24px;
+      pointer-events: none;
+      transition: all 0.4s;
+    }
+
+    .motiv-inner {
+      background: linear-gradient(135deg, rgba(232, 255, 71, 0.08), rgba(196, 71, 255, 0.06));
+      border: 1px solid rgba(232, 255, 71, 0.2);
+      border-radius: 0 0 10px 10px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .motiv-text {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .motiv-text strong {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .motiv-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      pointer-events: all;
+      padding: 2px 6px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .motiv-close:hover {
+      color: var(--text);
+    }
+
+    .motiv-banner.hidden {
+      transform: translateY(-120%);
+      opacity: 0;
+    }
+
+    /* improved logout */
+    .user-menu-wrap {
+      position: relative;
+    }
+
+    .user-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    .user-email {
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 180px;
+      display: none;
+      z-index: 200;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .user-dropdown.on {
+      display: block;
+    }
+
+    .ud-email {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 6px;
+      word-break: break-all;
+    }
+
+    .ud-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.15s;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .ud-btn:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .ud-btn.danger {
+      color: var(--accent2);
+    }
+
+    .ud-btn.danger:hover {
+      background: rgba(255, 71, 71, 0.08);
+    }
+
     .chat-bubble {
       position: fixed;
       bottom: 28px;
@@ -3689,6 +3835,335 @@
       justify-content: flex-end;
     }
 
+    /* ── AI PACKAGE ── */
+    .pkg-progress {
+      background: rgba(232, 255, 71, 0.06);
+      border: 1px solid rgba(232, 255, 71, 0.2);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .pkg-progress.on {
+      display: block;
+    }
+
+    .pkg-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pkg-spin-sm {
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(232, 255, 71, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .pkg-status {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+    }
+
+    .pkg-steps {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pkg-step {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      transition: all .3s;
+    }
+
+    .pkg-step.active {
+      background: rgba(232, 255, 71, .1);
+      color: var(--accent);
+      border-color: rgba(232, 255, 71, .3);
+    }
+
+    .pkg-step.done {
+      background: rgba(71, 255, 179, .08);
+      color: #47ffb3;
+      border-color: rgba(71, 255, 179, .2);
+    }
+
+    .pkg-step.done::before {
+      content: '✓ ';
+    }
+
+    /* match badge on pipeline card */
+    .card-match-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    .card-match-badge.high {
+      background: rgba(71, 255, 179, .12);
+      color: #47ffb3;
+    }
+
+    .card-match-badge.mid {
+      background: rgba(255, 159, 71, .12);
+      color: var(--week3);
+    }
+
+    .card-match-badge.low {
+      background: rgba(255, 71, 71, .12);
+      color: var(--accent2);
+    }
+
+    .card-match-badge.pending {
+      background: rgba(232, 255, 71, .08);
+      color: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* AI Package drawer tab */
+    .pkg-tab-content {
+      padding: 2px 0;
+    }
+
+    .pkg-piece {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .pkg-piece-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pkg-piece-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pkg-piece-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pkg-copy-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      transition: all .15s;
+    }
+
+    .pkg-copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pkg-regen-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      transition: all .15s;
+    }
+
+    .pkg-regen-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    .pkg-piece-body {
+      padding: 14px;
+      display: none;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .pkg-piece-body.on {
+      display: block;
+    }
+
+    .pkg-match-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .pkg-match-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .pkg-match-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .pkg-match-score.high {
+      color: #47ffb3;
+    }
+
+    .pkg-match-score.mid {
+      color: var(--week3);
+    }
+
+    .pkg-match-score.low {
+      color: var(--accent2);
+    }
+
+    .pkg-match-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pkg-match-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .pkg-match-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .6s;
+    }
+
+    .pkg-match-fill.high {
+      background: #47ffb3;
+    }
+
+    .pkg-match-fill.mid {
+      background: var(--week3);
+    }
+
+    .pkg-match-fill.low {
+      background: var(--accent2);
+    }
+
+    .pkg-match-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .pkg-match-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .pkg-match-section-title {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .pkg-match-section.sk .pkg-match-section-title {
+      color: #47ffb3;
+    }
+
+    .pkg-match-section.gp .pkg-match-section-title {
+      color: var(--accent2);
+    }
+
+    .pkg-match-section.tp .pkg-match-section-title {
+      color: var(--accent3);
+    }
+
+    .pkg-match-section-body {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .pkg-generating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .pkg-empty-state {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .pkg-empty-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: .4;
+    }
+
+    .pkg-gen-all-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: opacity .15s;
+    }
+
+    .pkg-gen-all-btn:hover {
+      opacity: .85;
+    }
+
     /* ── MISC ── */
     ::-webkit-scrollbar {
       width: 5px;
@@ -3835,14 +4310,30 @@
           <div class="sync-dot" id="sync-dot"></div>
           <div class="sync-label" id="sync-label">—</div>
         </div>
-        <div class="user-btn" onclick="signOut()">
-          <span class="user-email" id="user-email"></span>
-          <span style="opacity:0.5">↪</span>
+        <div class="user-menu-wrap" id="user-menu-wrap">
+          <div class="user-btn" onclick="toggleUserDropdown()">
+            <span>👤</span>
+            <span class="user-email" id="user-email"></span>
+            <span style="opacity:0.4;font-size:10px">▾</span>
+          </div>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="ud-email" id="ud-email-full"></div>
+            <button class="ud-btn" onclick="toggleUserDropdown();switchView('aitools')">✨ AI Tools & Profile</button>
+            <button class="ud-btn danger" onclick="signOut()">↪ Sign Out</button>
+          </div>
         </div>
       </div>
     </header>
 
     <div class="layout">
+      <!-- MOTIVATIONAL BANNER -->
+      <div class="motiv-banner hidden" id="motiv-banner"
+        style="left:0;right:0;top:60px;position:fixed;z-index:90;padding:0;">
+        <div class="motiv-inner">
+          <div class="motiv-text" id="motiv-text"></div>
+          <button class="motiv-close" onclick="closeBanner()">✕</button>
+        </div>
+      </div>
       <nav class="sidebar">
         <div class="nav-label">Overview</div>
         <div style="padding:0 8px 8px">
@@ -4249,6 +4740,7 @@
         <div class="dtab" onclick="dTab('contacts',this)">Contacts</div>
         <div class="dtab" onclick="dTab('interviews',this)">Interview Log</div>
         <div class="dtab" onclick="dTab('ai',this)" style="color:var(--week4)">✨ AI Generate</div>
+        <div class="dtab" onclick="dTab('pkg',this)" style="color:var(--accent)">📦 AI Package</div>
       </div>
       <div class="dtp on" id="dtp-details">
         <div class="frow">
@@ -4285,6 +4777,14 @@
         </div>
         <div class="fg"><label class="fl">Notes</label><textarea class="fta" id="f-notes"
             placeholder="Hiring manager, next steps, salary details..."></textarea></div>
+        <div class="fg"><label class="fl">Job Description <span style="color:var(--text-muted);font-weight:400">(paste
+              to auto-generate AI Package on save)</span></label><textarea class="fta" id="f-jd" style="min-height:80px"
+            placeholder="Paste full job description — auto-generates resume bullets, cover letter, messages…"></textarea>
+        </div>
+      </div>
+      <!-- AI PACKAGE TAB -->
+      <div class="dtp" id="dtp-pkg">
+        <div id="pkg-tab-content" class="pkg-tab-content"></div>
       </div>
       <div class="dtp" id="dtp-contacts">
         <div class="cnt-list" id="cnt-list"></div>
@@ -4503,12 +5003,16 @@
       const strip = st === 'ov' ? '<div class="ov-strip"></div>' : st === 'ds' ? '<div class="ds-strip"></div>' : '';
       const fuTag = st ? `<span class="jtag ${st}">${st === 'ov' ? '⚠ Overdue' : '⏰ Due soon'}</span>` : '';
       const liTag = j.li ? `<span class="jtag li" onclick="event.stopPropagation();window.open('${j.li}','_blank')">in ↗</span>` : '';
-      return `<div class="jc" onclick="openDrawer('${j.id}')">${strip}<div class="jc-co">${j.co}</div><div class="jc-role">${j.role}</div><div class="jc-tags">${j.loc ? `<span class="jtag">${j.loc}</span>` : ''}${fuTag}${liTag}</div><div class="jc-foot"><div class="jc-date">${ago(j.dateApp || j.ts)}</div><div class="jc-acts"><button class="jc-btn" onclick="event.stopPropagation();openDrawer('${j.id}')">✎</button><button class="jc-btn del" onclick="event.stopPropagation();delJob('${j.id}')">✕</button></div></div></div>`;
+      let matchBadge = '';
+      if (j.aiPkg?.match) { const m = j.aiPkg.match; const cls = m.level || (m.score >= 70 ? 'high' : m.score >= 40 ? 'mid' : 'low'); matchBadge = `<span class="card-match-badge ${cls}">${m.score}%</span>`; }
+      else if (j.aiPkg?.status === 'generating') { matchBadge = `<span class="card-match-badge pending">⚡ Generating…</span>`; }
+      const pkgProg = `<div class="pkg-progress"><div class="pkg-progress-row"><div class="pkg-spin-sm"></div><div class="pkg-status"></div></div><div class="pkg-steps"></div></div>`;
+      return `<div class="jc" data-job-id="${j.id}" onclick="openDrawer('${j.id}')">${strip}<div class="jc-co">${j.co}</div><div class="jc-role">${j.role}</div><div class="jc-tags">${j.loc ? `<span class="jtag">${j.loc}</span>` : ''} ${matchBadge} ${fuTag}${liTag}</div>${pkgProg}<div class="jc-foot"><div class="jc-date">${ago(j.dateApp || j.ts)}</div><div class="jc-acts"><button class="jc-btn" onclick="event.stopPropagation();openDrawer('${j.id}')">✎</button><button class="jc-btn del" onclick="event.stopPropagation();delJob('${j.id}')">✕</button></div></div></div>`;
     }
     function renderList() {
       const b = document.getElementById('list-board');
       if (!S.jobs.length) { b.innerHTML = '<div class="empty"><div class="empty-i">○</div>No applications yet</div>'; return; }
-      b.innerHTML = `<table class="ltable"><thead><tr><th>Company</th><th>Role</th><th>Stage</th><th>Applied</th><th>Follow-Up</th><th>LinkedIn</th><th></th></tr></thead><tbody>${S.jobs.map(j => { const st = alertSt(j.fu); return `<tr><td><strong>${j.co}</strong></td><td>${j.role}</td><td><span class="spill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span></td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${fmtD(j.dateApp)}</td><td class="fc ${st || ''}">${j.fu ? fmtD(j.fu) + (st === 'ov' ? ' ⚠' : st === 'ds' ? ' ⏰' : '') : '—'}</td><td>${j.li ? `<a href="${j.li}" target="_blank" class="li-lnk">LinkedIn ↗</a>` : '—'}</td><td><button class="jc-btn" onclick="openDrawer('${j.id}')">✎</button> <button class="jc-btn del" onclick="delJob('${j.id}')">✕</button></td></tr>`; }).join('')}</tbody></table>`;
+      b.innerHTML = `<table class="ltable"><thead><tr><th>Company</th><th>Role</th><th>Stage</th><th>Applied</th><th>Follow-Up</th><th>LinkedIn</th><th></th></tr></thead><tbody>${S.jobs.map(j => { const st = alertSt(j.fu); return `<tr><td><strong>${j.co}</strong>${j.aiPkg?.match ? `<span class="card-match-badge ${j.aiPkg.match.score >= 70 ? 'high' : j.aiPkg.match.score >= 40 ? 'mid' : 'low'}" style="margin-left:6px">${j.aiPkg.match.score}%</span>` : ''}</td><td>${j.role}</td><td><span class="spill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span></td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${fmtD(j.dateApp)}</td><td class="fc ${st || ''}">${j.fu ? fmtD(j.fu) + (st === 'ov' ? ' ⚠' : st === 'ds' ? ' ⏰' : '') : '—'}</td><td>${j.li ? `<a href="${j.li}" target="_blank" class="li-lnk">LinkedIn ↗</a>` : '—'}</td><td><button class="jc-btn" onclick="openDrawer('${j.id}')">✎</button> <button class="jc-btn del" onclick="delJob('${j.id}')">✕</button></td></tr>`; }).join('')}</tbody></table>`;
     }
     function setPV(v) { pvMode = v; document.getElementById('kanban-board').style.display = v === 'kanban' ? 'grid' : 'none'; document.getElementById('list-board').classList.toggle('on', v === 'list'); document.getElementById('vt-k').classList.toggle('on', v === 'kanban'); document.getElementById('vt-l').classList.toggle('on', v === 'list'); if (v === 'list') renderList(); }
 
@@ -4524,19 +5028,24 @@
       document.getElementById('f-date').value = j?.dateApp || tod(); document.getElementById('f-fu').value = j?.fu || '';
       document.getElementById('f-sal').value = j?.sal || ''; document.getElementById('f-jurl').value = j?.jurl || '';
       document.getElementById('f-li').value = j?.li || ''; document.getElementById('f-notes').value = j?.notes || '';
+      document.getElementById('f-jd').value = j?.jd || '';
       document.getElementById('i-date').value = tod();
       renderContacts(j); renderILog(j); dTab('details', document.querySelector('.dtab'));
       document.getElementById('d-ov').classList.add('on'); document.getElementById('drawer').classList.add('on');
     }
     function closeDrawer() { document.getElementById('d-ov').classList.remove('on'); document.getElementById('drawer').classList.remove('on'); activeJob = null; }
-    function dTab(t, el) { document.querySelectorAll('.dtab').forEach(x => x.classList.remove('on')); document.querySelectorAll('.dtp').forEach(x => x.classList.remove('on')); if (el && el.classList) el.classList.add('on'); else { const idx = ['details', 'contacts', 'interviews', 'ai'].indexOf(t); if (idx >= 0) document.querySelectorAll('.dtab')[idx].classList.add('on'); } document.getElementById('dtp-' + t).classList.add('on'); if (t === 'ai') initDrawerAITab(); }
+    function dTab(t, el) { document.querySelectorAll('.dtab').forEach(x => x.classList.remove('on')); document.querySelectorAll('.dtp').forEach(x => x.classList.remove('on')); if (el && el.classList) el.classList.add('on'); else { const idx = ['details', 'contacts', 'interviews', 'ai', 'pkg'].indexOf(t); if (idx >= 0) document.querySelectorAll('.dtab')[idx].classList.add('on'); } document.getElementById('dtp-' + t).classList.add('on'); if (t === 'ai') initDrawerAITab(); if (t === 'pkg') renderPkgTab(); }
     function saveDrawer() {
       const co = document.getElementById('f-co').value.trim(), role = document.getElementById('f-role').value.trim();
       if (!co || !role) { toast('Company & role required'); return; }
       const ex = activeJob ? S.jobs.find(j => j.id === activeJob) : null;
-      const job = { id: ex?.id || Date.now().toString(), co, role, stage: document.getElementById('f-stage').value, loc: document.getElementById('f-loc').value.trim(), dateApp: document.getElementById('f-date').value, fu: document.getElementById('f-fu').value, sal: document.getElementById('f-sal').value.trim(), jurl: document.getElementById('f-jurl').value.trim(), li: document.getElementById('f-li').value.trim(), notes: document.getElementById('f-notes').value.trim(), contacts: ex?.contacts || [], interviews: ex?.interviews || [], ts: ex?.ts || Date.now() };
+      const newJD = document.getElementById('f-jd').value.trim();
+      const job = { id: ex?.id || Date.now().toString(), co, role, stage: document.getElementById('f-stage').value, loc: document.getElementById('f-loc').value.trim(), dateApp: document.getElementById('f-date').value, fu: document.getElementById('f-fu').value, sal: document.getElementById('f-sal').value.trim(), jurl: document.getElementById('f-jurl').value.trim(), li: document.getElementById('f-li').value.trim(), notes: document.getElementById('f-notes').value.trim(), jd: newJD, contacts: ex?.contacts || [], interviews: ex?.interviews || [], aiPkg: ex?.aiPkg || null, ts: ex?.ts || Date.now() };
       if (ex) S.jobs = S.jobs.map(j => j.id === ex.id ? job : j); else S.jobs.push(job);
       save(); closeDrawer(); renderPipeline(); updateStats(); toast(ex ? 'Updated ✓' : 'Added ✓');
+      // Trigger auto-generation if JD provided and no existing package or JD changed
+      const shouldGenerate = newJD && (!ex?.aiPkg || (ex?.jd !== newJD));
+      if (shouldGenerate) autoGeneratePackage(job.id);
     }
     function goLI() { const u = document.getElementById('f-li').value.trim(); if (u) window.open(u, '_blank'); else toast('Enter a LinkedIn URL first'); }
 
@@ -5016,6 +5525,223 @@ Write only the message itself. No preamble.`
       navigator.clipboard.writeText(text).then(() => toast('Copied ✓'));
     }
 
+    // ─── AI PACKAGE ENGINE ───────────────────────────────────────
+    const PKG_STEPS = ['match', 'resume', 'cover', 'recruiter', 'hiringmgr'];
+    const PKG_LABELS = { match: 'Match Score', resume: 'Resume Bullets', cover: 'Cover Letter', recruiter: 'Recruiter Message', hiringmgr: 'Hiring Manager Message' };
+    const PKG_ICONS = { match: '🎯', resume: '📄', cover: '✉️', recruiter: '💬', hiringmgr: '🎯' };
+
+    async function autoGeneratePackage(jobId) {
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) return; // silently skip if no key
+      const job = S.jobs.find(j => j.id === jobId);
+      if (!job || !job.jd) return;
+
+      // Show progress indicator on kanban card
+      showPkgProgress(jobId, 'starting');
+
+      // Init package object
+      const pkg = { status: 'generating', match: null, resume: null, cover: null, recruiter: null, hiringmgr: null, generatedAt: Date.now() };
+
+      const li = liProfile || S.liProfile;
+      const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+
+      try {
+        // Step 1: Match Score
+        showPkgProgress(jobId, 'match');
+        const matchPrompt = `Score candidate-job match. Respond ONLY with valid JSON, no markdown:
+{"score":<0-100>,"level":"high|mid|low","matched_skills":"comma list max 5","gaps":"comma list max 4","tip":"one actionable sentence max 20 words"}
+
+CANDIDATE:
+${li ? `${li.name} | ${li.headline}\nWork: ${(li.work || '').slice(0, 800)}\nSkills: ${li.skills || ''}` : 'Not provided'}
+Role: ${profile.role || ''}, YOE: ${profile.yoe || ''}, Achievements: ${(profile.achievements || '').slice(0, 400)}
+
+JOB: ${job.co} | ${job.role}
+JD: ${job.jd.slice(0, 2000)}`;
+        const matchRes = await claudeCall(key, matchPrompt, 300, false);
+        pkg.match = JSON.parse(matchRes.replace(/```json|```/g, '').trim());
+        // Update job match score
+        const jobRef = S.jobs.find(j => j.id === jobId);
+        if (jobRef) { jobRef.matchScore = pkg.match.score; jobRef.aiPkg = pkg; save(); }
+        renderPipeline();
+
+        // Step 2–5: Generate all 4 documents sequentially
+        for (const tool of ['resume', 'cover', 'recruiter', 'hiringmgr']) {
+          showPkgProgress(jobId, tool);
+          const p = buildPrompt(tool, job.co, job.role, job.jd, profile);
+          pkg[tool] = await claudeCall(key, p, 800, false);
+          const j2 = S.jobs.find(j => j.id === jobId);
+          if (j2) { j2.aiPkg = { ...pkg }; save(); }
+        }
+
+        // Done
+        pkg.status = 'done';
+        const j3 = S.jobs.find(j => j.id === jobId);
+        if (j3) { j3.aiPkg = pkg; save(); }
+        showPkgProgress(jobId, 'done');
+        renderPipeline();
+        toast(`✓ AI Package ready for ${job.co}`);
+
+        // If drawer is open on this job, refresh the pkg tab
+        if (activeJob === jobId) renderPkgTab();
+
+      } catch (e) {
+        pkg.status = 'error';
+        const j4 = S.jobs.find(j => j.id === jobId);
+        if (j4) { j4.aiPkg = pkg; save(); }
+        hidePkgProgress(jobId);
+        console.error('AI Package error:', e);
+      }
+    }
+
+    async function claudeCall(key, prompt, maxTokens, stream) {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'API error'); }
+      const data = await res.json();
+      return data.content[0].text;
+    }
+
+    function showPkgProgress(jobId, step) {
+      // Show on kanban card
+      const cardEl = document.querySelector(`[data-job-id="${jobId}"] .pkg-progress`);
+      if (cardEl) {
+        cardEl.classList.add('on');
+        const statusEl = cardEl.querySelector('.pkg-status');
+        const stepsEl = cardEl.querySelector('.pkg-steps');
+        if (statusEl) statusEl.textContent = step === 'done' ? '✓ AI Package ready' : `Generating ${PKG_LABELS[step] || ''}…`;
+        if (stepsEl) {
+          stepsEl.innerHTML = PKG_STEPS.map(s => {
+            const idx = PKG_STEPS.indexOf(s);
+            const currentIdx = PKG_STEPS.indexOf(step);
+            const cls = step === 'done' ? 'done' : idx < currentIdx ? 'done' : idx === currentIdx ? 'active' : '';
+            return `<span class="pkg-step ${cls}">${PKG_LABELS[s]}</span>`;
+          }).join('');
+        }
+        if (step === 'done') setTimeout(() => hidePkgProgress(jobId), 3000);
+      }
+    }
+
+    function hidePkgProgress(jobId) {
+      const cardEl = document.querySelector(`[data-job-id="${jobId}"] .pkg-progress`);
+      if (cardEl) cardEl.classList.remove('on');
+    }
+
+    function renderPkgTab() {
+      const el = document.getElementById('pkg-tab-content');
+      if (!el) return;
+      const job = activeJob ? S.jobs.find(j => j.id === activeJob) : null;
+      if (!job) { el.innerHTML = '<div class="pkg-empty-state"><div class="pkg-empty-icon">📦</div>Open a job card to see its AI Package.</div>'; return; }
+
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      const pkg = job.aiPkg;
+
+      if (!pkg && !job.jd) {
+        el.innerHTML = `<div class="pkg-empty-state">
+      <div class="pkg-empty-icon">📦</div>
+      <div style="margin-bottom:8px">No AI Package yet.</div>
+      <div style="font-size:12px;color:var(--text-muted)">Paste the job description in the Details tab and save — everything generates automatically.</div>
+    </div>`;
+        return;
+      }
+
+      if (!pkg && job.jd) {
+        el.innerHTML = `<div class="pkg-empty-state">
+      <div class="pkg-empty-icon">⚡</div>
+      <div style="margin-bottom:8px">JD saved. Ready to generate.</div>
+      ${key ? `<button class="pkg-gen-all-btn" onclick="autoGeneratePackage('${job.id}')">⚡ Generate AI Package</button>` : '<div style="font-size:12px;color:var(--text-muted)">Add Claude API key in AI Tools tab first.</div>'}
+    </div>`;
+        return;
+      }
+
+      if (pkg?.status === 'generating') {
+        el.innerHTML = `<div class="pkg-generating"><div class="ai-spinner-inline"></div>Generating AI Package… check back in a moment.</div>`;
+        return;
+      }
+
+      // Render full package
+      let html = '';
+
+      // Match score card
+      if (pkg.match) {
+        const m = pkg.match;
+        const cls = m.level || (m.score >= 70 ? 'high' : m.score >= 40 ? 'mid' : 'low');
+        html += `<div class="pkg-match-card">
+      <div class="pkg-match-top">
+        <div class="pkg-match-score ${cls}">${m.score}%</div>
+        <div><div style="font-size:16px;font-weight:600;margin-bottom:4px">${cls === 'high' ? '✅ Strong fit' : cls === 'mid' ? '⚠️ Partial fit' : '❌ Weak fit'}</div><div class="pkg-match-label">${job.co} · ${job.role}</div></div>
+      </div>
+      <div class="pkg-match-track"><div class="pkg-match-fill ${cls}" style="width:${m.score}%"></div></div>
+      <div class="pkg-match-grid">
+        <div class="pkg-match-section sk"><div class="pkg-match-section-title">✅ You Have</div><div class="pkg-match-section-body">${m.matched_skills || '—'}</div></div>
+        <div class="pkg-match-section gp"><div class="pkg-match-section-title">⚠️ Gaps</div><div class="pkg-match-section-body">${m.gaps || 'None identified'}</div></div>
+        <div class="pkg-match-section tp"><div class="pkg-match-section-title">💡 Tip</div><div class="pkg-match-section-body">${m.tip || '—'}</div></div>
+      </div>
+    </div>`;
+      }
+
+      // Document pieces
+      for (const tool of ['resume', 'cover', 'recruiter', 'hiringmgr']) {
+        const content = pkg[tool];
+        const label = PKG_LABELS[tool];
+        const icon = PKG_ICONS[tool];
+        if (content) {
+          html += `<div class="pkg-piece">
+        <div class="pkg-piece-header" onclick="togglePkgPiece('${tool}')">
+          <div class="pkg-piece-title">${icon} ${label}</div>
+          <div class="pkg-piece-actions">
+            <button class="pkg-copy-btn" onclick="event.stopPropagation();copyPkg('${tool}','${job.id}')">📋 Copy</button>
+            <button class="pkg-regen-btn" onclick="event.stopPropagation();regenPkgPiece('${tool}','${job.id}')">↺ Regen</button>
+          </div>
+        </div>
+        <div class="pkg-piece-body on" id="pkg-body-${tool}">${content.replace(/\n/g, '<br>')}</div>
+      </div>`;
+        } else if (pkg.status !== 'done') {
+          html += `<div class="pkg-piece"><div class="pkg-piece-header"><div class="pkg-piece-title pkg-generating"><div class="ai-spinner-inline"></div> ${label}</div></div></div>`;
+        }
+      }
+
+      // Regenerate all button
+      html += `<div style="margin-top:8px;display:flex;gap:10px">
+    <button class="pkg-gen-all-btn" onclick="autoGeneratePackage('${job.id}')">⚡ Regenerate All</button>
+    <div style="font-size:11px;color:var(--text-muted);align-self:center;font-family:'DM Mono',monospace">Generated ${pkg.generatedAt ? timeAgo(new Date(pkg.generatedAt).toISOString()) : ''}</div>
+  </div>`;
+
+      el.innerHTML = html;
+    }
+
+    function togglePkgPiece(tool) {
+      document.getElementById(`pkg-body-${tool}`)?.classList.toggle('on');
+    }
+
+    function copyPkg(tool, jobId) {
+      const job = S.jobs.find(j => j.id === jobId);
+      const text = job?.aiPkg?.[tool] || '';
+      navigator.clipboard.writeText(text).then(() => toast(`${PKG_LABELS[tool]} copied ✓`));
+    }
+
+    async function regenPkgPiece(tool, jobId) {
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude API key first'); return; }
+      const job = S.jobs.find(j => j.id === jobId);
+      if (!job) return;
+      const bodyEl = document.getElementById(`pkg-body-${tool}`);
+      if (bodyEl) { bodyEl.innerHTML = '<div class="pkg-generating"><div class="ai-spinner-inline"></div>Regenerating…</div>'; bodyEl.classList.add('on'); }
+      try {
+        const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+        const content = await claudeCall(key, buildPrompt(tool, job.co, job.role, job.jd || '', profile), 800, false);
+        if (!job.aiPkg) job.aiPkg = { status: 'done' };
+        job.aiPkg[tool] = content;
+        save();
+        if (bodyEl) bodyEl.innerHTML = content.replace(/\n/g, '<br>');
+        toast(`${PKG_LABELS[tool]} regenerated ✓`);
+      } catch (e) {
+        if (bodyEl) bodyEl.innerHTML = `<span style="color:var(--accent2)">Error: ${e.message}</span>`;
+      }
+    }
+
     // ─── NAV ──────────────────────────────────────────────────────
     function switchView(v) { document.querySelectorAll('.view').forEach(x => x.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active')); document.getElementById('view-' + v).classList.add('active'); document.querySelector(`[data-view="${v}"]`)?.classList.add('active'); if (v === 'overview') { renderOvWeeks(); updateStats(); renderAlerts(); } if (v === 'pipeline') renderPipeline(); if (v === 'discover') initDiscovery(); if (v === 'aitools') initAITools(); }
     function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2000); }
@@ -5360,14 +6086,15 @@ Respond ONLY with valid JSON, no markdown:
         dateApp: new Date().toISOString().slice(0, 10), fu: getFUDate(5),
         sal: j.job_min_salary ? `$${Math.round(j.job_min_salary / 1000)}k–$${Math.round(j.job_max_salary / 1000)}k` : '',
         jurl: j.job_apply_link || j.job_url || '', li: '',
+        jd: (j.job_description || '').slice(0, 3000),
         notes: `Via JSearch · ${j.job_publisher || ''} · Easy Apply: ${isEasyApply(j) ? 'Yes' : 'No'}`,
-        // Store match score in notes if available
         matchScore: jdMatchCache[getJobId(j)]?.score || null,
-        contacts: [], interviews: [], ts: Date.now()
+        contacts: [], interviews: [], aiPkg: null, ts: Date.now()
       };
       S.jobs.push(job); save(); updateStats();
       renderJDResults();
-      toast(`✓ ${j.employer_name} added to pipeline!`);
+      toast(`✓ ${j.employer_name} added! Generating AI Package…`);
+      autoGeneratePackage(job.id);
     }
 
     function jdSkip(idx) {
@@ -5879,12 +6606,70 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       }
     }, 3000);
 
+    // ─── MOTIVATIONAL BANNER ──────────────────────────────────────
+    const MOTIV_MESSAGES = [
+      { text: 'The market is brutal. But you showing up today puts you ahead of everyone who didn\'t.', highlight: 'you showing up today' },
+      { text: '70–80% of jobs are never posted. Every outreach you send is access to the hidden market.', highlight: '70–80% of jobs' },
+      { text: 'The person who gets hired is the one who treats the job search as the job itself. You\'re doing that.', highlight: 'treats the job search as the job itself' },
+      { text: 'Apply within 48 hours of a posting going live. Speed is your competitive edge today.', highlight: 'Speed is your competitive edge' },
+      { text: 'One well-targeted application beats ten generic ones. Quality over quantity — always.', highlight: 'Quality over quantity' },
+      { text: 'Workers with AI fluency command salaries up to 56% higher. You\'re already building that edge.', highlight: '56% higher' },
+      { text: 'Rejection is data, not judgment. Adjust, don\'t quit. Every no gets you closer to yes.', highlight: 'Rejection is data, not judgment' },
+      { text: 'Send the message to the hiring manager. Most people won\'t. That\'s exactly why you should.', highlight: 'Most people won\'t' },
+      { text: 'Never mentally bank on one offer until you have a signed letter. Keep the pipeline full.', highlight: 'Keep the pipeline full' },
+      { text: 'Your next job is one conversation away. Message someone today who can open a door.', highlight: 'one conversation away' },
+      { text: '59% of job seekers who upskilled got interviews vs 49% who didn\'t. Small habits, big edge.', highlight: 'Small habits, big edge' },
+      { text: 'You\'re not just applying for jobs — you\'re building a system that compounds every day.', highlight: 'a system that compounds' },
+      { text: 'Follow up within 2 hours of every interview. Most candidates wait days. Don\'t be most candidates.', highlight: 'Most candidates wait days' },
+      { text: 'The best time to apply was 24 hours ago. The second best time is right now.', highlight: 'right now' },
+      { text: 'This is temporary. The discipline you\'re building right now will outlast this job search.', highlight: 'The discipline you\'re building' },
+    ];
+
+    function showMotivBanner() {
+      const seen = JSON.parse(localStorage.getItem('motiv-seen') || '[]');
+      const unseen = MOTIV_MESSAGES.filter((_, i) => !seen.includes(i));
+      const pool = unseen.length > 0 ? unseen : MOTIV_MESSAGES;
+      const allIdx = unseen.length > 0
+        ? MOTIV_MESSAGES.map((_, i) => i).filter(i => !seen.includes(i))
+        : MOTIV_MESSAGES.map((_, i) => i);
+      const idx = allIdx[Math.floor(Math.random() * allIdx.length)];
+      const msg = MOTIV_MESSAGES[idx];
+      // Bold the highlighted phrase
+      const html = msg.text.replace(msg.highlight, `<strong>${msg.highlight}</strong>`);
+      document.getElementById('motiv-text').innerHTML = html;
+      // Track seen
+      const newSeen = unseen.length > 0 ? [...seen, idx] : [idx];
+      localStorage.setItem('motiv-seen', JSON.stringify(newSeen));
+      // Animate in after short delay
+      const banner = document.getElementById('motiv-banner');
+      banner.classList.remove('hidden');
+      // Auto-dismiss after 8 seconds
+      setTimeout(closeBanner, 8000);
+    }
+
+    function closeBanner() {
+      document.getElementById('motiv-banner').classList.add('hidden');
+    }
+
+    // ─── USER DROPDOWN ─────────────────────────────────────────────
+    function toggleUserDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('on');
+    }
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+      const wrap = document.getElementById('user-menu-wrap');
+      if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('user-dropdown')?.classList.remove('on');
+      }
+    });
+
     // ─── BOOT ─────────────────────────────────────────────────────
     async function boot() {
       sb.auth.onAuthStateChange(async (event, session) => {
         if (session?.user) {
           currentUser = session.user;
           document.getElementById('user-email').textContent = currentUser.email;
+          document.getElementById('ud-email-full').textContent = currentUser.email;
           document.getElementById('loading-screen').style.display = 'none';
           document.getElementById('auth-screen').style.display = 'none';
           document.getElementById('app').style.display = 'block';
@@ -5892,6 +6677,8 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
           // Restore LinkedIn profile from synced state
           if (S.liProfile) { liProfile = S.liProfile; }
           renderChecklists(); renderEmergency(); renderSkills(); renderFunnel(); renderPipeline(); updateStats(); renderOvWeeks(); initDiscovery();
+          // Show motivational banner after short delay
+          setTimeout(showMotivBanner, 1200);
         } else {
           document.getElementById('loading-screen').style.display = 'none';
           document.getElementById('auth-screen').style.display = 'flex';
