@@ -6374,6 +6374,7 @@ JD: ${job.jd.slice(0, 2000)}`;
       const tr = job?.aiPkg?.tailored_resume;
       if (tr) downloadResumePDF(tr, jobId);
     }
+    function togglePkgPiece(tool) {
     document.getElementById(`pkg-body-${tool}`)?.classList.toggle('on');
 }
 
