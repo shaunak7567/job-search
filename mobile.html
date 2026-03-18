@@ -2783,6 +2783,410 @@
       background: var(--surface);
       flex-shrink: 0;
     }
+
+    /* ── MOTIVATIONAL BANNER MOBILE ── */
+    .m-motiv {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .m-motiv.on {
+      transform: translateY(0);
+    }
+
+    .m-motiv-inner {
+      background: linear-gradient(135deg, rgba(232, 255, 71, 0.12), rgba(196, 71, 255, 0.08));
+      border-bottom: 1px solid rgba(232, 255, 71, 0.2);
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .m-motiv-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .m-motiv-text {
+      flex: 1;
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .m-motiv-text strong {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .m-motiv-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0 4px;
+      line-height: 1;
+    }
+
+    /* improved user menu */
+    .um-signout {
+      color: var(--accent2);
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      padding-top: 8px;
+      width: 100%;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      padding: 10px;
+    }
+
+    /* ── AI PACKAGE MOBILE ── */
+    .m-pkg-progress {
+      background: rgba(232, 255, 71, .06);
+      border: 1px solid rgba(232, 255, 71, .2);
+      border-radius: 6px;
+      padding: 7px 10px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .m-pkg-progress.on {
+      display: block;
+    }
+
+    .m-pkg-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .m-pkg-spin {
+      width: 11px;
+      height: 11px;
+      border: 2px solid rgba(232, 255, 71, .2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .m-pkg-status {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+    }
+
+    .m-pkg-steps {
+      display: flex;
+      gap: 4px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+
+    .m-pkg-step {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      transition: all .3s;
+    }
+
+    .m-pkg-step.active {
+      background: rgba(232, 255, 71, .1);
+      color: var(--accent);
+      border-color: rgba(232, 255, 71, .3);
+    }
+
+    .m-pkg-step.done {
+      background: rgba(71, 255, 179, .08);
+      color: #47ffb3;
+      border-color: rgba(71, 255, 179, .2);
+    }
+
+    .m-card-match {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-left: 4px;
+    }
+
+    .m-card-match.high {
+      background: rgba(71, 255, 179, .12);
+      color: #47ffb3;
+    }
+
+    .m-card-match.mid {
+      background: rgba(255, 159, 71, .12);
+      color: var(--week3);
+    }
+
+    .m-card-match.low {
+      background: rgba(255, 71, 71, .12);
+      color: var(--accent2);
+    }
+
+    .m-card-match.pending {
+      background: rgba(232, 255, 71, .08);
+      color: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* pkg sheet */
+    .m-pkg-sheet {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 280;
+      display: none;
+      flex-direction: column;
+    }
+
+    .m-pkg-sheet.on {
+      display: flex;
+    }
+
+    .m-pkg-top {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .m-pkg-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+
+    .m-pkg-sub {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .m-pkg-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px;
+    }
+
+    .m-pkg-match-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .m-pkg-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .m-pkg-score.high {
+      color: #47ffb3;
+    }
+
+    .m-pkg-score.mid {
+      color: var(--week3);
+    }
+
+    .m-pkg-score.low {
+      color: var(--accent2);
+    }
+
+    .m-pkg-fit {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .m-pkg-bar {
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .m-pkg-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .m-pkg-fill.high {
+      background: #47ffb3;
+    }
+
+    .m-pkg-fill.mid {
+      background: var(--week3);
+    }
+
+    .m-pkg-fill.low {
+      background: var(--accent2);
+    }
+
+    .m-pkg-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .m-pkg-row {
+      background: var(--surface2);
+      border-radius: 7px;
+      padding: 10px 12px;
+    }
+
+    .m-pkg-row-title {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .m-pkg-row.sk .m-pkg-row-title {
+      color: #47ffb3;
+    }
+
+    .m-pkg-row.gp .m-pkg-row-title {
+      color: var(--accent2);
+    }
+
+    .m-pkg-row.tp .m-pkg-row-title {
+      color: var(--accent3);
+    }
+
+    .m-pkg-row-body {
+      font-size: 12px;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .m-pkg-piece {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .m-pkg-piece-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+
+    .m-pkg-piece-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+
+    .m-pkg-piece-acts {
+      display: flex;
+      gap: 6px;
+    }
+
+    .m-pkg-copy {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--dim);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-pkg-regen {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-pkg-piece-body {
+      padding: 12px 14px;
+      display: none;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+      border-top: 1px solid var(--border);
+    }
+
+    .m-pkg-piece-body.on {
+      display: block;
+    }
+
+    .m-pkg-empty {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .m-pkg-gen-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .m-pkg-footer {
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 
@@ -3143,12 +3547,39 @@
     <div class="sheet" id="job-sheet-inner"></div>
   </div>
 
+  <!-- MOTIVATIONAL BANNER -->
+  <div class="m-motiv" id="m-motiv">
+    <div class="m-motiv-inner">
+      <div class="m-motiv-icon">⚡</div>
+      <div class="m-motiv-text" id="m-motiv-text"></div>
+      <button class="m-motiv-close" onclick="mCloseBanner()">✕</button>
+    </div>
+  </div>
+
   <!-- USER MENU -->
   <div class="user-menu" id="user-menu">
     <div class="um-backdrop" onclick="toggleUserMenu()"></div>
     <div class="um-card">
       <div class="um-email" id="um-email"></div>
-      <button class="um-btn" onclick="doSignOut()">Sign Out ↪</button>
+      <button class="um-btn" onclick="toggleUserMenu();switchTab('ai')">✨ AI Tools & Profile</button>
+      <button class="um-btn" style="color:var(--accent2);margin-top:4px;border-color:rgba(255,71,71,0.2)"
+        onclick="doSignOut()">↪ Sign Out</button>
+    </div>
+  </div>
+
+  <!-- AI PACKAGE SHEET -->
+  <div class="m-pkg-sheet" id="m-pkg-sheet">
+    <div class="m-pkg-top">
+      <div>
+        <div class="m-pkg-title" id="m-pkg-title">AI PACKAGE</div>
+        <div class="m-pkg-sub" id="m-pkg-sub"></div>
+      </div>
+      <button class="m-chat-close" onclick="mClosePkg()">✕</button>
+    </div>
+    <div class="m-pkg-body" id="m-pkg-body"></div>
+    <div class="m-pkg-footer">
+      <button class="m-pkg-gen-btn" id="m-pkg-regen-all-btn" onclick="mRegenAllPkg()" style="display:none">⚡ Regenerate
+        All</button>
     </div>
   </div>
 
@@ -3355,7 +3786,11 @@
         const st = alertSt(j.fu);
         const strip = st === 'ov' ? '<div class="pipe-ov-strip"></div>' : st === 'ds' ? '<div class="pipe-ds-strip"></div>' : '';
         const fuTag = st ? `<span class="fu-tag ${st}">${st === 'ov' ? '⚠ Overdue' : '⏰ Soon'}</span>` : '';
-        return `<div class="pipe-card" onclick="openJobSheet('${j.id}')">${strip}<div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><div style="display:flex;gap:6px;align-items:center">${fuTag}<span class="pipe-card-meta">${j.loc || ''}</span></div></div></div>`;
+        let matchBadge = '';
+        if (j.aiPkg && j.aiPkg.match) { const m = j.aiPkg.match; const cls = m.level || (m.score >= 70 ? 'high' : m.score >= 40 ? 'mid' : 'low'); matchBadge = `<span class="m-card-match ${cls}">${m.score}%</span>`; }
+        else if (j.aiPkg && j.aiPkg.status === 'generating') { matchBadge = `<span class="m-card-match pending">⚡</span>`; }
+        const pkgProg = j.aiPkg && j.aiPkg.status === 'generating' ? `<div class="m-pkg-progress on" id="m-pkg-prog-${j.id}"><div class="m-pkg-progress-row"><div class="m-pkg-spin"></div><div class="m-pkg-status">Generating AI Package…</div></div></div>` : '';
+        return `<div class="pipe-card" data-job-id="${j.id}" onclick="openJobSheet('${j.id}')">${strip}<div class="pipe-card-co">${j.co}</div><div class="pipe-card-role">${j.role}</div><div class="pipe-card-row"><span class="stage-pill" style="background:${SC[j.stage]}22;color:${SC[j.stage]}">${SL[j.stage]}</span><div style="display:flex;gap:6px;align-items:center">${matchBadge}${fuTag}<span class="pipe-card-meta">${j.loc || ''}</span></div></div>${pkgProg}</div>`;
       }).join('');
     }
 
@@ -3435,8 +3870,10 @@
     ${j.notes ? `<div class="jd-sheet-field"><div class="jd-sf-label">Notes</div><div class="jd-sf-val">${j.notes}</div></div>` : ''}
     ${j.jurl ? `<div class="jd-sheet-field"><div class="jd-sf-label">Job Posting</div><a href="${j.jurl}" target="_blank" class="li-open-m">Open Posting ↗</a></div>` : ''}
     ${j.li ? `<div class="jd-sheet-field"><div class="jd-sf-label">LinkedIn</div><a href="${j.li}" target="_blank" class="li-open-m">Open LinkedIn ↗</a></div>` : ''}
+    ${j.aiPkg?.status === 'generating' ? `<div class="m-pkg-progress on" id="m-pkg-prog-${id}"><div class="m-pkg-progress-row"><div class="m-pkg-spin"></div><div class="m-pkg-status">Generating AI Package…</div></div><div class="m-pkg-steps"></div></div>` : ''}
     <div style="display:flex;gap:10px;margin-top:16px">
       <button class="sheet-cancel" style="flex:1" onclick="openEditSheet('${id}')">✎ Edit</button>
+      <button class="sheet-save" style="flex:1;background:var(--week4)" onclick="mOpenPkg('${id}')">📦 ${j.aiPkg?.status === 'done' ? 'AI Package ✓' : 'Generate Package'}</button>
       <button class="sheet-save" style="flex:1;background:var(--accent)" onclick="closeJobSheet()">Done</button>
     </div>
     <div class="jd-ai-section">
@@ -3626,8 +4063,10 @@
     function mApply(idx) {
       const f = mGetFiltered(), j = f[idx]; if (!j) return;
       const url = j.job_apply_link || j.job_url; if (url) window.open(url, '_blank');
-      const job = { id: Date.now().toString(), co: j.employer_name || 'Unknown', role: j.job_title || 'Role', stage: 'applied', loc: j.job_is_remote ? 'Remote' : (j.job_city || ''), dateApp: tod(), fu: getFU(5), sal: j.job_min_salary ? `$${Math.round(j.job_min_salary / 1000)}k–$${Math.round(j.job_max_salary / 1000)}k` : '', jurl: j.job_apply_link || j.job_url || '', li: '', notes: `Via JSearch · Easy Apply: ${mIsEasy(j) ? 'Yes' : 'No'}`, matchScore: mJdMatchCache[mGetJobId(j)]?.score || null, contacts: [], interviews: [], ts: Date.now() };
+      const job = { id: Date.now().toString(), co: j.employer_name || 'Unknown', role: j.job_title || 'Role', stage: 'applied', loc: j.job_is_remote ? 'Remote' : (j.job_city || ''), dateApp: tod(), fu: getFU(5), sal: j.job_min_salary ? `$${Math.round(j.job_min_salary / 1000)}k–$${Math.round(j.job_max_salary / 1000)}k` : '', jurl: j.job_apply_link || j.job_url || '', li: '', jd: (j.job_description || '').slice(0, 3000), notes: `Via JSearch · Easy Apply: ${mIsEasy(j) ? 'Yes' : 'No'}`, matchScore: mJdMatchCache[mGetJobId(j)]?.score || null, contacts: [], interviews: [], aiPkg: null, ts: Date.now() };
       S.jobs.push(job); save(); updateStats(); renderMResults();
+      toast(`✓ ${j.employer_name} added! Generating AI Package…`);
+      mAutoGeneratePkg(job.id);
     }
     function mSkip(idx) { const f = mGetFiltered(), j = f[idx]; if (!j) return; const gi = mJdResults.indexOf(j); if (gi > -1) mJdResults.splice(gi, 1); renderMResults(); }
     function mSaveSearch() { const q = document.getElementById('m-jq').value.trim(), loc = document.getElementById('m-jloc').value.trim(); if (!q) return; S.savedSearches = S.savedSearches || []; if (S.savedSearches.length >= 5) return; if (!S.savedSearches.find(s => s.q === q && s.loc === loc)) { S.savedSearches.push({ q, loc }); save(); renderMSaved(); } }
@@ -4051,6 +4490,186 @@
     }
     function mCopyCFMsg() { const t = document.getElementById('m-cf-msg-output').innerText; navigator.clipboard.writeText(t).then(() => toast('Copied ✓')); }
 
+    // ─── MOTIVATIONAL BANNER MOBILE ──────────────────────────────
+    const M_MOTIV = [
+      { text: 'The market is brutal. But you showing up today puts you ahead of everyone who didn\'t.', h: 'you showing up today' },
+      { text: '70–80% of jobs are never posted. Every outreach you send is access to the hidden market.', h: 'hidden market' },
+      { text: 'The person who gets hired treats the job search as the job itself. You\'re doing that.', h: 'treats the job search as the job itself' },
+      { text: 'Apply within 48 hours of a posting going live. Speed is your competitive edge today.', h: 'Speed is your competitive edge' },
+      { text: 'One well-targeted application beats ten generic ones. Quality over quantity — always.', h: 'Quality over quantity' },
+      { text: 'Rejection is data, not judgment. Adjust, don\'t quit. Every no gets you closer to yes.', h: 'Rejection is data' },
+      { text: 'Send the message to the hiring manager. Most people won\'t. That\'s exactly why you should.', h: 'Most people won\'t' },
+      { text: 'Your next job is one conversation away. Message someone today who can open a door.', h: 'one conversation away' },
+      { text: 'Follow up within 2 hours of every interview. Most candidates wait days. Don\'t be most candidates.', h: 'Don\'t be most candidates' },
+      { text: 'The best time to apply was 24 hours ago. The second best time is right now.', h: 'right now' },
+      { text: 'This is temporary. The discipline you\'re building right now will outlast this job search.', h: 'The discipline you\'re building' },
+      { text: 'Never bank on one offer until you have a signed letter. Keep 3–5 processes running always.', h: 'Keep 3–5 processes running' },
+    ];
+
+    function mShowBanner() {
+      const seen = JSON.parse(localStorage.getItem('motiv-seen') || '[]');
+      const avail = M_MOTIV.map((_, i) => i).filter(i => !seen.includes(i));
+      const pool = avail.length > 0 ? avail : M_MOTIV.map((_, i) => i);
+      const idx = pool[Math.floor(Math.random() * pool.length)];
+      const msg = M_MOTIV[idx];
+      document.getElementById('m-motiv-text').innerHTML = msg.text.replace(msg.h, `<strong>${msg.h}</strong>`);
+      localStorage.setItem('motiv-seen', JSON.stringify(avail.length > 0 ? [...seen, idx] : [idx]));
+      document.getElementById('m-motiv').classList.add('on');
+      setTimeout(mCloseBanner, 8000);
+    }
+    function mCloseBanner() { document.getElementById('m-motiv').classList.remove('on'); }
+
+    // ─── MOBILE AI PACKAGE ENGINE ────────────────────────────────
+    const M_PKG_STEPS = ['match', 'resume', 'cover', 'recruiter', 'hiringmgr'];
+    const M_PKG_LABELS = { match: 'Match Score', resume: 'Resume Bullets', cover: 'Cover Letter', recruiter: 'Recruiter Message', hiringmgr: 'HM Message' };
+    let mActivePkgJobId = null;
+
+    async function mAutoGeneratePkg(jobId) {
+      const key = localStorage.getItem('ai-anthropic-key');
+      if (!key) return;
+      const job = S.jobs.find(j => j.id === jobId);
+      if (!job || !job.jd) return;
+      mShowPkgProg(jobId, 'starting');
+      const pkg = { status: 'generating', match: null, resume: null, cover: null, recruiter: null, hiringmgr: null, generatedAt: Date.now() };
+      const li = mLIProfile || S.liProfile;
+      const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+      try {
+        // Match
+        mShowPkgProg(jobId, 'match');
+        const matchP = `Score candidate-job match. Respond ONLY with valid JSON:\n{"score":<0-100>,"level":"high|mid|low","matched_skills":"max 5","gaps":"max 4","tip":"max 20 words"}\n\nCANDIDATE:\n${li ? `${li.name}|${li.headline}\nWork:${(li.work || '').slice(0, 600)}\nSkills:${li.skills || ''}` : 'Not provided'}\nRole:${profile.role || ''},YOE:${profile.yoe || ''}\n\nJOB:${job.co}|${job.role}\nJD:${job.jd.slice(0, 1500)}`;
+        const matchRes = await mClaudeCall(key, matchP, 250);
+        pkg.match = JSON.parse(matchRes.replace(/```json|```/g, '').trim());
+        const j1 = S.jobs.find(j => j.id === jobId); if (j1) { j1.matchScore = pkg.match.score; j1.aiPkg = { ...pkg }; save(); }
+        renderPipeline();
+        // Documents
+        for (const tool of ['resume', 'cover', 'recruiter', 'hiringmgr']) {
+          mShowPkgProg(jobId, tool);
+          pkg[tool] = await mClaudeCall(key, mBuildPrompt(tool, job.co, job.role, job.jd, profile), 700);
+          const j2 = S.jobs.find(j => j.id === jobId); if (j2) { j2.aiPkg = { ...pkg }; save(); }
+        }
+        pkg.status = 'done';
+        const j3 = S.jobs.find(j => j.id === jobId); if (j3) { j3.aiPkg = pkg; save(); }
+        mShowPkgProg(jobId, 'done');
+        renderPipeline();
+        toast(`✓ AI Package ready for ${job.co}`);
+        if (mActivePkgJobId === jobId) mRenderPkg(jobId);
+      } catch (e) {
+        const j4 = S.jobs.find(j => j.id === jobId); if (j4) { j4.aiPkg = { status: 'error' }; save(); }
+        console.error('Pkg error:', e);
+      }
+    }
+
+    async function mClaudeCall(key, prompt, maxTokens) {
+      const res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] }) });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'API error'); }
+      const data = await res.json(); return data.content[0].text;
+    }
+
+    function mShowPkgProg(jobId, step) {
+      // Update pipeline card progress strip
+      const card = document.querySelector(`[data-job-id="${jobId}"] .m-pkg-progress`);
+      if (card) {
+        card.classList.add('on');
+        const statusEl = card.querySelector('.m-pkg-status');
+        const stepsEl = card.querySelector('.m-pkg-steps');
+        if (statusEl) statusEl.textContent = step === 'done' ? '✓ AI Package ready' : `Generating ${M_PKG_LABELS[step] || ''}…`;
+        if (stepsEl) { stepsEl.innerHTML = M_PKG_STEPS.map(s => { const idx = M_PKG_STEPS.indexOf(s); const cur = M_PKG_STEPS.indexOf(step); const cls = step === 'done' ? 'done' : idx < cur ? 'done' : idx === cur ? 'active' : ''; return `<span class="m-pkg-step ${cls}">${M_PKG_LABELS[s]}</span>`; }).join(''); }
+        if (step === 'done') setTimeout(() => { card.classList.remove('on'); }, 3000);
+      }
+    }
+
+    function mOpenPkg(jobId) {
+      mActivePkgJobId = jobId;
+      const job = S.jobs.find(j => j.id === jobId);
+      document.getElementById('m-pkg-title').textContent = job ? job.co.toUpperCase() : 'AI PACKAGE';
+      document.getElementById('m-pkg-sub').textContent = job ? job.role : '';
+      mRenderPkg(jobId);
+      document.getElementById('m-pkg-sheet').classList.add('on');
+      closeJobSheet();
+    }
+
+    function mClosePkg() { document.getElementById('m-pkg-sheet').classList.remove('on'); mActivePkgJobId = null; }
+
+    function mRenderPkg(jobId) {
+      const el = document.getElementById('m-pkg-body');
+      const btn = document.getElementById('m-pkg-regen-all-btn');
+      const job = S.jobs.find(j => j.id === jobId);
+      if (!job) { el.innerHTML = '<div class="m-pkg-empty">Job not found.</div>'; return; }
+      const key = localStorage.getItem('ai-anthropic-key');
+      const pkg = job.aiPkg;
+      if (!pkg && !job.jd) {
+        el.innerHTML = `<div class="m-pkg-empty">No AI Package yet.<br><br>Go back and paste the job description in the detail sheet — it auto-generates on apply.</div>`;
+        btn.style.display = 'none'; return;
+      }
+      if (!pkg && job.jd) {
+        el.innerHTML = `<div class="m-pkg-empty">JD saved.<br>${key ? `<button class="m-pkg-gen-btn" onclick="mAutoGeneratePkg('${jobId}')">⚡ Generate AI Package</button>` : 'Add Claude API key in ✨ AI tab first.'}</div>`;
+        btn.style.display = 'none'; return;
+      }
+      if (pkg.status === 'generating') {
+        el.innerHTML = '<div class="m-pkg-empty" style="color:var(--accent)">⚡ Generating… check back in a moment.</div>';
+        btn.style.display = 'none'; return;
+      }
+      let html = '';
+      // Match card
+      if (pkg.match) {
+        const m = pkg.match; const cls = m.level || (m.score >= 70 ? 'high' : m.score >= 40 ? 'mid' : 'low');
+        html += `<div class="m-pkg-match-card">
+      <div class="m-pkg-score ${cls}">${m.score}%</div>
+      <div class="m-pkg-fit">${cls === 'high' ? '✅ Strong fit' : cls === 'mid' ? '⚠️ Partial fit' : '❌ Weak fit'}</div>
+      <div class="m-pkg-bar"><div class="m-pkg-fill ${cls}" style="width:${m.score}%"></div></div>
+      <div class="m-pkg-rows">
+        <div class="m-pkg-row sk"><div class="m-pkg-row-title">✅ You Have</div><div class="m-pkg-row-body">${m.matched_skills || '—'}</div></div>
+        <div class="m-pkg-row gp"><div class="m-pkg-row-title">⚠️ Gaps</div><div class="m-pkg-row-body">${m.gaps || 'None'}</div></div>
+        <div class="m-pkg-row tp"><div class="m-pkg-row-title">💡 Tip</div><div class="m-pkg-row-body">${m.tip || '—'}</div></div>
+      </div>
+    </div>`;
+      }
+      // Document pieces
+      for (const tool of ['resume', 'cover', 'recruiter', 'hiringmgr']) {
+        const content = pkg[tool]; const label = M_PKG_LABELS[tool];
+        if (content) {
+          html += `<div class="m-pkg-piece">
+        <div class="m-pkg-piece-hd" onclick="mTogglePkgPiece('m-mpb-${tool}')">
+          <div class="m-pkg-piece-title">${label}</div>
+          <div class="m-pkg-piece-acts">
+            <button class="m-pkg-copy" onclick="event.stopPropagation();mCopyPkg('${tool}','${jobId}')">📋</button>
+            <button class="m-pkg-regen" onclick="event.stopPropagation();mRegenPiece('${tool}','${jobId}')">↺</button>
+          </div>
+        </div>
+        <div class="m-pkg-piece-body on" id="m-mpb-${tool}">${content.replace(/\n/g, '<br>')}</div>
+      </div>`;
+        }
+      }
+      el.innerHTML = html || '<div class="m-pkg-empty">Still generating…</div>';
+      btn.style.display = 'block';
+      btn.onclick = () => mAutoGeneratePkg(jobId);
+    }
+
+    function mTogglePkgPiece(id) { document.getElementById(id)?.classList.toggle('on'); }
+
+    function mCopyPkg(tool, jobId) {
+      const job = S.jobs.find(j => j.id === jobId);
+      const text = job?.aiPkg?.[tool] || '';
+      navigator.clipboard.writeText(text).then(() => toast(`${M_PKG_LABELS[tool]} copied ✓`));
+    }
+
+    async function mRegenPiece(tool, jobId) {
+      const key = localStorage.getItem('ai-anthropic-key'); if (!key) { toast('Add Claude key in ✨ AI tab'); return; }
+      const job = S.jobs.find(j => j.id === jobId); if (!job) return;
+      const bodyEl = document.getElementById(`m-mpb-${tool}`);
+      if (bodyEl) { bodyEl.innerHTML = '<div class="m-cf-loading"><div class="m-cf-spin"></div>Regenerating…</div>'; bodyEl.classList.add('on'); }
+      try {
+        const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+        const content = await mClaudeCall(key, mBuildPrompt(tool, job.co, job.role, job.jd || '', profile), 700);
+        if (!job.aiPkg) job.aiPkg = { status: 'done' };
+        job.aiPkg[tool] = content; save();
+        if (bodyEl) bodyEl.innerHTML = content.replace(/\n/g, '<br>');
+        toast(`${M_PKG_LABELS[tool]} regenerated ✓`);
+      } catch (e) { if (bodyEl) bodyEl.innerHTML = `<span style="color:var(--accent2)">${e.message}</span>`; }
+    }
+
+    function mRegenAllPkg() { if (mActivePkgJobId) mAutoGeneratePkg(mActivePkgJobId); }
+
     // ─── BOOT ─────────────────────────────────────────────────────
     async function boot() {
       sb.auth.onAuthStateChange(async (event, session) => {
@@ -4066,6 +4685,7 @@
           // Restore LinkedIn profile from synced state
           if (S.liProfile) { mLIProfile = S.liProfile; }
           renderHome();
+          setTimeout(mShowBanner, 1200);
         } else {
           document.getElementById('loading').style.display = 'none';
           document.getElementById('auth').style.display = 'flex';
