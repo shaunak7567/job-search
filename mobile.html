@@ -14,6 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@9.5.3/build/index.umd.js"></script>
   <style>
     :root {
       --bg: #0a0a0a;
@@ -3187,6 +3188,246 @@
       background: var(--surface);
       flex-shrink: 0;
     }
+
+    /* ── RESUME UPLOAD MOBILE ── */
+    .m-resume-strip {
+      background: rgba(232, 255, 71, .05);
+      border: 1px solid rgba(232, 255, 71, .2);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .m-resume-title {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .m-resume-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .m-resume-drop {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: border-color .2s;
+    }
+
+    .m-resume-drop:active {
+      border-color: var(--accent);
+    }
+
+    .m-resume-drop input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .m-resume-drop-icon {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .m-resume-drop-txt {
+      font-size: 12px;
+      color: var(--dim);
+    }
+
+    .m-resume-parsing {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(232, 255, 71, .06);
+      border-radius: 7px;
+      margin-top: 10px;
+    }
+
+    .m-resume-parsing.on {
+      display: flex;
+    }
+
+    .m-resume-spin {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(232, 255, 71, .2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .m-resume-parse-txt {
+      font-size: 12px;
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-resume-card {
+      background: rgba(232, 255, 71, .04);
+      border: 1px solid rgba(232, 255, 71, .15);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .m-resume-card.on {
+      display: block;
+    }
+
+    .m-resume-card-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .m-resume-card-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .m-resume-remove {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-resume-preview-label {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .m-resume-preview-text {
+      font-size: 11px;
+      color: var(--dim);
+      line-height: 1.5;
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    /* tailored resume in pkg sheet */
+    .m-pkg-resume-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .m-pkg-resume-hd {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .m-pkg-resume-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .m-pkg-resume-ats {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(71, 255, 179, .1);
+      border: 1px solid rgba(71, 255, 179, .2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: #47ffb3;
+    }
+
+    .m-pkg-resume-dl-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+
+    .m-pkg-dl-btn {
+      flex: 1;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .m-pkg-dl-btn.pdf {
+      background: var(--accent2);
+      color: #fff;
+    }
+
+    .m-pkg-resume-changes {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 0 14px 12px;
+      font-family: 'DM Mono', monospace;
+      line-height: 1.5;
+    }
+
+    .m-pkg-resume-preview {
+      padding: 0 14px 14px;
+      display: none;
+    }
+
+    .m-pkg-resume-preview.on {
+      display: block;
+    }
+
+    .m-pkg-resume-sec {
+      margin-bottom: 12px;
+    }
+
+    .m-pkg-resume-sec-title {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+
+    .m-pkg-resume-sec-body {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 
@@ -3371,6 +3612,30 @@
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:8px">Get free key at <a
             href="https://console.anthropic.com" target="_blank" style="color:var(--week4)">console.anthropic.com</a>
+        </div>
+      </div>
+
+      <!-- Resume Upload -->
+      <div class="m-resume-strip">
+        <div class="m-resume-title">📄 Base Resume</div>
+        <div class="m-resume-sub">Upload your resume PDF once. Claude tailors a full ATS-optimized version for every job
+          you apply to.</div>
+        <div class="m-resume-drop" id="m-resume-drop">
+          <input type="file" accept=".pdf" onchange="mHandleResumePDF(this.files[0])">
+          <div class="m-resume-drop-icon">📄</div>
+          <div class="m-resume-drop-txt" id="m-resume-drop-txt">Tap to upload resume PDF</div>
+        </div>
+        <div class="m-resume-parsing" id="m-resume-parsing">
+          <div class="m-resume-spin"></div>
+          <div class="m-resume-parse-txt">Reading your resume…</div>
+        </div>
+        <div class="m-resume-card" id="m-resume-card">
+          <div class="m-resume-card-hd">
+            <div class="m-resume-card-name" id="m-resume-name"></div>
+            <button class="m-resume-remove" onclick="mClearResume()">Remove</button>
+          </div>
+          <div class="m-resume-preview-label">Experience preview</div>
+          <div class="m-resume-preview-text" id="m-resume-exp-preview"></div>
         </div>
       </div>
 
@@ -4092,6 +4357,7 @@
         document.getElementById('m-prof-ach').value = p.achievements || '';
         document.getElementById('m-prof-skills').value = p.skills || '';
       }
+      initMobileResume();
     }
 
     function mSaveAIKey() {
@@ -4520,8 +4786,8 @@
     function mCloseBanner() { document.getElementById('m-motiv').classList.remove('on'); }
 
     // ─── MOBILE AI PACKAGE ENGINE ────────────────────────────────
-    const M_PKG_STEPS = ['match', 'resume', 'cover', 'recruiter', 'hiringmgr'];
-    const M_PKG_LABELS = { match: 'Match Score', resume: 'Resume Bullets', cover: 'Cover Letter', recruiter: 'Recruiter Message', hiringmgr: 'HM Message' };
+    const M_PKG_STEPS = ['match', 'resume', 'cover', 'recruiter', 'hiringmgr', 'tailored_resume'];
+    const M_PKG_LABELS = { match: 'Match Score', resume: 'Resume Bullets', cover: 'Cover Letter', recruiter: 'Recruiter Message', hiringmgr: 'HM Message', tailored_resume: 'Tailored Resume' };
     let mActivePkgJobId = null;
 
     async function mAutoGeneratePkg(jobId) {
@@ -4549,9 +4815,20 @@
         }
         pkg.status = 'done';
         const j3 = S.jobs.find(j => j.id === jobId); if (j3) { j3.aiPkg = pkg; save(); }
+        // Step 6: Tailored Resume if base resume uploaded
+        const mResume = mBaseResume || S.baseResume;
+        if (mResume) {
+          mShowPkgProg(jobId, 'tailored_resume');
+          try {
+            pkg.tailored_resume = await mGenerateTailoredResume(jobId);
+            const j4 = S.jobs.find(j => j.id === jobId); if (j4) { j4.aiPkg = { ...pkg }; save(); }
+          } catch (e) { console.warn('Resume gen failed:', e.message); }
+        }
+        pkg.status = 'done';
+        const j5 = S.jobs.find(j => j.id === jobId); if (j5) { j5.aiPkg = pkg; save(); }
         mShowPkgProg(jobId, 'done');
         renderPipeline();
-        toast(`✓ AI Package ready for ${job.co}`);
+        toast(`✓ AI Package ready for ${job.co}${mResume ? ' + Tailored Resume' : ''}`);
         if (mActivePkgJobId === jobId) mRenderPkg(jobId);
       } catch (e) {
         const j4 = S.jobs.find(j => j.id === jobId); if (j4) { j4.aiPkg = { status: 'error' }; save(); }
@@ -4610,6 +4887,38 @@
         btn.style.display = 'none'; return;
       }
       let html = '';
+      // Tailored Resume card
+      const mResume = mBaseResume || S.baseResume;
+      if (pkg.tailored_resume) {
+        const tr = pkg.tailored_resume;
+        html += `<div class="m-pkg-resume-card">
+      <div class="m-pkg-resume-hd">
+        <div class="m-pkg-resume-title">📋 Tailored Resume</div>
+        <div class="m-pkg-resume-ats">✅ ATS Optimized</div>
+      </div>
+      <div class="m-pkg-resume-changes">Changes: ${tr.changes_made || '—'}</div>
+      <div class="m-pkg-resume-dl-row">
+        <button class="m-pkg-dl-btn" onclick="mDlResumeDocx('${jobId}')">⬇ DOCX</button>
+        <button class="m-pkg-dl-btn pdf" onclick="mDlResumePDF('${jobId}')">⬇ PDF</button>
+        <button class="m-pkg-regen" onclick="mRegenResume('${jobId}')" style="padding:10px 12px;border-radius:7px">↺</button>
+      </div>
+      <div style="padding:0 14px 10px"><button onclick="document.getElementById('m-resume-preview-${jobId}').classList.toggle('on')" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace">▼ Preview Resume</button></div>
+      <div class="m-pkg-resume-preview" id="m-resume-preview-${jobId}">
+        <div class="m-pkg-resume-sec"><div class="m-pkg-resume-sec-title">Summary</div><div class="m-pkg-resume-sec-body">${tr.summary || ''}</div></div>
+        <div class="m-pkg-resume-sec"><div class="m-pkg-resume-sec-title">Experience</div><div class="m-pkg-resume-sec-body">${(tr.experience || '').replace(/\n/g, '<br>')}</div></div>
+        <div class="m-pkg-resume-sec"><div class="m-pkg-resume-sec-title">Skills</div><div class="m-pkg-resume-sec-body">${tr.skills || ''}</div></div>
+        <div class="m-pkg-resume-sec"><div class="m-pkg-resume-sec-title">Projects</div><div class="m-pkg-resume-sec-body">${(tr.projects || '').replace(/\n/g, '<br>')}</div></div>
+        <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;padding-bottom:14px">ATS keywords: ${tr.ats_keywords || ''}</div>
+      </div>
+    </div>`;
+      } else if (!mResume) {
+        html += `<div class="m-pkg-resume-card"><div class="m-pkg-resume-hd"><div class="m-pkg-resume-title">📋 Tailored Resume</div></div>
+      <div style="padding:14px;font-size:12px;color:var(--muted)">Upload your resume PDF in the ✨ AI tab to enable tailored resume generation.</div></div>`;
+      } else {
+        html += `<div class="m-pkg-resume-card"><div class="m-pkg-resume-hd"><div class="m-pkg-resume-title">📋 Tailored Resume</div></div>
+      <div style="padding:14px"><button class="m-pkg-gen-btn" onclick="mRegenResume('${jobId}')">⚡ Generate Tailored Resume</button></div></div>`;
+      }
+
       // Match card
       if (pkg.match) {
         const m = pkg.match; const cls = m.level || (m.score >= 70 ? 'high' : m.score >= 40 ? 'mid' : 'low');
@@ -4670,6 +4979,179 @@
 
     function mRegenAllPkg() { if (mActivePkgJobId) mAutoGeneratePkg(mActivePkgJobId); }
 
+    // ─── MOBILE RESUME ENGINE ────────────────────────────────────
+    let mBaseResume = null;
+
+    function initMobileResume() {
+      mBaseResume = S.baseResume || JSON.parse(localStorage.getItem('base-resume') || 'null');
+      if (mBaseResume) renderMResumeCard();
+    }
+
+    async function mHandleResumePDF(file) {
+      if (!file || file.type !== 'application/pdf') { toast('Upload a PDF file'); return; }
+      const key = localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude API key in ✨ AI tab first'); return; }
+      document.getElementById('m-resume-drop-txt').textContent = file.name;
+      document.getElementById('m-resume-parsing').classList.add('on');
+      document.getElementById('m-resume-card').classList.remove('on');
+      try {
+        const base64 = await new Promise((res, rej) => {
+          const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(file);
+        });
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514', max_tokens: 3000,
+            messages: [{
+              role: 'user', content: [
+                { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+                { type: 'text', text: 'Extract this resume completely. Respond ONLY with valid JSON:\n{"name":"full name","contact":"email | phone | location","summary":"summary paragraph","experience":"all roles with bullets formatted as Company | Title | Dates\\n• bullet","education":"degree, institution, year","skills":"comma-separated skills","projects":"project name: description","certifications":"certs if any"}' }
+              ]
+            }]
+          })
+        });
+        if (!resp.ok) { const e = await resp.json(); throw new Error(e.error?.message || 'err'); }
+        const data = await resp.json();
+        mBaseResume = JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
+        S.baseResume = mBaseResume; save();
+        localStorage.setItem('base-resume', JSON.stringify(mBaseResume));
+        renderMResumeCard();
+        toast('Resume loaded ✓');
+      } catch (e) { toast('Parse failed: ' + e.message); }
+      document.getElementById('m-resume-parsing').classList.remove('on');
+    }
+
+    function renderMResumeCard() {
+      if (!mBaseResume) return;
+      document.getElementById('m-resume-name').textContent = mBaseResume.name || 'Resume loaded';
+      document.getElementById('m-resume-exp-preview').textContent = (mBaseResume.experience || '').slice(0, 200) + '…';
+      document.getElementById('m-resume-card').classList.add('on');
+    }
+
+    function mClearResume() {
+      mBaseResume = null; S.baseResume = null; save();
+      localStorage.removeItem('base-resume');
+      document.getElementById('m-resume-card').classList.remove('on');
+      document.getElementById('m-resume-drop-txt').textContent = 'Tap to upload resume PDF';
+      toast('Removed');
+    }
+
+    async function mGenerateTailoredResume(jobId) {
+      const key = localStorage.getItem('ai-anthropic-key');
+      if (!key) throw new Error('No API key');
+      const job = S.jobs.find(j => j.id === jobId);
+      if (!job) throw new Error('Job not found');
+      const resume = mBaseResume || S.baseResume;
+      if (!resume) throw new Error('No base resume');
+      const li = mLIProfile || S.liProfile;
+      const profile = JSON.parse(localStorage.getItem('ai-profile') || '{}');
+      const prompt = `You are an expert resume writer and ATS specialist. Create a FULLY TAILORED, ATS-OPTIMIZED resume for this job application.
+
+BASE RESUME:
+Name: ${resume.name}
+Contact: ${resume.contact}
+Summary: ${resume.summary}
+Experience:\n${resume.experience}
+Education: ${resume.education}
+Skills: ${resume.skills}
+Projects: ${resume.projects || 'None'}
+Certifications: ${resume.certifications || 'None'}
+${li ? `\nLINKEDIN: ${(li.work || '').slice(0, 400)}` : ''}
+
+TARGET JOB: ${job.co} | ${job.role}
+JD: ${(job.jd || '').slice(0, 2000)}
+${job.aiPkg?.match ? `Gaps to address: ${job.aiPkg.match.gaps}` : ''}
+
+INSTRUCTIONS:
+1. Summary: Rewrite for ${job.co}/${job.role}, include exact job title, mirror 3+ JD keywords
+2. Experience: Rewrite EVERY bullet — weave JD keywords naturally, keep real metrics, keep real companies
+3. Projects: Reframe existing + add 1-2 new realistic projects addressing gaps
+4. Skills: Reorder — JD requirements first
+5. ATS rules: standard headers only, no tables/columns, exact JD keyword phrases, standard dates
+
+Respond ONLY with valid JSON:
+{"name":"","contact":"","summary":"","experience":"","education":"","skills":"","projects":"","certifications":"","ats_keywords":"top 10 keywords","changes_made":"brief summary"}`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 3500, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'API error'); }
+      const data = await res.json();
+      return JSON.parse(data.content[0].text.replace(/```json|```/g, '').trim());
+    }
+
+    async function mRegenResume(jobId) {
+      const key = localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude key in ✨ AI tab'); return; }
+      const resume = mBaseResume || S.baseResume;
+      if (!resume) { toast('Upload resume in ✨ AI tab first'); return; }
+      toast('Generating tailored resume…');
+      try {
+        const tr = await mGenerateTailoredResume(jobId);
+        const job = S.jobs.find(j => j.id === jobId);
+        if (job) { if (!job.aiPkg) job.aiPkg = { status: 'done' }; job.aiPkg.tailored_resume = tr; save(); }
+        mRenderPkg(jobId);
+        toast('Tailored Resume ready ✓');
+      } catch (e) { toast('Error: ' + e.message); }
+    }
+
+    function mDlResumeDocx(jobId) {
+      const job = S.jobs.find(j => j.id === jobId);
+      const tr = job?.aiPkg?.tailored_resume;
+      if (!tr) { toast('No tailored resume yet'); return; }
+      const { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } = docx;
+      const NAME = (t) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: t, bold: true, size: 32, font: 'Calibri' })] });
+      const CONTACT = (t) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [new TextRun({ text: t, size: 18, font: 'Calibri', color: '444444' })] });
+      const SECTION = (t) => new Paragraph({ spacing: { before: 200, after: 60 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000' } }, children: [new TextRun({ text: t.toUpperCase(), bold: true, size: 22, font: 'Calibri' })] });
+      const BODY = (t) => new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: t, size: 20, font: 'Calibri' })] });
+      const BULLET = (t) => new Paragraph({ spacing: { after: 40 }, indent: { left: 360 }, children: [new TextRun({ text: '• ' + t, size: 20, font: 'Calibri' })] });
+      const ROLE = (t) => new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: t, bold: true, size: 20, font: 'Calibri' })] });
+      function parse(text) {
+        return (text || '').split('\n').filter(l => l.trim()).map(l => {
+          const t = l.trim();
+          if (t.startsWith('•')) return BULLET(t.slice(1).trim());
+          if (t.includes('|')) return ROLE(t);
+          return BODY(t);
+        });
+      }
+      const document = new Document({
+        styles: { default: { document: { run: { font: 'Calibri', size: 20 } } } },
+        sections: [{
+          properties: { page: { margin: { top: 720, right: 900, bottom: 720, left: 900 } } }, children: [
+            NAME(tr.name || ''), CONTACT(tr.contact || ''),
+            SECTION('Summary'), BODY(tr.summary || ''),
+            SECTION('Experience'), ...parse(tr.experience),
+            SECTION('Skills'), BODY(tr.skills || ''),
+            SECTION('Projects'), ...parse(tr.projects || ''),
+            ...(tr.education ? [SECTION('Education'), ...parse(tr.education)] : []),
+            ...(tr.certifications ? [SECTION('Certifications'), BODY(tr.certifications)] : []),
+            new Paragraph({ spacing: { before: 200 }, children: [new TextRun({ text: `ATS Keywords: ${tr.ats_keywords || ''}`, size: 16, color: '888888', italics: true, font: 'Calibri' })] })
+          ]
+        }]
+      });
+      Packer.toBlob(document).then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${(tr.name || 'Resume').replace(/\s+/g, '-')}_${(job?.co || '').replace(/\s+/g, '-')}.docx`;
+        a.click(); URL.revokeObjectURL(url); toast('DOCX downloaded ✓');
+      });
+    }
+
+    function mDlResumePDF(jobId) {
+      const job = S.jobs.find(j => j.id === jobId);
+      const tr = job?.aiPkg?.tailored_resume;
+      if (!tr) { toast('No tailored resume yet'); return; }
+      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;margin:0;padding:0;color:#111;}.page{width:8.5in;min-height:11in;padding:.75in .9in;box-sizing:border-box;}h1{text-align:center;font-size:18pt;margin:0 0 4px;font-weight:700;}.contact{text-align:center;font-size:10pt;color:#444;margin-bottom:16px;}.sec{font-size:11pt;font-weight:700;text-transform:uppercase;border-bottom:1.5px solid #111;padding-bottom:3px;margin:14px 0 6px;letter-spacing:.5px;}p{margin:0 0 5px;line-height:1.5;}.role{font-weight:700;margin:8px 0 3px;}.bul{margin:2px 0 2px 16px;}.bul::before{content:'• ';}.note{font-size:8pt;color:#999;font-style:italic;margin-top:20px;}@media print{body{margin:0;}}</style></head><body><div class="page"><h1>${tr.name || ''}</h1><div class="contact">${(tr.contact || '').replace(/\|/g, ' · ')}</div><div class="sec">Summary</div><p>${tr.summary || ''}</p><div class="sec">Experience</div>${(tr.experience || '').split('\n').map(l => { const t = l.trim(); if (!t) return ''; if (t.startsWith('•')) return `<div class="bul">${t.slice(1).trim()}</div>`; if (t.includes('|')) return `<div class="role">${t}</div>`; return `<p>${t}</p>`; }).join('')}<div class="sec">Skills</div><p>${tr.skills || ''}</p><div class="sec">Projects</div>${(tr.projects || '').split('\n').map(l => { const t = l.trim(); if (!t) return ''; if (t.startsWith('•')) return `<div class="bul">${t.slice(1).trim()}</div>`; if (t.includes(':')) return `<div class="role">${t}</div>`; return `<p>${t}</p>`; }).join('')}${tr.education ? `<div class="sec">Education</div><p>${tr.education}</p>` : ''}${tr.certifications ? `<div class="sec">Certifications</div><p>${tr.certifications}</p>` : ''}<div class="note">ATS keywords: ${tr.ats_keywords || ''}</div></div></body></html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, '_blank');
+      if (win) win.onload = () => { setTimeout(() => { win.print(); URL.revokeObjectURL(url); }, 500); };
+      toast('PDF — use Print → Save as PDF');
+    }
+
     // ─── BOOT ─────────────────────────────────────────────────────
     async function boot() {
       sb.auth.onAuthStateChange(async (event, session) => {
@@ -4684,6 +5166,7 @@
           await loadDB();
           // Restore LinkedIn profile from synced state
           if (S.liProfile) { mLIProfile = S.liProfile; }
+          if (S.baseResume) { mBaseResume = S.baseResume; }
           renderHome();
           setTimeout(mShowBanner, 1200);
         } else {
