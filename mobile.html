@@ -4929,6 +4929,13 @@
     function mInitChat() {
       const key = localStorage.getItem('ai-anthropic-key');
       if (!key) { mAppendMsg('bot', 'Add your Claude API key in the ✨ AI tab first.'); return; }
+      // Restore previous messages if history exists
+      if (mChatHistory.length > 0) {
+        const msgs = document.getElementById('m-chat-msgs');
+        msgs.innerHTML = '';
+        mChatHistory.forEach(m => mAppendMsg(m.role === 'user' ? 'user' : 'bot', m.content));
+        return;
+      }
       mAppendMsg('bot', M_CHAT_WELCOME);
     }
 
@@ -4996,6 +5003,7 @@
         bubble.innerHTML = fullText.replace(/\n/g, '<br>');
         mChatHistory.push({ role: 'assistant', content: fullText });
         if (mChatHistory.length > 20) mChatHistory = mChatHistory.slice(-20);
+        try { localStorage.setItem('chat-history', JSON.stringify(mChatHistory)); } catch (e) { }
       } catch (e) { mRemoveTyping(); mAppendMsg('bot', `Error: ${e.message}`); }
     }
 
@@ -5434,7 +5442,7 @@
         <div class="m-network-av">${(c.name || '?')[0].toUpperCase()}</div>
         <div class="m-network-info">
           <div class="m-network-name">${c.name}</div>
-          <div class="m-network-role">${c.title || c.company}</div>
+          <div class="m-network-role">${c.title || c.company} ${c.source === 'csv' || c.source === 'linkedin-csv' ? '<span style="background:rgba(71,196,255,.15);color:var(--accent3);font-size:9px;font-family:\'DM Mono\',monospace;padding:1px 4px;border-radius:3px;margin-left:3px">in</span>' : c.source === 'manual' ? '<span style="background:rgba(232,255,71,.1);color:var(--accent);font-size:9px;font-family:\'DM Mono\',monospace;padding:1px 4px;border-radius:3px;margin-left:3px">✎</span>' : ''}</div>
         </div>
         <div class="m-network-acts">
           ${c.li ? `<a href="${c.li}" target="_blank" class="m-network-li">in ↗</a>` : ''}
@@ -5663,10 +5671,16 @@ Respond ONLY with valid JSON:
           document.getElementById('auth').style.display = 'none';
           document.getElementById('app').style.display = 'flex';
           await loadDB();
-          // Restore LinkedIn profile from synced state
+          // Restore all persisted state — Supabase first, localStorage fallback
           if (S.liProfile) { mLIProfile = S.liProfile; }
+          else { const ls = localStorage.getItem('li-profile'); if (ls) { try { mLIProfile = JSON.parse(ls); } catch (e) { } } }
           if (S.baseResume) { mBaseResume = S.baseResume; }
-          if (S.myConnections) { mMyConnections = S.myConnections; }
+          else { const ls = localStorage.getItem('base-resume'); if (ls) { try { mBaseResume = JSON.parse(ls); } catch (e) { } } }
+          if (S.myConnections && S.myConnections.length) { mMyConnections = S.myConnections; }
+          else { const ls = localStorage.getItem('my-connections'); if (ls) { try { mMyConnections = JSON.parse(ls); } catch (e) { } } }
+          // Restore chat history
+          const lsChat = localStorage.getItem('chat-history');
+          if (lsChat) { try { mChatHistory = JSON.parse(lsChat); mChatFirstOpen = false; } catch (e) { } }
           renderHome();
           setTimeout(mShowBanner, 1200);
         } else {
