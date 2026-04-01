@@ -6328,7 +6328,7 @@ Write only the message itself. No preamble.`
         <div class="network-conn-avatar">${(c.name || '?')[0].toUpperCase()}</div>
         <div class="network-conn-info">
           <div class="network-conn-name">${c.name}</div>
-          <div class="network-conn-title">${c.title || c.company}</div>
+          <div class="network-conn-title">${c.title || c.company} ${c.source === 'linkedin-csv' ? '<span style="background:rgba(71,196,255,.15);color:var(--accent3);font-size:9px;font-family:\'DM Mono\',monospace;padding:1px 5px;border-radius:3px;margin-left:4px">in LinkedIn</span>' : c.source === 'manual' ? '<span style="background:rgba(232,255,71,.1);color:var(--accent);font-size:9px;font-family:\'DM Mono\',monospace;padding:1px 5px;border-radius:3px;margin-left:4px">✎ Manual</span>' : ''}</div>
         </div>
         <div class="network-conn-acts">
           ${c.li ? `<a href="${c.li}" target="_blank" class="network-conn-li">in ↗</a>` : ''}
@@ -7709,11 +7709,19 @@ If you find fewer than 4, that is fine. Only include people you actually find, n
         appendChatMsg('bot', `To use Research Bot, add your Claude API key in the ✨ AI Tools tab first.`);
         return;
       }
+      // If history already exists, replay it visually
+      if (chatHistory.length > 0) {
+        const msgs = document.getElementById('chat-messages');
+        msgs.innerHTML = '';
+        chatHistory.forEach(m => appendChatMsg(m.role === 'user' ? 'user' : 'bot', m.content));
+        return;
+      }
       appendChatMsg('bot', CHAT_WELCOME);
     }
 
     function clearChat() {
       chatHistory = [];
+      localStorage.removeItem('chat-history');
       document.getElementById('chat-messages').innerHTML = '';
       chatFirstOpen = true;
       initChat();
@@ -7856,6 +7864,8 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
         chatHistory.push({ role: 'assistant', content: fullText });
         // Keep history manageable (last 10 exchanges)
         if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+        // Persist to localStorage
+        try { localStorage.setItem('chat-history', JSON.stringify(chatHistory)); } catch (e) { }
 
       } catch (e) {
         removeTypingIndicator();
@@ -7942,12 +7952,19 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
           document.getElementById('auth-screen').style.display = 'none';
           document.getElementById('app').style.display = 'block';
           await loadFromDB();
-          // Restore LinkedIn profile from synced state
+          // Restore all persisted state on boot
           if (S.liProfile) { liProfile = S.liProfile; }
+          else { const lsLI = localStorage.getItem('li-profile'); if (lsLI) { try { liProfile = JSON.parse(lsLI); } catch (e) { } } }
           if (S.baseResume) { baseResume = S.baseResume; }
-          if (S.myConnections) { myConnections = S.myConnections; }
+          else { const lsR = localStorage.getItem('base-resume'); if (lsR) { try { baseResume = JSON.parse(lsR); } catch (e) { } } }
+          if (S.myConnections && S.myConnections.length) { myConnections = S.myConnections; }
+          else { const lsN = localStorage.getItem('my-connections'); if (lsN) { try { myConnections = JSON.parse(lsN); } catch (e) { } } }
+          // Restore chat history from localStorage
+          const lsChat = localStorage.getItem('chat-history');
+          if (lsChat) { try { chatHistory = JSON.parse(lsChat); chatFirstOpen = false; } catch (e) { } }
+          // Restore AI key
+          aiKey = localStorage.getItem('ai-anthropic-key') || '';
           renderChecklists(); renderEmergency(); renderSkills(); renderFunnel(); renderPipeline(); updateStats(); renderOvWeeks(); initDiscovery();
-          // Show motivational banner after short delay
           setTimeout(showMotivBanner, 1200);
         } else {
           document.getElementById('loading-screen').style.display = 'none';
