@@ -1094,7 +1094,12 @@ function authSeg(m){authMode=m;document.getElementById('as-in').classList.toggle
 async function authGo(){const email=document.getElementById('a-email').value.trim(),pw=document.getElementById('a-pw').value,btn=document.getElementById('a-btn');if(!email)return;btn.disabled=true;btn.textContent='…';try{let r;if(authMode==='in')r=await sb.auth.signInWithPassword({email,password:pw});else r=await sb.auth.signUp({email,password:pw});if(r.error)setErr(r.error.message);else if(authMode==='up')setErr('✓ Check your email to confirm');}catch(e){setErr(e.message);}btn.disabled=false;btn.textContent=authMode==='in'?'Sign In':'Create Account';}
 async function magicGo(){const email=document.getElementById('a-email').value.trim();if(!email){setErr('Enter your email first');return;}const{error}=await sb.auth.signInWithOtp({email});setErr(error?error.message:'✓ Magic link sent — check your inbox');}
 function setErr(m){document.getElementById('a-err').textContent=m;}
-async function doSignOut(){await sb.auth.signOut();location.reload();}
+async function doSignOut(){
+  try { await Promise.race([sb.auth.signOut(), new Promise(r => setTimeout(r, 3000))]); } catch(e) {}
+  localStorage.clear();
+  sessionStorage.clear();
+  location.reload();
+}
 function toggleUserMenu(){document.getElementById('user-menu').classList.toggle('on');}
 
 // ─── DATE UTILS ───────────────────────────────────────────────
