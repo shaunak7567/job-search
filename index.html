@@ -1322,7 +1322,12 @@ async function magicLink(){
   else document.getElementById('magic-wrap').innerHTML=`<div class="magic-sent">✉ Magic link sent to <strong>${email}</strong><br>Check your inbox and click the link to sign in.</div>`;
 }
 function setAuthErr(m){document.getElementById('auth-err').textContent=m;}
-async function signOut(){await sb.auth.signOut();location.reload();}
+async function signOut(){
+  try { await Promise.race([sb.auth.signOut(), new Promise(r => setTimeout(r, 3000))]); } catch(e) {}
+  localStorage.clear();
+  sessionStorage.clear();
+  location.reload();
+}
 
 // ─── SYNC STATUS ──────────────────────────────────────────────
 function setSyncStatus(s){
