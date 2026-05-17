@@ -2027,7 +2027,7 @@ async function handleNetworkCSV(file) {
       const name = `${cols[0]?.trim() || ''} ${cols[1]?.trim() || ''}`.trim();
       const company = cols[3]?.trim() || '';
       const title = cols[4]?.trim() || '';
-      if (!name || !company) continue;
+      if (!name) continue;
       // Check if already exists
       const exists = myConnections.find(c => c.name.toLowerCase() === name.toLowerCase() && c.company.toLowerCase() === company.toLowerCase());
       if (!exists) parsed.push({ name, company, title, li: '', source: 'linkedin-csv' });
