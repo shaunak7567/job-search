@@ -2163,7 +2163,7 @@ async function mHandleNetworkCSV(file) {
       const name = (cols[0]?.trim() + ' ' + cols[1]?.trim()).trim();
       const company = cols[3]?.trim() || '';
       const title = cols[4]?.trim() || '';
-      if (!name || !company) continue;
+      if (!name) continue;
       if (!mMyConnections.find(c => c.name.toLowerCase() === name.toLowerCase() && c.company.toLowerCase() === company.toLowerCase())) {
         parsed.push({ name, company, title, li: '', source: 'csv' });
       }
