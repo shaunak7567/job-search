@@ -1982,7 +1982,7 @@ let myConnections = []; // [{name, company, title, li, source}]
 let referralContext = {}; // {conn, jobCo, jobRole, jobId}
 
 function initNetwork() {
-  const stored = S.myConnections || JSON.parse(localStorage.getItem('my-connections') || '[]');
+  const stored = JSON.parse(localStorage.getItem('my-connections') || '[]');
   myConnections = stored;
   updateNetworkUI();
   const zone = document.getElementById('network-drop-zone');
@@ -2000,8 +2000,7 @@ function updateNetworkUI() {
 }
 
 function saveNetwork() {
-  S.myConnections = myConnections;
-  save();
+  // Store connections only in localStorage to avoid bloating the Supabase payload
   localStorage.setItem('my-connections', JSON.stringify(myConnections));
   updateNetworkUI();
 }
@@ -2012,11 +2011,11 @@ async function handleNetworkCSV(file) {
   document.getElementById('network-parse-txt').textContent = 'Importing connections…';
   try {
     const text = await file.text();
-    const lines = text.split('\n').filter(l => l.trim());
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
     // LinkedIn CSV format: First Name,Last Name,Email Address,Company,Position,Connected On
-    // Find header row
+    // Find header row — search up to 10 lines to handle LinkedIn's note rows at top
     let startIdx = 0;
-    for (let i = 0; i < Math.min(lines.length, 5); i++) {
+    for (let i = 0; i < Math.min(lines.length, 10); i++) {
       if (lines[i].toLowerCase().includes('first name') || lines[i].toLowerCase().includes('firstname')) {
         startIdx = i + 1; break;
       }
