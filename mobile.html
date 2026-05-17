@@ -2129,7 +2129,7 @@ let mMyConnections = [];
 let mReferralCtx = {};
 
 function initMobileNetwork() {
-  mMyConnections = S.myConnections || JSON.parse(localStorage.getItem('my-connections') || '[]');
+  mMyConnections = JSON.parse(localStorage.getItem('my-connections') || '[]');
   mUpdateNetworkUI();
 }
 
@@ -2141,7 +2141,6 @@ function mUpdateNetworkUI() {
 }
 
 function mSaveNetwork() {
-  S.myConnections = mMyConnections; save();
   localStorage.setItem('my-connections', JSON.stringify(mMyConnections));
   mUpdateNetworkUI();
 }
@@ -2152,9 +2151,9 @@ async function mHandleNetworkCSV(file) {
   document.getElementById('m-network-parse-txt').textContent = 'Importing…';
   try {
     const text = await file.text();
-    const lines = text.split('\n').filter(l => l.trim());
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
     let startIdx = 0;
-    for (let i = 0; i < Math.min(lines.length, 5); i++) {
+    for (let i = 0; i < Math.min(lines.length, 10); i++) {
       if (lines[i].toLowerCase().includes('first name') || lines[i].toLowerCase().includes('firstname')) { startIdx = i + 1; break; }
     }
     const parsed = [];
