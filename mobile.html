@@ -5569,26 +5569,38 @@
       document.getElementById('m-network-parse-txt').textContent = 'Importing…';
       try {
         const text = await file.text();
-        const lines = text.split('\n').filter(l => l.trim());
-        let startIdx = 0;
-        for (let i = 0; i < Math.min(lines.length, 5); i++) {
-          if (lines[i].toLowerCase().includes('first name') || lines[i].toLowerCase().includes('firstname')) { startIdx = i + 1; break; }
+        const allLines = text.split(/\r?\n/);
+        // Find header row — search ALL lines
+        let headerIdx = -1;
+        for (let i = 0; i < allLines.length; i++) {
+          const lower = allLines[i].toLowerCase();
+          if (lower.includes('first name') || lower.includes('firstname') || lower.startsWith('"first name"')) { headerIdx = i; break; }
         }
+        if (headerIdx === -1) { toast('Could not find header — use LinkedIn Connections CSV'); return; }
+        // Parse header to find column positions dynamically
+        const headerCols = mParseCSV(allLines[headerIdx]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+        const fiIdx = headerCols.findIndex(h => h.includes('first name') || h === 'firstname');
+        const liIdx = headerCols.findIndex(h => h.includes('last name') || h === 'lastname');
+        const coIdx = headerCols.findIndex(h => h === 'company' || h.includes('company'));
+        const poIdx = headerCols.findIndex(h => h === 'position' || h.includes('position') || h.includes('title'));
         const parsed = [];
-        for (let i = startIdx; i < lines.length; i++) {
-          const cols = mParseCSV(lines[i]);
-          if (cols.length < 4) continue;
-          const name = (cols[0]?.trim() + ' ' + cols[1]?.trim()).trim();
-          const company = cols[3]?.trim() || '';
-          const title = cols[4]?.trim() || '';
-          if (!name || !company) continue;
-          if (!mMyConnections.find(c => c.name.toLowerCase() === name.toLowerCase() && c.company.toLowerCase() === company.toLowerCase())) {
-            parsed.push({ name, company, title, li: '', source: 'csv' });
-          }
+        let skipped = 0;
+        for (let i = headerIdx + 1; i < allLines.length; i++) {
+          const line = allLines[i].trim(); if (!line) continue;
+          const cols = mParseCSV(line); if (cols.length < 2) continue;
+          const firstName = (cols[fiIdx >= 0 ? fiIdx : 0] || '').trim().replace(/"/g, '');
+          const lastName = (cols[liIdx >= 0 ? liIdx : 1] || '').trim().replace(/"/g, '');
+          const company = (cols[coIdx >= 0 ? coIdx : 3] || '').trim().replace(/"/g, '');
+          const title = (cols[poIdx >= 0 ? poIdx : 4] || '').trim().replace(/"/g, '');
+          const name = `${firstName} ${lastName}`.trim();
+          if (!name || name === ' ') continue;
+          const exists = mMyConnections.find(c => c.name.toLowerCase() === name.toLowerCase() && c.company.toLowerCase() === company.toLowerCase() && c.source === 'csv');
+          if (exists) { skipped++; continue; }
+          parsed.push({ name, company, title, li: '', source: 'csv' });
         }
         mMyConnections = [...mMyConnections, ...parsed];
         mSaveNetwork();
-        document.getElementById('m-network-drop-txt').textContent = `✓ ${parsed.length} new connections imported`;
+        document.getElementById('m-network-drop-txt').textContent = `✓ ${parsed.length} imported${skipped > 0 ? ` (${skipped} dupes skipped)` : ''} — ${mMyConnections.length} total`;
         toast(`✓ ${parsed.length} connections imported!`);
       } catch (e) { toast('Import failed: ' + e.message); }
       document.getElementById('m-network-parsing').classList.remove('on');
