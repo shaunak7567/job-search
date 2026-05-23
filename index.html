@@ -6487,32 +6487,55 @@ Write only the message itself. No preamble.`
       document.getElementById('network-parse-txt').textContent = 'Importing connections…';
       try {
         const text = await file.text();
-        const lines = text.split('\n').filter(l => l.trim());
-        // LinkedIn CSV format: First Name,Last Name,Email Address,Company,Position,Connected On
-        // Find header row
-        let startIdx = 0;
-        for (let i = 0; i < Math.min(lines.length, 5); i++) {
-          if (lines[i].toLowerCase().includes('first name') || lines[i].toLowerCase().includes('firstname')) {
-            startIdx = i + 1; break;
+        // Split on both \n and \r\n (Windows line endings)
+        const allLines = text.split(/\r?\n/);
+        // Find header row — search ALL lines, not just first 5
+        // LinkedIn export has many note rows before the header
+        let headerIdx = -1;
+        for (let i = 0; i < allLines.length; i++) {
+          const lower = allLines[i].toLowerCase();
+          if (lower.includes('first name') || lower.includes('firstname') || lower.startsWith('"first name"')) {
+            headerIdx = i; break;
           }
         }
+        if (headerIdx === -1) { toast('Could not find header row — is this a LinkedIn Connections CSV?'); return; }
+        // Parse header to find column positions dynamically
+        const headerCols = parseCSVLine(allLines[headerIdx]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+        const firstNameIdx = headerCols.findIndex(h => h.includes('first name') || h === 'firstname');
+        const lastNameIdx = headerCols.findIndex(h => h.includes('last name') || h === 'lastname');
+        const companyIdx = headerCols.findIndex(h => h === 'company' || h.includes('company'));
+        const positionIdx = headerCols.findIndex(h => h === 'position' || h.includes('position') || h.includes('title'));
+        const emailIdx = headerCols.findIndex(h => h.includes('email'));
+        console.log('CSV header:', headerCols, '| cols:', { firstNameIdx, lastNameIdx, companyIdx, positionIdx });
         const parsed = [];
-        for (let i = startIdx; i < lines.length; i++) {
-          const cols = parseCSVLine(lines[i]);
-          if (cols.length < 4) continue;
-          const name = `${cols[0]?.trim() || ''} ${cols[1]?.trim() || ''}`.trim();
-          const company = cols[3]?.trim() || '';
-          const title = cols[4]?.trim() || '';
-          if (!name || !company) continue;
-          // Check if already exists
-          const exists = myConnections.find(c => c.name.toLowerCase() === name.toLowerCase() && c.company.toLowerCase() === company.toLowerCase());
-          if (!exists) parsed.push({ name, company, title, li: '', source: 'linkedin-csv' });
+        let skippedDupe = 0;
+        for (let i = headerIdx + 1; i < allLines.length; i++) {
+          const line = allLines[i].trim();
+          if (!line) continue;
+          const cols = parseCSVLine(line);
+          if (cols.length < 2) continue;
+          const firstName = (cols[firstNameIdx >= 0 ? firstNameIdx : 0] || '').trim().replace(/"/g, '');
+          const lastName = (cols[lastNameIdx >= 0 ? lastNameIdx : 1] || '').trim().replace(/"/g, '');
+          const company = (cols[companyIdx >= 0 ? companyIdx : 3] || '').trim().replace(/"/g, '');
+          const title = (cols[positionIdx >= 0 ? positionIdx : 4] || '').trim().replace(/"/g, '');
+          const name = `${firstName} ${lastName}`.trim();
+          if (!name || name === ' ') continue;
+          // Only skip if EXACT same name+company (not just name)
+          const exists = myConnections.find(c =>
+            c.name.toLowerCase() === name.toLowerCase() &&
+            c.company.toLowerCase() === company.toLowerCase() &&
+            c.source === 'linkedin-csv'
+          );
+          if (exists) { skippedDupe++; continue; }
+          parsed.push({ name, company, title, li: '', source: 'linkedin-csv' });
         }
         myConnections = [...myConnections, ...parsed];
         saveNetwork();
-        document.getElementById('network-drop-label').textContent = `✓ ${parsed.length} new connections imported (${myConnections.length} total)`;
+        const msg = `✓ ${parsed.length} imported${skippedDupe > 0 ? ` (${skippedDupe} already existed)` : ''} — ${myConnections.length} total`;
+        document.getElementById('network-drop-label').textContent = msg;
+        console.log('Network import:', msg);
         toast(`✓ ${parsed.length} connections imported!`);
-      } catch (e) { toast('Import failed: ' + e.message); }
+      } catch (e) { console.error('CSV import error:', e); toast('Import failed: ' + e.message); }
       document.getElementById('network-parsing').classList.remove('on');
     }
 
