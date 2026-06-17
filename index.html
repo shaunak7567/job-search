@@ -4335,6 +4335,139 @@
       justify-content: flex-end;
     }
 
+    /* ── INTERVIEW PREP ── */
+    .ip-sd-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .ip-sd-card:hover {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .05);
+    }
+
+    .ip-sd-card.selected {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .08);
+    }
+
+    .ip-sd-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .ip-sd-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .ip-output {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .ip-output.on {
+      display: block;
+    }
+
+    .ip-output h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: #47ffb3;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin: 16px 0 8px;
+    }
+
+    .ip-output h3:first-child {
+      margin-top: 0;
+    }
+
+    .ip-output p,
+    .ip-output li {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .ip-output li {
+      margin-left: 16px;
+      margin-bottom: 3px;
+    }
+
+    .ip-output code {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      background: var(--surface2);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+
+    .ip-output strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .ip-complexity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .ip-complexity-cell {
+      background: var(--surface2);
+      border-radius: 7px;
+      padding: 12px 14px;
+    }
+
+    .ip-complexity-label {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .ip-complexity-value {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'DM Mono', monospace;
+      color: #47ffb3;
+    }
+
+    .ip-loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .ip-spin {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: #47ffb3;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
     /* ── RESUME UPLOAD ── */
     .resume-upload-box {
       background: var(--surface);
@@ -5157,6 +5290,10 @@
             <div class="dot" style="background:var(--week4)"></div>✨ AI Tools<span class="nav-badge"
               style="color:var(--week4);background:rgba(196,71,255,0.1)">NEW</span>
           </div>
+          <div class="nav-item" data-view="interview" onclick="switchView('interview')">
+            <div class="dot" style="background:#47ffb3"></div>🎓 Interview Prep<span class="nav-badge"
+              style="color:#47ffb3;background:rgba(71,255,179,0.1)">NEW</span>
+          </div>
         </div>
       </nav>
       <main class="main">
@@ -5511,6 +5648,173 @@
             </div>
           </div>
         </div>
+        <!-- INTERVIEW PREP VIEW -->
+        <div class="view" id="view-interview">
+          <div class="view-header">
+            <div class="view-title" style="color:#47ffb3">🎓 INTERVIEW PREP HUB</div>
+            <div class="view-sub">Pseudocode-first solution explainer · Company prep · System design coach</div>
+          </div>
+
+          <!-- Sub-tabs -->
+          <div class="dtabs" style="margin-bottom:20px">
+            <div class="dtab on" id="ipt-explain" onclick="ipTab('explain',this)">📄 Explain Solution</div>
+            <div class="dtab" id="ipt-company" onclick="ipTab('company',this)">🏢 Company Prep</div>
+            <div class="dtab" id="ipt-systemdesign" onclick="ipTab('systemdesign',this)">⚙️ System Design</div>
+          </div>
+
+          <!-- EXPLAIN SOLUTION -->
+          <div id="ip-panel-explain">
+            <div class="ai-profile-strip" style="margin-bottom:16px">
+              <div
+                style="font-size:12px;color:var(--text-muted);background:var(--surface2);border-radius:6px;padding:10px 12px;line-height:1.7;margin-bottom:14px">
+                Flow: <span
+                  style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:11px;font-family:'DM Mono',monospace;margin:0 4px">1
+                  · Pattern</span>→
+                <span
+                  style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:11px;font-family:'DM Mono',monospace;margin:0 4px">2
+                  · Pseudocode</span>→
+                <span
+                  style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:11px;font-family:'DM Mono',monospace;margin:0 4px">3
+                  · Line-by-line</span>→
+                <span
+                  style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:11px;font-family:'DM Mono',monospace;margin:0 4px">4
+                  · Complexity</span>
+              </div>
+              <div class="ai-gen-field">
+                <label>Problem</label>
+                <div style="display:flex;gap:8px">
+                  <input class="fld" id="ip-lc-num" placeholder="Problem #" style="max-width:110px">
+                  <input class="fld" id="ip-lc-title" placeholder="Problem title" style="flex:1">
+                  <select class="fld" id="ip-lc-lang">
+                    <option value="python3">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="typescript">TypeScript</option>
+                  </select>
+                </div>
+              </div>
+              <div class="ai-gen-field">
+                <label>Your Solution</label>
+                <textarea class="fta" id="ip-solution-code" rows="10" placeholder="Paste your solution here..."
+                  style="font-family:'DM Mono',monospace;font-size:13px"></textarea>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn-a" onclick="ipExplain()">✨ Pseudocode + Explain</button>
+                <button class="btn-cancel" onclick="ipComplexity()">⏱ Complexity Only</button>
+                <button class="btn-cancel" onclick="ipGotcha()">⚠️ Gotchas + Edge Cases</button>
+                <button class="btn-cancel" onclick="ipRevision()">📋 Revision Card</button>
+              </div>
+            </div>
+            <div id="ip-explain-output"></div>
+          </div>
+
+          <!-- COMPANY PREP -->
+          <div id="ip-panel-company" style="display:none">
+            <div class="ai-profile-strip" style="margin-bottom:16px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div class="ai-gen-field" style="margin-bottom:0">
+                  <label>Company</label>
+                  <select class="fld" id="ip-company-select" style="width:100%">
+                    <option value="">Select company…</option>
+                    <option value="google">Google / Alphabet</option>
+                    <option value="meta">Meta</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="apple">Apple</option>
+                    <option value="microsoft">Microsoft</option>
+                    <option value="netflix">Netflix</option>
+                    <option value="uber">Uber</option>
+                    <option value="airbnb">Airbnb</option>
+                    <option value="stripe">Stripe</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="twitter">X / Twitter</option>
+                    <option value="salesforce">Salesforce</option>
+                    <option value="other">Other…</option>
+                  </select>
+                </div>
+                <div class="ai-gen-field" style="margin-bottom:0">
+                  <label>Interview Type</label>
+                  <select class="fld" id="ip-interview-type" style="width:100%">
+                    <option value="onsite">Onsite / Final round</option>
+                    <option value="phone">Phone screen</option>
+                    <option value="takehome">Take-home</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+                <div class="ai-gen-field" style="margin-bottom:0">
+                  <label>Role</label>
+                  <select class="fld" id="ip-role-select" style="width:100%">
+                    <option value="swe">Software Engineer (SWE)</option>
+                    <option value="senior">Senior SWE</option>
+                    <option value="staff">Staff / Principal</option>
+                    <option value="ml">ML Engineer</option>
+                    <option value="backend">Backend Engineer</option>
+                    <option value="fullstack">Full-stack Engineer</option>
+                  </select>
+                </div>
+                <div class="ai-gen-field" style="margin-bottom:0">
+                  <label>Days Until Interview</label>
+                  <input class="fld" id="ip-days-until" placeholder="e.g. 7" type="number" style="width:100%">
+                </div>
+              </div>
+              <button class="btn-a" onclick="ipCompanyPrep()">🏢 Generate Prep Plan</button>
+            </div>
+            <div id="ip-company-output"></div>
+          </div>
+
+          <!-- SYSTEM DESIGN -->
+          <div id="ip-panel-systemdesign" style="display:none">
+            <div class="ai-profile-strip" style="margin-bottom:16px">
+              <label class="fl" style="margin-bottom:10px">Pick a Topic</label>
+              <div
+                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px"
+                id="ip-sd-grid">
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'URL Shortener')">
+                  <div class="ip-sd-title">URL Shortener</div>
+                  <div class="ip-sd-sub">Like bit.ly</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Rate Limiter')">
+                  <div class="ip-sd-title">Rate Limiter</div>
+                  <div class="ip-sd-sub">Token bucket</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Twitter / News Feed')">
+                  <div class="ip-sd-title">Twitter Feed</div>
+                  <div class="ip-sd-sub">Fan-out</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Distributed Cache')">
+                  <div class="ip-sd-title">Distributed Cache</div>
+                  <div class="ip-sd-sub">Redis</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Search Autocomplete')">
+                  <div class="ip-sd-title">Autocomplete</div>
+                  <div class="ip-sd-sub">Trie</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Notification System')">
+                  <div class="ip-sd-title">Notifications</div>
+                  <div class="ip-sd-sub">Push/SMS/email</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Video Streaming')">
+                  <div class="ip-sd-title">Video Streaming</div>
+                  <div class="ip-sd-sub">CDN, YouTube</div>
+                </div>
+                <div class="ip-sd-card" onclick="ipSelectSD(this,'Ride-Sharing')">
+                  <div class="ip-sd-title">Ride Sharing</div>
+                  <div class="ip-sd-sub">Uber / Lyft</div>
+                </div>
+              </div>
+              <div class="ai-gen-field">
+                <label>Or type any topic</label>
+                <div style="display:flex;gap:8px">
+                  <input class="fld" id="ip-sd-custom" placeholder="e.g. Payment processing system" style="flex:1">
+                  <button class="btn-a" onclick="ipSystemDesign()">⚙️ Generate Guide</button>
+                </div>
+              </div>
+            </div>
+            <div id="ip-sd-output"></div>
+          </div>
+        </div>
+
         <div class="view" id="view-discover">
           <div class="view-header">
             <div class="view-title">🔍 FIND JOBS</div>
@@ -7282,7 +7586,7 @@ JD: ${job.jd.slice(0, 2000)}`;
     }
 
     // ─── NAV ──────────────────────────────────────────────────────
-    function switchView(v) { document.querySelectorAll('.view').forEach(x => x.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active')); document.getElementById('view-' + v).classList.add('active'); document.querySelector(`[data-view="${v}"]`)?.classList.add('active'); if (v === 'overview') { renderOvWeeks(); updateStats(); renderAlerts(); } if (v === 'pipeline') renderPipeline(); if (v === 'discover') initDiscovery(); if (v === 'aitools') initAITools(); }
+    function switchView(v) { document.querySelectorAll('.view').forEach(x => x.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active')); document.getElementById('view-' + v).classList.add('active'); document.querySelector(`[data-view="${v}"]`)?.classList.add('active'); if (v === 'overview') { renderOvWeeks(); updateStats(); renderAlerts(); } if (v === 'pipeline') renderPipeline(); if (v === 'discover') initDiscovery(); if (v === 'aitools') initAITools(); if (v === 'interview') initInterviewPrep(); }
     function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2000); }
 
     // ─── JOB DISCOVERY ───────────────────────────────────────────
@@ -8222,6 +8526,161 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
         document.getElementById('user-dropdown')?.classList.remove('on');
       }
     });
+
+    // ─── BOOT ─────────────────────────────────────────────────────
+    // ─── INTERVIEW PREP ENGINE ───────────────────────────────────
+    let ipSelectedSD = null;
+
+    function initInterviewPrep() {
+      // Nothing to init — just opened
+    }
+
+    function ipTab(name, el) {
+      document.querySelectorAll('#view-interview .dtab').forEach(x => x.classList.remove('on'));
+      if (el) el.classList.add('on');
+      document.getElementById('ip-panel-explain').style.display = name === 'explain' ? 'block' : 'none';
+      document.getElementById('ip-panel-company').style.display = name === 'company' ? 'block' : 'none';
+      document.getElementById('ip-panel-systemdesign').style.display = name === 'systemdesign' ? 'block' : 'none';
+    }
+
+    function ipSelectSD(el, topic) {
+      document.querySelectorAll('.ip-sd-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      ipSelectedSD = topic;
+      const custom = document.getElementById('ip-sd-custom');
+      if (custom) custom.value = '';
+    }
+
+    function ipRenderMarkdown(md) {
+      return md
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^# (.+)$/gm, '<h3>$1</h3>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/^(\d+)\. (.+)$/gm, '<li><strong>$1.</strong> $2</li>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function ipExtractO(str) {
+      if (!str) return '—';
+      const m = str.match(/O\([^)]+\)/i);
+      return m ? m[0] : '—';
+    }
+
+    async function ipCallClaude(prompt, outputEl, systemMsg) {
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) {
+        outputEl.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Add your Claude API key in the ✨ AI Tools tab first.</div>`;
+        return null;
+      }
+      outputEl.innerHTML = `<div class="ip-output on"><div class="ip-loading"><div class="ip-spin"></div>Thinking…</div></div>`;
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 2000,
+            system: systemMsg || "You are an expert coding interview coach. Be precise and structured.",
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error?.message || 'API error');
+        return data.content?.find(b => b.type === 'text')?.text || '';
+      } catch (e) {
+        outputEl.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Error: ${e.message}</div>`;
+        return null;
+      }
+    }
+
+    async function ipExplain() {
+      const code = document.getElementById('ip-solution-code').value.trim();
+      const num = document.getElementById('ip-lc-num').value.trim();
+      const title = document.getElementById('ip-lc-title').value.trim();
+      const lang = document.getElementById('ip-lc-lang').value;
+      if (!code) { toast('Paste your solution first'); return; }
+      const out = document.getElementById('ip-explain-output');
+      const problemCtx = (num || title) ? `Problem: #${num} ${title}` : 'LeetCode problem';
+      const prompt = `Explain this ${lang} solution for a ${problemCtx}. CRITICAL: write the pseudocode FIRST, before any line-by-line explanation.\n\nCode:\n\`\`\`${lang}\n${code}\n\`\`\`\n\nRespond in EXACTLY this order:\n\n## Pattern\nOne sentence naming the pattern.\n\n## Pseudocode\nNumbered plain-English steps FIRST — no language syntax, just the logic.\n\n## Line-by-line explanation\nNow map the pseudocode to the actual code. For each meaningful line/block: the line in backticks, which pseudocode step it implements and why.\n\n## Time complexity\nO(...) with justification.\n\n## Space complexity\nO(...) with justification.\n\n## Gotcha\nThe single most important thing that trips people up.`;
+      const text = await ipCallClaude(prompt, out, "You are an expert coding interview coach. The learner wants pseudocode FIRST, then line-by-line mapped back to those steps.");
+      if (!text) return;
+      const tVal = ipExtractO(text.match(/Time complexity[\s\S]{0,80}?O\([^)]+\)/i)?.[0]);
+      const sVal = ipExtractO(text.match(/Space complexity[\s\S]{0,80}?O\([^)]+\)/i)?.[0]);
+      out.innerHTML = `
+    <div class="ip-output on">
+      <div class="ip-complexity-grid">
+        <div class="ip-complexity-cell"><div class="ip-complexity-label">Time</div><div class="ip-complexity-value">${tVal}</div></div>
+        <div class="ip-complexity-cell"><div class="ip-complexity-label">Space</div><div class="ip-complexity-value">${sVal}</div></div>
+      </div>
+    </div>
+    <div class="ip-output on" style="margin-top:12px">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    async function ipComplexity() {
+      const code = document.getElementById('ip-solution-code').value.trim();
+      const lang = document.getElementById('ip-lc-lang').value;
+      if (!code) { toast('Paste your solution first'); return; }
+      const out = document.getElementById('ip-explain-output');
+      const prompt = `Analyze the time and space complexity of this ${lang} solution:\n\n\`\`\`${lang}\n${code}\n\`\`\`\n\n## Time complexity\nO(...) with justification.\n\n## Space complexity\nO(...) with justification.\n\n## Can we do better?\nIf a more optimal approach exists, name it and its complexity. Otherwise say "This is optimal."`;
+      const text = await ipCallClaude(prompt, out);
+      if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    async function ipGotcha() {
+      const code = document.getElementById('ip-solution-code').value.trim();
+      const lang = document.getElementById('ip-lc-lang').value;
+      if (!code) { toast('Paste your solution first'); return; }
+      const out = document.getElementById('ip-explain-output');
+      const prompt = `Review this ${lang} solution:\n\n\`\`\`${lang}\n${code}\n\`\`\`\n\n## Gotcha\nThe 1–2 things that most commonly cause bugs.\n\n## Edge cases\nList edge cases this handles or fails to. Mark each ✅ or ❌.\n\n## Common mistakes\nWhat a wrong solution looks like.\n\n## Interview tip\nOne tip for explaining this confidently.`;
+      const text = await ipCallClaude(prompt, out);
+      if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    async function ipRevision() {
+      const code = document.getElementById('ip-solution-code').value.trim();
+      const num = document.getElementById('ip-lc-num').value.trim();
+      const title = document.getElementById('ip-lc-title').value.trim();
+      const lang = document.getElementById('ip-lc-lang').value;
+      if (!code) { toast('Paste your solution first'); return; }
+      const out = document.getElementById('ip-explain-output');
+      const prompt = `Generate a revision card. Pseudocode before code.\n\nProblem: #${num} ${title || '(untitled)'}\nCode:\n\`\`\`${lang}\n${code}\n\`\`\`\n\n## Pattern\n## Pseudocode\n3–6 steps in plain English (before the code)\n## Clean solution\nClean, commented version in ${lang}.\n## Time / Space\nT: O(...) | S: O(...)\n## Gotcha\nMost important thing that trips people up.`;
+      const text = await ipCallClaude(prompt, out);
+      if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    async function ipCompanyPrep() {
+      const company = document.getElementById('ip-company-select').value;
+      const itype = document.getElementById('ip-interview-type').value;
+      const role = document.getElementById('ip-role-select').value;
+      const days = document.getElementById('ip-days-until').value || '7';
+      if (!company) { toast('Select a company'); return; }
+      const out = document.getElementById('ip-company-output');
+      const cnames = { google: 'Google', meta: 'Meta', amazon: 'Amazon', apple: 'Apple', microsoft: 'Microsoft', netflix: 'Netflix', uber: 'Uber', airbnb: 'Airbnb', stripe: 'Stripe', linkedin: 'LinkedIn', twitter: 'X/Twitter', salesforce: 'Salesforce', other: 'the company' };
+      const rnames = { swe: 'Software Engineer', senior: 'Senior SWE', staff: 'Staff/Principal Engineer', ml: 'ML Engineer', backend: 'Backend Engineer', fullstack: 'Full-stack Engineer' };
+      const cname = cnames[company] || company, rname = rnames[role] || role;
+      const prompt = `I have ${days} days to prep for a ${itype} at ${cname} for ${rname}.\n\n## Must-do LeetCode problems\nTop 10–15 most commonly asked. Each: number+name, difficulty, pattern, why ${cname} asks it.\n\n## Key patterns to master\n3–5 most critical patterns.\n\n## ${cname}-specific tips\n2–3 things (culture, interview style, what they value).\n\n## ${days}-day study plan\nDay-by-day, 30 min/day.\n\n## System design topics\nIf relevant for ${rname}, the 2–3 most likely SD questions.`;
+      const text = await ipCallClaude(prompt, out, `Expert FAANG interview coach with deep knowledge of ${cname}'s process. Be specific and actionable.`);
+      if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    async function ipSystemDesign() {
+      const custom = document.getElementById('ip-sd-custom').value.trim();
+      const topic = custom || ipSelectedSD;
+      if (!topic) { toast('Select a topic or type one'); return; }
+      const out = document.getElementById('ip-sd-output');
+      const prompt = `Complete system design guide for: "${topic}"\n\n## Requirements clarification\n3–4 questions to ask first, with example answers.\n\n## High-level design\nCore components and how they connect.\n\n## Key design decisions\nFor each: the tradeoff, which to choose and why.\n\n## Scalability\n3 main challenges and how to address them.\n\n## Data model\nKey tables/structures.\n\n## Interview walk-through order\nExact sequence, step-by-step.\n\n## Common follow-up questions\n3 follow-ups with short answers.`;
+      const text = await ipCallClaude(prompt, out, "Staff-level systems engineer and interview coach. Precise and technical.");
+      if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
 
     // ─── BOOT ─────────────────────────────────────────────────────
     async function boot() {
