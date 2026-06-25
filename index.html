@@ -4335,6 +4335,233 @@
       justify-content: flex-end;
     }
 
+    /* ── INTERVIEW PREP VISUALIZER ── */
+    .ip-viz-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .ip-viz-btn {
+      background: #47ffb3;
+      color: #000;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .ip-viz-btn:hover {
+      opacity: .85;
+    }
+
+    .ip-viz-btn:disabled {
+      background: var(--border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    .ip-viz-progress {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .ip-viz-progress-fill {
+      height: 100%;
+      background: #47ffb3;
+      border-radius: 3px;
+      transition: width .3s;
+    }
+
+    .ip-viz-counter {
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .ip-viz-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid #47ffb3;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 10px;
+      animation: fadeInUp .3s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .ip-viz-step-num {
+      display: inline-block;
+      background: #47ffb3;
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+
+    .ip-viz-step-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      background: var(--surface2);
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      color: var(--accent);
+      overflow-x: auto;
+    }
+
+    .ip-viz-step-desc {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .ip-viz-vars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .ip-viz-var {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    .ip-viz-var-name {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .ip-viz-var-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: #47ffb3;
+      word-break: break-all;
+    }
+
+    .ip-viz-var.changed {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .05);
+      animation: varPulse .6s ease;
+    }
+
+    @keyframes varPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(71, 255, 179, .4)
+      }
+
+      100% {
+        box-shadow: 0 0 0 8px rgba(71, 255, 179, 0)
+      }
+    }
+
+    /* ── ASK DOUBT CHAT ── */
+    .ip-doubt-msg {
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      max-width: 90%;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .ip-doubt-msg.user {
+      background: rgba(232, 255, 71, .08);
+      border: 1px solid rgba(232, 255, 71, .2);
+      margin-left: auto;
+      color: var(--text);
+    }
+
+    .ip-doubt-msg.bot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .ip-doubt-msg.bot h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: #47ffb3;
+      margin: 10px 0 4px;
+    }
+
+    .ip-doubt-msg.bot h3:first-child {
+      margin-top: 0;
+    }
+
+    .ip-doubt-msg.bot code {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      background: var(--surface2);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+
+    .ip-doubt-msg.bot pre {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      overflow-x: auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      margin: 8px 0;
+      color: var(--accent);
+    }
+
+    .ip-doubt-msg.bot strong {
+      color: #47ffb3;
+    }
+
+    .ip-doubt-msg.bot li {
+      margin-left: 18px;
+      margin-bottom: 3px;
+    }
+
     /* ── INTERVIEW PREP ── */
     .ip-sd-card {
       background: var(--surface);
@@ -5658,6 +5885,8 @@
           <!-- Sub-tabs -->
           <div class="dtabs" style="margin-bottom:20px">
             <div class="dtab on" id="ipt-explain" onclick="ipTab('explain',this)">📄 Explain Solution</div>
+            <div class="dtab" id="ipt-visualize" onclick="ipTab('visualize',this)">📊 Visualize</div>
+            <div class="dtab" id="ipt-doubt" onclick="ipTab('doubt',this)">❓ Ask Doubt</div>
             <div class="dtab" id="ipt-company" onclick="ipTab('company',this)">🏢 Company Prep</div>
             <div class="dtab" id="ipt-systemdesign" onclick="ipTab('systemdesign',this)">⚙️ System Design</div>
           </div>
@@ -5707,6 +5936,73 @@
               </div>
             </div>
             <div id="ip-explain-output"></div>
+          </div>
+
+          <!-- VISUALIZE -->
+          <div id="ip-panel-visualize" style="display:none">
+            <div class="ai-profile-strip" style="margin-bottom:16px">
+              <div
+                style="font-size:12px;color:var(--text-muted);background:var(--surface2);border-radius:6px;padding:10px 12px;line-height:1.7;margin-bottom:14px">
+                Paste your code with a sample input. Claude will trace through each step, showing variable state changes
+                — perfect for understanding loops, recursion, and tricky algorithms.
+              </div>
+              <div class="ai-gen-field">
+                <label>Problem (optional)</label>
+                <input class="fld" id="ip-viz-title" placeholder="e.g. Two Sum, Binary Search" style="width:100%">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="ai-gen-field">
+                  <label>Your Code</label>
+                  <textarea class="fta" id="ip-viz-code" rows="10" placeholder="def twoSum(nums, target):..."
+                    style="font-family:'DM Mono',monospace;font-size:13px"></textarea>
+                </div>
+                <div class="ai-gen-field">
+                  <label>Sample Input</label>
+                  <textarea class="fta" id="ip-viz-input" rows="10" placeholder="nums = [2, 7, 11, 15]&#10;target = 9"
+                    style="font-family:'DM Mono',monospace;font-size:13px"></textarea>
+                </div>
+              </div>
+              <button class="btn-a" onclick="ipVisualize()">📊 Trace Step-by-Step</button>
+            </div>
+            <div id="ip-viz-output"></div>
+          </div>
+
+          <!-- ASK DOUBT -->
+          <div id="ip-panel-doubt" style="display:none">
+            <div class="ai-profile-strip" style="margin-bottom:16px">
+              <div
+                style="font-size:12px;color:var(--text-muted);background:var(--surface2);border-radius:6px;padding:10px 12px;line-height:1.7;margin-bottom:14px">
+                Ask anything about coding interviews — concepts, debugging, why an approach works, alternative
+                solutions, language differences, etc. Claude has context from your current problem if you've used
+                Explain or Visualize.
+              </div>
+              <div id="ip-doubt-chat"
+                style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;min-height:200px;max-height:500px;overflow-y:auto;margin-bottom:12px;font-size:13px;line-height:1.7">
+                <div style="color:var(--text-muted);text-align:center;padding:30px 10px">
+                  💬 Start asking your interview questions below.<br>
+                  <span style="font-size:11px;color:var(--text-muted)">Examples: "Why is this O(n²) instead of O(n)?" ·
+                    "When should I use a heap vs sorted array?" · "Walk me through dynamic programming"</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <textarea class="fta" id="ip-doubt-input" rows="2" placeholder="Type your question..."
+                  style="flex:1;font-size:13px"
+                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ipAskDoubt();}"></textarea>
+                <button class="btn-a" onclick="ipAskDoubt()" style="align-self:stretch">Ask</button>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn-cancel" style="font-size:11px;padding:5px 10px"
+                  onclick="ipQuickAsk('Explain time complexity using simple examples')">⏱ Time complexity 101</button>
+                <button class="btn-cancel" style="font-size:11px;padding:5px 10px"
+                  onclick="ipQuickAsk('What are the most common DP patterns?')">🎯 DP patterns</button>
+                <button class="btn-cancel" style="font-size:11px;padding:5px 10px"
+                  onclick="ipQuickAsk('When should I use BFS vs DFS?')">🌲 BFS vs DFS</button>
+                <button class="btn-cancel" style="font-size:11px;padding:5px 10px"
+                  onclick="ipQuickAsk('Tips for behavioral interview questions')">🤝 Behavioral tips</button>
+                <button class="btn-cancel" style="font-size:11px;padding:5px 10px" onclick="ipClearDoubt()">🗑 Clear
+                  chat</button>
+              </div>
+            </div>
           </div>
 
           <!-- COMPANY PREP -->
@@ -8539,6 +8835,8 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       document.querySelectorAll('#view-interview .dtab').forEach(x => x.classList.remove('on'));
       if (el) el.classList.add('on');
       document.getElementById('ip-panel-explain').style.display = name === 'explain' ? 'block' : 'none';
+      document.getElementById('ip-panel-visualize').style.display = name === 'visualize' ? 'block' : 'none';
+      document.getElementById('ip-panel-doubt').style.display = name === 'doubt' ? 'block' : 'none';
       document.getElementById('ip-panel-company').style.display = name === 'company' ? 'block' : 'none';
       document.getElementById('ip-panel-systemdesign').style.display = name === 'systemdesign' ? 'block' : 'none';
     }
@@ -8680,6 +8978,199 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       const prompt = `Complete system design guide for: "${topic}"\n\n## Requirements clarification\n3–4 questions to ask first, with example answers.\n\n## High-level design\nCore components and how they connect.\n\n## Key design decisions\nFor each: the tradeoff, which to choose and why.\n\n## Scalability\n3 main challenges and how to address them.\n\n## Data model\nKey tables/structures.\n\n## Interview walk-through order\nExact sequence, step-by-step.\n\n## Common follow-up questions\n3 follow-ups with short answers.`;
       const text = await ipCallClaude(prompt, out, "Staff-level systems engineer and interview coach. Precise and technical.");
       if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
+    }
+
+    // ── INTERVIEW PREP: VISUALIZER ────────────────────────────────
+    let ipVizSteps = [];
+    let ipVizCurrent = 0;
+
+    async function ipVisualize() {
+      const code = document.getElementById('ip-viz-code').value.trim();
+      const input = document.getElementById('ip-viz-input').value.trim();
+      const title = document.getElementById('ip-viz-title').value.trim();
+      if (!code) { toast('Paste your code first'); return; }
+      if (!input) { toast('Provide sample input'); return; }
+      const out = document.getElementById('ip-viz-output');
+      out.innerHTML = `<div class="ip-output on"><div class="ip-loading"><div class="ip-spin"></div>Tracing execution step-by-step…</div></div>`;
+      const prompt = `Trace through this code step-by-step with the given input. Generate a detailed execution trace.
+
+${title ? `Problem: ${title}\n\n` : ''}Code:
+\`\`\`
+${code}
+\`\`\`
+
+Input:
+${input}
+
+Respond ONLY with valid JSON in this exact format (no markdown):
+{
+  "steps": [
+    {
+      "step": 1,
+      "line": "the exact code line being executed",
+      "description": "what this step does in plain English (1-2 sentences)",
+      "vars": { "varName": "current value", "another": "value" },
+      "changed": ["varName"]
+    }
+  ],
+  "summary": "1 sentence final result and what the algorithm did"
+}
+
+Rules:
+- Show EVERY meaningful step (loop iterations, function calls, condition checks, variable updates)
+- For loops: include each iteration as a separate step
+- vars should ALWAYS include all currently in-scope variables with their current values
+- changed lists variables that CHANGED in this specific step (highlight them)
+- description should explain WHY this step happens, not just what
+- Aim for 8-25 steps total — be thorough but not excessive
+- If the code crashes/errors, show steps up to and including the error`;
+
+      const text = await ipCallClaude(prompt, out, "Expert code execution tracer. Generate precise step-by-step traces showing variable state at each point.");
+      if (!text) return;
+
+      try {
+        const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+        ipVizSteps = parsed.steps || [];
+        ipVizCurrent = 0;
+        if (ipVizSteps.length === 0) {
+          out.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">No steps generated. Try simpler code or clearer input.</div>`;
+          return;
+        }
+        ipRenderViz(parsed.summary);
+      } catch (e) {
+        out.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Failed to parse trace. Try simpler code.</div>`;
+        console.error(e);
+      }
+    }
+
+    function ipRenderViz(summary) {
+      const out = document.getElementById('ip-viz-output');
+      const step = ipVizSteps[ipVizCurrent];
+      if (!step) return;
+      const total = ipVizSteps.length;
+      const pct = Math.round(((ipVizCurrent + 1) / total) * 100);
+      const changed = step.changed || [];
+      const varsHTML = Object.entries(step.vars || {}).map(([name, val]) => {
+        const isChanged = changed.includes(name);
+        const displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
+        return `<div class="ip-viz-var ${isChanged ? 'changed' : ''}">
+      <div class="ip-viz-var-name">${name}</div>
+      <div class="ip-viz-var-val">${displayVal}</div>
+    </div>`;
+      }).join('');
+      out.innerHTML = `
+    <div class="ip-viz-controls">
+      <button class="ip-viz-btn" onclick="ipVizPrev()" ${ipVizCurrent === 0 ? 'disabled' : ''}>◀</button>
+      <button class="ip-viz-btn" onclick="ipVizPlay()" title="Play all">▶▶</button>
+      <button class="ip-viz-btn" onclick="ipVizNext()" ${ipVizCurrent >= total - 1 ? 'disabled' : ''}>▶</button>
+      <div class="ip-viz-progress"><div class="ip-viz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="ip-viz-counter">${ipVizCurrent + 1} / ${total}</div>
+      <button class="ip-viz-btn" onclick="ipVizReset()" title="Reset" style="background:var(--surface);color:var(--text)">⟲</button>
+    </div>
+    <div class="ip-viz-step">
+      <div class="ip-viz-step-num">STEP ${step.step}</div>
+      <div class="ip-viz-step-line">${step.line || '(no line)'}</div>
+      <div class="ip-viz-step-desc">${step.description || ''}</div>
+      ${varsHTML ? `<div class="ip-viz-vars">${varsHTML}</div>` : ''}
+    </div>
+    ${ipVizCurrent === total - 1 && summary ? `<div class="ip-output on" style="margin-top:14px"><h3>✓ Final Result</h3><p>${summary}</p></div>` : ''}
+  `;
+    }
+
+    function ipVizNext() { if (ipVizCurrent < ipVizSteps.length - 1) { ipVizCurrent++; ipRenderViz(); } }
+    function ipVizPrev() { if (ipVizCurrent > 0) { ipVizCurrent--; ipRenderViz(); } }
+    function ipVizReset() { ipVizCurrent = 0; ipRenderViz(); }
+
+    let ipVizPlayInterval = null;
+    function ipVizPlay() {
+      if (ipVizPlayInterval) { clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; return; }
+      ipVizPlayInterval = setInterval(() => {
+        if (ipVizCurrent >= ipVizSteps.length - 1) {
+          clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; return;
+        }
+        ipVizCurrent++; ipRenderViz();
+      }, 1500);
+    }
+
+    // ── INTERVIEW PREP: ASK DOUBT ─────────────────────────────────
+    let ipDoubtHistory = [];
+
+    function ipQuickAsk(q) {
+      document.getElementById('ip-doubt-input').value = q;
+      ipAskDoubt();
+    }
+
+    function ipClearDoubt() {
+      ipDoubtHistory = [];
+      document.getElementById('ip-doubt-chat').innerHTML = `
+    <div style="color:var(--text-muted);text-align:center;padding:30px 10px">
+      💬 Start asking your interview questions below.<br>
+      <span style="font-size:11px;color:var(--text-muted)">Examples: "Why is this O(n²) instead of O(n)?" · "When should I use a heap vs sorted array?" · "Walk me through dynamic programming"</span>
+    </div>`;
+    }
+
+    async function ipAskDoubt() {
+      const input = document.getElementById('ip-doubt-input');
+      const question = input.value.trim();
+      if (!question) return;
+      const key = aiKey || localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude API key in AI Tools tab first'); return; }
+
+      const chatEl = document.getElementById('ip-doubt-chat');
+      // Clear placeholder if first message
+      if (ipDoubtHistory.length === 0) chatEl.innerHTML = '';
+
+      // Append user message
+      ipDoubtHistory.push({ role: 'user', content: question });
+      const userMsg = document.createElement('div');
+      userMsg.className = 'ip-doubt-msg user';
+      userMsg.textContent = question;
+      chatEl.appendChild(userMsg);
+      input.value = '';
+      chatEl.scrollTop = chatEl.scrollHeight;
+
+      // Pull context from current Explain/Visualize state
+      const explainCode = document.getElementById('ip-solution-code')?.value?.trim() || '';
+      const vizCode = document.getElementById('ip-viz-code')?.value?.trim() || '';
+      const explainTitle = document.getElementById('ip-lc-title')?.value?.trim() || '';
+      const contextCode = explainCode || vizCode;
+      const contextNote = contextCode
+        ? `\n\nCONTEXT — the user is currently looking at this code${explainTitle ? ` (problem: ${explainTitle})` : ''}:\n\`\`\`\n${contextCode.slice(0, 1500)}\n\`\`\`\nIf the question relates to this code, use it as context.`
+        : '';
+
+      // Append loading bot message
+      const botMsg = document.createElement('div');
+      botMsg.className = 'ip-doubt-msg bot';
+      botMsg.innerHTML = '<div class="ip-loading" style="padding:0"><div class="ip-spin"></div>Thinking…</div>';
+      chatEl.appendChild(botMsg);
+      chatEl.scrollTop = chatEl.scrollHeight;
+
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1500,
+            system: `You are an expert coding interview coach. Answer concisely but thoroughly. Use markdown: ## headers, **bold**, \`code\`, code blocks, and bullet lists. Be direct — no fluff. If the user asks about a specific algorithm or pattern, give concrete examples.${contextNote}`,
+            messages: ipDoubtHistory.map(m => ({ role: m.role, content: m.content }))
+          })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error?.message || 'API error');
+        const answer = data.content?.find(b => b.type === 'text')?.text || 'No response';
+        ipDoubtHistory.push({ role: 'assistant', content: answer });
+        // Render with markdown
+        botMsg.innerHTML = ipRenderMarkdown(answer).replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+        chatEl.scrollTop = chatEl.scrollHeight;
+      } catch (e) {
+        botMsg.innerHTML = `<span style="color:var(--accent2)">Error: ${e.message}</span>`;
+      }
     }
 
     // ─── BOOT ─────────────────────────────────────────────────────
