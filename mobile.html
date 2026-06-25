@@ -4120,6 +4120,203 @@
       animation: spin .7s linear infinite;
       flex-shrink: 0;
     }
+
+    /* mobile visualizer */
+    .m-ip-viz-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .m-ip-viz-btn {
+      background: #47ffb3;
+      color: #000;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .m-ip-viz-btn:disabled {
+      background: var(--border);
+      color: var(--muted);
+      opacity: .5;
+    }
+
+    .m-ip-viz-progress {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .m-ip-viz-progress-fill {
+      height: 100%;
+      background: #47ffb3;
+      transition: width .3s;
+    }
+
+    .m-ip-viz-counter {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .m-ip-viz-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid #47ffb3;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      animation: fadeInUp .3s ease;
+    }
+
+    .m-ip-viz-step-num {
+      display: inline-block;
+      background: #47ffb3;
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-bottom: 7px;
+    }
+
+    .m-ip-viz-step-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      background: var(--surface2);
+      padding: 7px 10px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      overflow-x: auto;
+    }
+
+    .m-ip-viz-step-desc {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .m-ip-viz-vars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .m-ip-viz-var {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 6px 8px;
+    }
+
+    .m-ip-viz-var-name {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .m-ip-viz-var-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: #47ffb3;
+      word-break: break-all;
+    }
+
+    .m-ip-viz-var.changed {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .05);
+    }
+
+    /* mobile doubt chat */
+    .m-ip-doubt-msg {
+      margin-bottom: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      max-width: 90%;
+      line-height: 1.6;
+      font-size: 12px;
+    }
+
+    .m-ip-doubt-msg.user {
+      background: rgba(232, 255, 71, .08);
+      border: 1px solid rgba(232, 255, 71, .2);
+      margin-left: auto;
+      color: var(--text);
+    }
+
+    .m-ip-doubt-msg.bot {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .m-ip-doubt-msg.bot h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #47ffb3;
+      margin: 8px 0 3px;
+    }
+
+    .m-ip-doubt-msg.bot h3:first-child {
+      margin-top: 0;
+    }
+
+    .m-ip-doubt-msg.bot code {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      background: var(--surface);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+
+    .m-ip-doubt-msg.bot pre {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 8px;
+      overflow-x: auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      margin: 6px 0;
+      color: var(--accent);
+    }
+
+    .m-ip-doubt-msg.bot strong {
+      color: #47ffb3;
+    }
+
+    .m-ip-doubt-msg.bot li {
+      margin-left: 14px;
+    }
   </style>
 </head>
 
@@ -4613,6 +4810,8 @@
     </div>
     <div class="m-ip-tabs">
       <div class="m-ip-tab on" id="m-ip-tab-explain" onclick="mIpTab('explain',this)">📄 Explain</div>
+      <div class="m-ip-tab" id="m-ip-tab-viz" onclick="mIpTab('viz',this)">📊 Trace</div>
+      <div class="m-ip-tab" id="m-ip-tab-doubt" onclick="mIpTab('doubt',this)">❓ Doubt</div>
       <div class="m-ip-tab" id="m-ip-tab-company" onclick="mIpTab('company',this)">🏢 Company</div>
       <div class="m-ip-tab" id="m-ip-tab-sd" onclick="mIpTab('sd',this)">⚙️ Design</div>
     </div>
@@ -4650,6 +4849,52 @@
           </div>
         </div>
         <div id="m-ip-explain-out"></div>
+      </div>
+
+      <!-- Visualize panel -->
+      <div id="m-ip-panel-viz" style="display:none">
+        <div class="m-ip-card">
+          <div class="ai-gen-field"><label>Problem (optional)</label>
+            <input id="m-ip-viz-title" placeholder="e.g. Two Sum"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:14px;outline:none">
+          </div>
+          <div class="ai-gen-field"><label>Your Code</label>
+            <textarea id="m-ip-viz-code" rows="7" placeholder="def twoSum(nums, target):..."
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none;resize:vertical"></textarea>
+          </div>
+          <div class="ai-gen-field"><label>Sample Input</label>
+            <textarea id="m-ip-viz-input" rows="3" placeholder="nums = [2,7,11,15]&#10;target = 9"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none;resize:vertical"></textarea>
+          </div>
+          <button class="ai-gen-go" onclick="mIpVisualize()" style="width:100%">📊 Trace Step-by-Step</button>
+        </div>
+        <div id="m-ip-viz-out"></div>
+      </div>
+
+      <!-- Ask Doubt panel -->
+      <div id="m-ip-panel-doubt" style="display:none">
+        <div id="m-ip-doubt-chat"
+          style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;min-height:180px;margin-bottom:12px;font-size:13px;line-height:1.7">
+          <div style="color:var(--muted);text-align:center;padding:24px 8px">
+            💬 Ask any coding interview question.<br>
+            <span style="font-size:10px">e.g. "Why is this O(n²)?" "BFS vs DFS?"</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <textarea id="m-ip-doubt-input" rows="2" placeholder="Type your question..."
+            style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;resize:vertical"></textarea>
+          <button class="ai-gen-go" onclick="mIpAskDoubt()" style="align-self:stretch;padding:0 16px">Ask</button>
+        </div>
+        <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap">
+          <button class="sheet-cancel" style="font-size:10px;padding:5px 8px"
+            onclick="mIpQuickAsk('Explain time complexity using simple examples')">⏱ Time complexity</button>
+          <button class="sheet-cancel" style="font-size:10px;padding:5px 8px"
+            onclick="mIpQuickAsk('What are the most common DP patterns?')">🎯 DP patterns</button>
+          <button class="sheet-cancel" style="font-size:10px;padding:5px 8px"
+            onclick="mIpQuickAsk('When should I use BFS vs DFS?')">🌲 BFS vs DFS</button>
+          <button class="sheet-cancel" style="font-size:10px;padding:5px 8px" onclick="mIpClearDoubt()">🗑
+            Clear</button>
+        </div>
       </div>
 
       <!-- Company panel -->
@@ -6336,6 +6581,8 @@ Respond ONLY with valid JSON:
       document.querySelectorAll('.m-ip-tab').forEach(x => x.classList.remove('on'));
       el.classList.add('on');
       document.getElementById('m-ip-panel-explain').style.display = name === 'explain' ? 'block' : 'none';
+      document.getElementById('m-ip-panel-viz').style.display = name === 'viz' ? 'block' : 'none';
+      document.getElementById('m-ip-panel-doubt').style.display = name === 'doubt' ? 'block' : 'none';
       document.getElementById('m-ip-panel-company').style.display = name === 'company' ? 'block' : 'none';
       document.getElementById('m-ip-panel-sd').style.display = name === 'sd' ? 'block' : 'none';
     }
@@ -6477,6 +6724,132 @@ Respond ONLY with valid JSON:
       const prompt = `System design guide for: "${topic}"\n\n## Requirements clarification\n3-4 questions with example answers.\n\n## High-level design\nCore components and connections.\n\n## Key design decisions\nTradeoffs and choices.\n\n## Scalability\n3 challenges and solutions.\n\n## Data model\nKey tables/structures.\n\n## Interview walk-through order\nStep-by-step.\n\n## Common follow-up questions\n3 with short answers.`;
       const text = await mIpCallClaude(prompt, out, "Staff-level systems engineer. Precise and technical.");
       if (text) out.innerHTML = `<div class="m-ip-output on">${mIpRenderMarkdown(text)}</div>`;
+    }
+
+    // ── MOBILE VISUALIZER ─────────────────────────────────────────
+    let mIpVizSteps = [];
+    let mIpVizCurrent = 0;
+
+    async function mIpVisualize() {
+      const code = document.getElementById('m-ip-viz-code').value.trim();
+      const input = document.getElementById('m-ip-viz-input').value.trim();
+      const title = document.getElementById('m-ip-viz-title').value.trim();
+      if (!code) { toast('Paste your code first'); return; }
+      if (!input) { toast('Provide sample input'); return; }
+      const out = document.getElementById('m-ip-viz-out');
+      out.innerHTML = `<div class="m-ip-output on"><div class="m-ip-loading"><div class="m-ip-spin-inner"></div>Tracing…</div></div>`;
+      const prompt = `Trace this code with the input. JSON only:\n\n${title ? `Problem: ${title}\n` : ''}Code:\n\`\`\`\n${code}\n\`\`\`\nInput:\n${input}\n\nFormat:\n{"steps":[{"step":1,"line":"code line","description":"plain English","vars":{"x":"value"},"changed":["x"]}],"summary":"final result"}\n\nRules:\n- Every meaningful step (loop iters, calls, conditions)\n- vars always shows all in-scope variables\n- changed = vars that changed this step\n- 8-25 steps total`;
+      const text = await mIpCallClaude(prompt, out, "Expert code execution tracer. Generate precise step-by-step traces.");
+      if (!text) return;
+      try {
+        const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+        mIpVizSteps = parsed.steps || [];
+        mIpVizCurrent = 0;
+        if (mIpVizSteps.length === 0) { out.innerHTML = `<div class="m-ip-output on" style="color:var(--accent2)">No steps generated.</div>`; return; }
+        mIpRenderViz(parsed.summary);
+      } catch (e) {
+        out.innerHTML = `<div class="m-ip-output on" style="color:var(--accent2)">Failed to parse trace.</div>`;
+      }
+    }
+
+    function mIpRenderViz(summary) {
+      const out = document.getElementById('m-ip-viz-out');
+      const step = mIpVizSteps[mIpVizCurrent];
+      if (!step) return;
+      const total = mIpVizSteps.length;
+      const pct = Math.round(((mIpVizCurrent + 1) / total) * 100);
+      const changed = step.changed || [];
+      const varsHTML = Object.entries(step.vars || {}).map(([name, val]) => {
+        const isChanged = changed.includes(name);
+        const displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
+        return `<div class="m-ip-viz-var ${isChanged ? 'changed' : ''}"><div class="m-ip-viz-var-name">${name}</div><div class="m-ip-viz-var-val">${displayVal}</div></div>`;
+      }).join('');
+      out.innerHTML = `
+    <div class="m-ip-viz-controls">
+      <button class="m-ip-viz-btn" onclick="mIpVizPrev()" ${mIpVizCurrent === 0 ? 'disabled' : ''}>◀</button>
+      <button class="m-ip-viz-btn" onclick="mIpVizPlay()">▶▶</button>
+      <button class="m-ip-viz-btn" onclick="mIpVizNext()" ${mIpVizCurrent >= total - 1 ? 'disabled' : ''}>▶</button>
+      <div class="m-ip-viz-progress"><div class="m-ip-viz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="m-ip-viz-counter">${mIpVizCurrent + 1} / ${total}</div>
+    </div>
+    <div class="m-ip-viz-step">
+      <div class="m-ip-viz-step-num">STEP ${step.step}</div>
+      <div class="m-ip-viz-step-line">${step.line || ''}</div>
+      <div class="m-ip-viz-step-desc">${step.description || ''}</div>
+      ${varsHTML ? `<div class="m-ip-viz-vars">${varsHTML}</div>` : ''}
+    </div>
+    ${mIpVizCurrent === total - 1 && summary ? `<div class="m-ip-output on" style="margin-top:12px"><h3>✓ Final Result</h3><p>${summary}</p></div>` : ''}
+  `;
+    }
+
+    function mIpVizNext() { if (mIpVizCurrent < mIpVizSteps.length - 1) { mIpVizCurrent++; mIpRenderViz(); } }
+    function mIpVizPrev() { if (mIpVizCurrent > 0) { mIpVizCurrent--; mIpRenderViz(); } }
+    let mIpVizPlayInterval = null;
+    function mIpVizPlay() {
+      if (mIpVizPlayInterval) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; return; }
+      mIpVizPlayInterval = setInterval(() => {
+        if (mIpVizCurrent >= mIpVizSteps.length - 1) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; return; }
+        mIpVizCurrent++; mIpRenderViz();
+      }, 1500);
+    }
+
+    // ── MOBILE ASK DOUBT ──────────────────────────────────────────
+    let mIpDoubtHistory = [];
+
+    function mIpQuickAsk(q) { document.getElementById('m-ip-doubt-input').value = q; mIpAskDoubt(); }
+    function mIpClearDoubt() {
+      mIpDoubtHistory = [];
+      document.getElementById('m-ip-doubt-chat').innerHTML = `<div style="color:var(--muted);text-align:center;padding:24px 8px">💬 Ask any coding interview question.</div>`;
+    }
+
+    async function mIpAskDoubt() {
+      const inp = document.getElementById('m-ip-doubt-input');
+      const q = inp.value.trim();
+      if (!q) return;
+      const key = localStorage.getItem('ai-anthropic-key');
+      if (!key) { toast('Add Claude key in AI tab'); return; }
+
+      const chat = document.getElementById('m-ip-doubt-chat');
+      if (mIpDoubtHistory.length === 0) chat.innerHTML = '';
+      mIpDoubtHistory.push({ role: 'user', content: q });
+      const userMsg = document.createElement('div');
+      userMsg.className = 'm-ip-doubt-msg user';
+      userMsg.textContent = q;
+      chat.appendChild(userMsg);
+      inp.value = '';
+      chat.scrollTop = chat.scrollHeight;
+
+      const explainCode = document.getElementById('m-ip-solution-code')?.value?.trim() || '';
+      const vizCode = document.getElementById('m-ip-viz-code')?.value?.trim() || '';
+      const contextCode = explainCode || vizCode;
+      const contextNote = contextCode ? `\n\nCONTEXT — user is looking at this code:\n\`\`\`\n${contextCode.slice(0, 1500)}\n\`\`\`` : '';
+
+      const botMsg = document.createElement('div');
+      botMsg.className = 'm-ip-doubt-msg bot';
+      botMsg.innerHTML = '<div class="m-ip-loading" style="padding:0"><div class="m-ip-spin-inner"></div>Thinking…</div>';
+      chat.appendChild(botMsg);
+      chat.scrollTop = chat.scrollHeight;
+
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 1200,
+            system: `Expert coding interview coach. Concise but thorough. Use markdown: ## headers, **bold**, \`code\`, code blocks, bullets. Direct, no fluff.${contextNote}`,
+            messages: mIpDoubtHistory.map(m => ({ role: m.role, content: m.content }))
+          })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error?.message || 'API error');
+        const answer = data.content?.find(b => b.type === 'text')?.text || 'No response';
+        mIpDoubtHistory.push({ role: 'assistant', content: answer });
+        botMsg.innerHTML = mIpRenderMarkdown(answer).replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+        chat.scrollTop = chat.scrollHeight;
+      } catch (e) {
+        botMsg.innerHTML = `<span style="color:var(--accent2)">Error: ${e.message}</span>`;
+      }
     }
 
     // ─── BOOT ─────────────────────────────────────────────────────
