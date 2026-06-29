@@ -4335,7 +4335,846 @@
       justify-content: flex-end;
     }
 
-    /* ── INTERVIEW PREP VISUALIZER ── */
+    /* ── VISUAL CODE VISUALIZER ── */
+    .viz-controls-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .viz-controls-left,
+    .viz-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .viz-controls-mid {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 160px;
+    }
+
+    .viz-ctrl-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: all .15s;
+    }
+
+    .viz-ctrl-btn:hover:not(:disabled) {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .08);
+    }
+
+    .viz-ctrl-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .viz-ctrl-btn.primary {
+      background: #47ffb3;
+      color: #000;
+      border-color: #47ffb3;
+    }
+
+    .viz-ctrl-btn.primary:hover:not(:disabled) {
+      background: #5cff7f;
+    }
+
+    .viz-progress {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .viz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #47c4ff, #47ffb3);
+      border-radius: 3px;
+      transition: width .3s ease;
+    }
+
+    .viz-counter {
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .viz-speed-label {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .viz-speed-sel {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+    }
+
+    .viz-pattern-badge {
+      background: linear-gradient(90deg, rgba(71, 255, 179, .1), rgba(71, 196, 255, .1));
+      border: 1px solid rgba(71, 255, 179, .3);
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .viz-pattern-badge strong {
+      color: #47ffb3;
+    }
+
+    .viz-main-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(0, 1.4fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width:900px) {
+      .viz-main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .viz-left,
+    .viz-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .viz-code-side {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .viz-code-line {
+      display: flex;
+      padding: 2px 12px;
+      transition: all .25s;
+      border-left: 3px solid transparent;
+    }
+
+    .viz-code-line.active {
+      background: rgba(71, 255, 179, .1);
+      border-left-color: #47ffb3;
+      animation: lineGlow .5s ease;
+    }
+
+    @keyframes lineGlow {
+      from {
+        background: rgba(71, 255, 179, .3)
+      }
+
+      to {
+        background: rgba(71, 255, 179, .1)
+      }
+    }
+
+    .viz-code-num {
+      color: var(--text-muted);
+      min-width: 30px;
+      text-align: right;
+      margin-right: 12px;
+      user-select: none;
+    }
+
+    .viz-code-text {
+      color: var(--accent);
+      white-space: pre;
+      flex: 1;
+    }
+
+    .viz-code-line.active .viz-code-text {
+      color: #47ffb3;
+      font-weight: 600;
+    }
+
+    /* Step card */
+    .viz-step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      animation: slideInRight .3s ease;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    .viz-step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .viz-step-badge {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      letter-spacing: 1px;
+    }
+
+    .viz-step-num {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    .viz-step-desc {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Visual card */
+    .viz-visual-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    /* Array */
+    .viz-array-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .viz-array {
+      display: flex;
+      gap: 4px;
+    }
+
+    .viz-cell {
+      width: 48px;
+      height: 60px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all .3s;
+      position: relative;
+    }
+
+    .viz-cell-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .viz-cell-idx {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .viz-cell.highlight {
+      background: rgba(71, 255, 179, .15);
+      border-color: var(--hl);
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 3px var(--hl), 0 4px 12px rgba(71, 255, 179, .4);
+    }
+
+    .viz-cell.highlight .viz-cell-val {
+      color: var(--hl);
+    }
+
+    .viz-cell.compare {
+      background: rgba(255, 159, 71, .15);
+      border-color: #ff9f47;
+      animation: comparePulse 1s ease infinite;
+    }
+
+    @keyframes comparePulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 159, 71, .4)
+      }
+
+      50% {
+        box-shadow: 0 0 0 4px rgba(255, 159, 71, 0)
+      }
+    }
+
+    .viz-cell.visited {
+      opacity: .35;
+    }
+
+    .viz-pointers-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .viz-ptr-slot {
+      width: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-height: 36px;
+    }
+
+    .viz-ptr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: ptrBob .8s ease infinite;
+    }
+
+    @keyframes ptrBob {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(2px)
+      }
+    }
+
+    .viz-ptr-arrow {
+      color: var(--c);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .viz-ptr-name {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--c);
+      font-weight: 700;
+    }
+
+    /* Grid */
+    .viz-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .viz-grid-row {
+      display: flex;
+      gap: 2px;
+    }
+
+    .viz-grid-cell {
+      width: 38px;
+      height: 38px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .viz-grid-cell.visited {
+      opacity: .4;
+      background: #222;
+    }
+
+    .viz-grid-cell.frontier {
+      background: rgba(255, 159, 71, .2);
+      border-color: #ff9f47;
+      color: #ff9f47;
+    }
+
+    .viz-grid-cell.highlight,
+    .viz-grid-cell.current {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.08);
+      box-shadow: 0 0 0 2px var(--hl), 0 0 12px var(--hl);
+      font-weight: 700;
+      animation: cellPulse 1s ease infinite;
+    }
+
+    @keyframes cellPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 2px var(--hl), 0 0 12px var(--hl)
+      }
+
+      50% {
+        box-shadow: 0 0 0 4px var(--hl), 0 0 16px var(--hl)
+      }
+    }
+
+    /* Hashmap */
+    .viz-hashmap {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .viz-hash-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      transition: all .3s;
+    }
+
+    .viz-hash-row.highlight {
+      background: rgba(71, 255, 179, .1);
+      border-color: var(--hl);
+      transform: translateX(4px);
+      box-shadow: -3px 0 0 var(--hl);
+    }
+
+    .viz-hash-key {
+      color: #47c4ff;
+      font-weight: 700;
+      min-width: 50px;
+    }
+
+    .viz-hash-arrow {
+      color: var(--text-muted);
+    }
+
+    .viz-hash-val {
+      color: #47ffb3;
+      font-weight: 700;
+    }
+
+    /* Linked List */
+    .viz-linkedlist {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding-top: 30px;
+    }
+
+    .viz-ll-node-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .viz-ll-ptrs {
+      position: absolute;
+      top: -26px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .viz-ll-ptr {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--c);
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: ptrBob .8s ease infinite;
+    }
+
+    .viz-ll-ptr-arrow {
+      font-size: 11px;
+    }
+
+    .viz-ll-node {
+      display: flex;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: all .3s;
+    }
+
+    .viz-ll-node.highlight {
+      border-color: var(--hl);
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 2px var(--hl), 0 4px 10px rgba(71, 255, 179, .3);
+    }
+
+    .viz-ll-val {
+      padding: 10px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      border-right: 1px solid var(--border);
+    }
+
+    .viz-ll-next {
+      padding: 10px 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+      background: var(--surface);
+    }
+
+    /* Tree */
+    .viz-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 8px;
+    }
+
+    .viz-tree-level {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .viz-tree-node {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .viz-tree-node.visited {
+      opacity: .35;
+    }
+
+    .viz-tree-node.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.15);
+      box-shadow: 0 0 0 3px var(--hl), 0 0 16px var(--hl);
+      animation: cellPulse 1s ease infinite;
+    }
+
+    /* Stack */
+    .viz-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-width: 80px;
+    }
+
+    .viz-stack-label-top,
+    .viz-stack-label-bottom {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .viz-stack-item {
+      width: 90px;
+      padding: 10px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .viz-stack-item.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.05);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    /* Queue */
+    .viz-queue {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .viz-queue-label {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      writing-mode: vertical-rl;
+    }
+
+    .viz-queue-items {
+      display: flex;
+      gap: 3px;
+    }
+
+    .viz-queue-item {
+      width: 42px;
+      height: 42px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .viz-queue-item.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.08);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    /* Graph */
+    .viz-graph {
+      width: 260px;
+      height: 260px;
+      max-width: 100%;
+    }
+
+    /* Scalar fallback */
+    .viz-scalars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+
+    .viz-scalar {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+
+    .viz-scalar-name {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .viz-scalar-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      color: #47ffb3;
+      font-weight: 700;
+    }
+
+    .viz-empty {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Variables panel */
+    .viz-vars-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .viz-vars-title {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .viz-vars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 6px;
+    }
+
+    .viz-var {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 6px 8px;
+      position: relative;
+      transition: all .3s;
+    }
+
+    .viz-var.changed {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .06);
+      animation: varPulse 0.8s ease;
+    }
+
+    @keyframes varPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(71, 255, 179, .5)
+      }
+
+      100% {
+        box-shadow: 0 0 0 8px rgba(71, 255, 179, 0)
+      }
+    }
+
+    .viz-var-name {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 2px;
+    }
+
+    .viz-var-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .viz-var-flash {
+      position: absolute;
+      top: -7px;
+      right: 6px;
+      background: #47ffb3;
+      color: #000;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 8px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* Summary card */
+    .viz-summary-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, rgba(71, 255, 179, .08), rgba(71, 196, 255, .04));
+      border: 1px solid rgba(71, 255, 179, .3);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-top: 14px;
+      animation: slideInRight .4s ease;
+    }
+
+    .viz-summary-icon {
+      font-size: 32px;
+    }
+
+    .viz-summary-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+      color: #47ffb3;
+    }
+
+    .viz-summary-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+
+    /* ── INTERVIEW PREP VISUALIZER (LEGACY) ── */
     .ip-viz-controls {
       display: flex;
       gap: 10px;
@@ -8868,7 +9707,7 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       return m ? m[0] : '—';
     }
 
-    async function ipCallClaude(prompt, outputEl, systemMsg) {
+    async function ipCallClaude(prompt, outputEl, systemMsg, maxTokens) {
       const key = aiKey || localStorage.getItem('ai-anthropic-key');
       if (!key) {
         outputEl.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Add your Claude API key in the ✨ AI Tools tab first.</div>`;
@@ -8886,7 +9725,7 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
           },
           body: JSON.stringify({
             model: 'claude-sonnet-4-6',
-            max_tokens: 2000,
+            max_tokens: maxTokens || 2000,
             system: systemMsg || "You are an expert coding interview coach. Be precise and structured.",
             messages: [{ role: 'user', content: prompt }]
           })
@@ -8965,8 +9804,37 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       const cnames = { google: 'Google', meta: 'Meta', amazon: 'Amazon', apple: 'Apple', microsoft: 'Microsoft', netflix: 'Netflix', uber: 'Uber', airbnb: 'Airbnb', stripe: 'Stripe', linkedin: 'LinkedIn', twitter: 'X/Twitter', salesforce: 'Salesforce', other: 'the company' };
       const rnames = { swe: 'Software Engineer', senior: 'Senior SWE', staff: 'Staff/Principal Engineer', ml: 'ML Engineer', backend: 'Backend Engineer', fullstack: 'Full-stack Engineer' };
       const cname = cnames[company] || company, rname = rnames[role] || role;
-      const prompt = `I have ${days} days to prep for a ${itype} at ${cname} for ${rname}.\n\n## Must-do LeetCode problems\nTop 10–15 most commonly asked. Each: number+name, difficulty, pattern, why ${cname} asks it.\n\n## Key patterns to master\n3–5 most critical patterns.\n\n## ${cname}-specific tips\n2–3 things (culture, interview style, what they value).\n\n## ${days}-day study plan\nDay-by-day, 30 min/day.\n\n## System design topics\nIf relevant for ${rname}, the 2–3 most likely SD questions.`;
-      const text = await ipCallClaude(prompt, out, `Expert FAANG interview coach with deep knowledge of ${cname}'s process. Be specific and actionable.`);
+      const prompt = `You are coaching me for a ${itype} interview at ${cname} for ${rname}. I have ${days} days to prep.
+
+I need REAL, SPECIFIC questions actually asked at ${cname} — not generic LeetCode lists. Pull from Glassdoor reports, Blind posts, LeetCode discuss tagged ${cname}, and recent (2024-2026) candidate experiences.
+
+## Top 15 Coding Questions Asked at ${cname}
+For EACH question give:
+- **LC #XXX. Name** (difficulty) — actual LeetCode number when applicable
+- **Pattern:** the algorithmic pattern (e.g. sliding window, DFS, DP, monotonic stack)
+- **Why ${cname} asks it:** specific reason — what skill/concept they're testing
+- **Variant they ask:** the exact twist or follow-up ${cname} typically adds (e.g. "Two Sum but return all pairs", "with k constraints")
+- **Recency:** how recently this has been reported (e.g. "asked in 2024 onsites", "classic phone screen question")
+
+Rank by frequency — most commonly asked first.
+
+## ${cname}'s Interview Style — What's Different
+2-3 specific things that make ${cname}'s coding interviews different from other companies. Examples: emphasis on follow-ups, focus on optimization vs correctness, preference for specific languages, behavioral mixed in, etc. Be CONCRETE — actual things candidates have reported.
+
+## Behavioral Questions (Top 5)
+The specific behavioral questions ${cname} actually asks (especially relevant for ${rname}). Include ${cname}'s leadership principles / values if applicable (Amazon LPs, Meta culture, Google Googliness, etc.).
+
+## ${days}-Day Study Plan
+Day-by-day plan (30-60 min/day). Each day: which problems to solve, which concepts to review. Front-load the most common patterns.
+
+## System Design (if applicable for ${rname})
+Top 3 system design topics ${cname} actually asks for this role. For each: 1 sentence on the typical follow-up they push you to think about.
+
+## Red Flags To Avoid
+3 specific mistakes that fail candidates at ${cname}. Be specific to their interview style.
+
+Be specific and concrete. No generic advice. If you genuinely don't know a recent specific question, say "general pattern" rather than making one up.`;
+      const text = await ipCallClaude(prompt, out, `You are an elite FAANG interview coach with deep, current knowledge of ${cname}'s actual interview process. You've coached hundreds of candidates through ${cname} interviews in 2024-2026. You know the SPECIFIC questions asked, not generic LeetCode lists. You read Glassdoor and Blind regularly. When in doubt about whether a question is currently asked, you say "general pattern" instead of making something up. Be brutally specific and concrete.`, 4000);
       if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
     }
 
@@ -8980,9 +9848,14 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       if (text) out.innerHTML = `<div class="ip-output on">${ipRenderMarkdown(text)}</div>`;
     }
 
-    // ── INTERVIEW PREP: VISUALIZER ────────────────────────────────
+    // ── INTERVIEW PREP: VISUAL CODE VISUALIZER ────────────────────
     let ipVizSteps = [];
     let ipVizCurrent = 0;
+    let ipVizCode = '';
+    let ipVizPattern = '';
+    let ipVizSummary = '';
+    let ipVizSpeed = 1500;
+    let ipVizPlayInterval = null;
 
     async function ipVisualize() {
       const code = document.getElementById('ip-viz-code').value.trim();
@@ -8991,8 +9864,10 @@ Current context: ${chatContext ? `User is looking at ${chatContext}` : 'No speci
       if (!code) { toast('Paste your code first'); return; }
       if (!input) { toast('Provide sample input'); return; }
       const out = document.getElementById('ip-viz-output');
-      out.innerHTML = `<div class="ip-output on"><div class="ip-loading"><div class="ip-spin"></div>Tracing execution step-by-step…</div></div>`;
-      const prompt = `Trace through this code step-by-step with the given input. Generate a detailed execution trace.
+      ipVizCode = code;
+      out.innerHTML = `<div class="ip-output on"><div class="ip-loading"><div class="ip-spin"></div>🎨 Analyzing code and building visual trace…</div></div>`;
+
+      const prompt = `Analyze this code and produce a VISUAL execution trace. Detect the data structures used and tag each step so we can render visualizations.
 
 ${title ? `Problem: ${title}\n\n` : ''}Code:
 \`\`\`
@@ -9002,94 +9877,452 @@ ${code}
 Input:
 ${input}
 
-Respond ONLY with valid JSON in this exact format (no markdown):
+Respond ONLY with valid JSON (no markdown, no commentary outside JSON):
 {
+  "pattern": "Sliding Window | Two Pointers | Binary Search | BFS | DFS | DP | Greedy | Hash Map | Stack | Queue | Linked List | Tree Traversal | Backtracking | Other",
+  "summary": "One sentence final result + what the algorithm did",
   "steps": [
     {
       "step": 1,
-      "line": "the exact code line being executed",
-      "description": "what this step does in plain English (1-2 sentences)",
-      "vars": { "varName": "current value", "another": "value" },
-      "changed": ["varName"]
+      "lineNumber": 3,
+      "line": "exact code line text",
+      "description": "what this step does (1-2 sentences)",
+      "stepType": "INIT | LOOP | COMPARE | UPDATE | SWAP | PUSH | POP | RECURSE | RETURN | CONDITION",
+      "vars": { "varName": <actual value, not string> },
+      "changed": ["varName"],
+      "visual": {
+        "type": "array | grid | hashmap | linkedlist | tree | stack | queue | graph | scalar",
+        "data": <see formats below>,
+        "highlights": { "indices": [], "color": "primary | secondary | success | warn | error", "label": "i" },
+        "pointers": [ { "name": "i", "index": 2, "color": "primary" } ],
+        "compare": [ {"a": 0, "b": 5} ],
+        "visited": [],
+        "frontier": []
+      }
     }
-  ],
-  "summary": "1 sentence final result and what the algorithm did"
+  ]
 }
 
-Rules:
-- Show EVERY meaningful step (loop iterations, function calls, condition checks, variable updates)
-- For loops: include each iteration as a separate step
-- vars should ALWAYS include all currently in-scope variables with their current values
-- changed lists variables that CHANGED in this specific step (highlight them)
-- description should explain WHY this step happens, not just what
-- Aim for 8-25 steps total — be thorough but not excessive
-- If the code crashes/errors, show steps up to and including the error`;
+Visual data formats by type:
+- array: { "items": [1, 5, 3, 8, 2] }
+- grid: { "rows": [[1,0,1],[0,1,0]], "current": [0,1] }
+- hashmap: { "entries": [["a", 1], ["b", 2]] }
+- linkedlist: { "nodes": [{"val": 1, "next": 1}, {"val": 2, "next": 2}, {"val": 3, "next": null}] }
+- tree: { "nodes": [{"id": 0, "val": 5, "left": 1, "right": 2}, {"id": 1, "val": 3, "left": null, "right": null}, {"id": 2, "val": 8, "left": null, "right": null}] }
+- stack: { "items": [1, 2, 3] }  (top is last)
+- queue: { "items": [1, 2, 3] }  (front is first)
+- graph: { "nodes": [{"id": "A"}, {"id": "B"}], "edges": [["A", "B"]] }
+- scalar: { "values": { "result": 42 } }
 
-      const text = await ipCallClaude(prompt, out, "Expert code execution tracer. Generate precise step-by-step traces showing variable state at each point.");
+Critical Rules:
+- Detect the PRIMARY data structure in the algorithm — use that as visual.type
+- For 2D DP problems or grid traversal → grid
+- For arrays/strings with pointers/sliding window → array (string chars become items)
+- For BST/binary tree problems → tree (use null for missing children)
+- For Linked List Problems → linkedlist
+- "highlights.indices" are positions/keys/node ids to visually emphasize this step
+- "pointers" are named labels pointing at positions (e.g. "i", "j", "left", "right", "slow", "fast", "head", "curr")
+- "compare" marks two elements being compared this step
+- "visited" marks already-processed positions (gets dimmed)
+- "frontier" marks elements about to be explored (BFS/DFS frontier)
+- vars values should be ACTUAL TYPES (numbers as numbers, arrays as arrays) so we can render them
+- changed lists variables CHANGED in this specific step
+- stepType helps color-code the step
+- Generate 10-30 steps — every meaningful state change
+- If multiple structures coexist (e.g. array + hashmap in Two Sum), use the most relevant for that step's visual`;
+
+      const text = await ipCallClaude(prompt, out, "Expert code execution tracer. Output structured JSON visual traces.", 8000);
       if (!text) return;
 
       try {
-        const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+        const cleaned = text.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(cleaned);
         ipVizSteps = parsed.steps || [];
+        ipVizPattern = parsed.pattern || '';
+        ipVizSummary = parsed.summary || '';
         ipVizCurrent = 0;
         if (ipVizSteps.length === 0) {
           out.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">No steps generated. Try simpler code or clearer input.</div>`;
           return;
         }
-        ipRenderViz(parsed.summary);
+        ipRenderViz();
       } catch (e) {
-        out.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Failed to parse trace. Try simpler code.</div>`;
-        console.error(e);
+        console.error('Visualizer parse error:', e);
+        out.innerHTML = `<div class="ip-output on" style="color:var(--accent2)">Failed to parse trace: ${e.message}. Try simpler code or fewer iterations.</div>`;
       }
     }
 
-    function ipRenderViz(summary) {
+    // ── STEP TYPE COLOR PALETTE ──
+    const ipStepColors = {
+      INIT: { bg: '#47c4ff', fg: '#000', icon: '🟦', label: 'INIT' },
+      LOOP: { bg: '#e8ff47', fg: '#000', icon: '🔁', label: 'LOOP' },
+      COMPARE: { bg: '#ff9f47', fg: '#000', icon: '⚖️', label: 'COMPARE' },
+      UPDATE: { bg: '#47ffb3', fg: '#000', icon: '✏️', label: 'UPDATE' },
+      SWAP: { bg: '#c447ff', fg: '#fff', icon: '🔄', label: 'SWAP' },
+      PUSH: { bg: '#47ffb3', fg: '#000', icon: '⬆️', label: 'PUSH' },
+      POP: { bg: '#ff9f47', fg: '#000', icon: '⬇️', label: 'POP' },
+      RECURSE: { bg: '#c447ff', fg: '#fff', icon: '🌀', label: 'RECURSE' },
+      RETURN: { bg: '#47ff9f', fg: '#000', icon: '✅', label: 'RETURN' },
+      CONDITION: { bg: '#ff9f47', fg: '#000', icon: '❓', label: 'CONDITION' }
+    };
+
+    function ipColorFor(name) {
+      const map = { primary: '#47ffb3', secondary: '#47c4ff', success: '#47ff9f', warn: '#ff9f47', error: '#ff4747' };
+      return map[name] || '#47ffb3';
+    }
+
+    // ── RENDERERS BY TYPE ──
+
+    function ipRenderArray(v) {
+      const items = v.data?.items || [];
+      const pointers = v.pointers || [];
+      const highlights = v.highlights?.indices || [];
+      const visited = v.visited || [];
+      const compare = (v.compare || []).flatMap(c => [c.a, c.b]);
+      const hlColor = ipColorFor(v.highlights?.color);
+
+      // group pointers by index
+      const pointersByIdx = {};
+      pointers.forEach(p => {
+        if (!pointersByIdx[p.index]) pointersByIdx[p.index] = [];
+        pointersByIdx[p.index].push(p);
+      });
+
+      return `<div class="viz-array-wrap">
+    <div class="viz-array">
+      ${items.map((val, i) => {
+        const isHl = highlights.includes(i);
+        const isVisited = visited.includes(i);
+        const isCompare = compare.includes(i);
+        const cls = ['viz-cell'];
+        if (isVisited) cls.push('visited');
+        if (isHl) cls.push('highlight');
+        if (isCompare) cls.push('compare');
+        return `<div class="${cls.join(' ')}" ${isHl ? `style="--hl:${hlColor}"` : ''}>
+          <div class="viz-cell-val">${val}</div>
+          <div class="viz-cell-idx">${i}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="viz-pointers-row">
+      ${items.map((_, i) => {
+        const ptrs = pointersByIdx[i] || [];
+        if (ptrs.length === 0) return `<div class="viz-ptr-slot"></div>`;
+        return `<div class="viz-ptr-slot">${ptrs.map(p => `
+          <div class="viz-ptr" style="--c:${ipColorFor(p.color)}">
+            <div class="viz-ptr-arrow">▲</div>
+            <div class="viz-ptr-name">${p.name}</div>
+          </div>`).join('')}</div>`;
+      }).join('')}
+    </div>
+  </div>`;
+    }
+
+    function ipRenderGrid(v) {
+      const rows = v.data?.rows || [];
+      const cur = v.data?.current;
+      const visited = (v.visited || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const highlights = (v.highlights?.indices || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const frontier = (v.frontier || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const hlColor = ipColorFor(v.highlights?.color);
+      return `<div class="viz-grid">
+    ${rows.map((row, ri) => `<div class="viz-grid-row">${row.map((cell, ci) => {
+        const key = `${ri},${ci}`;
+        const cls = ['viz-grid-cell'];
+        if (visited.includes(key)) cls.push('visited');
+        if (frontier.includes(key)) cls.push('frontier');
+        if (highlights.includes(key)) cls.push('highlight');
+        if (cur && cur[0] === ri && cur[1] === ci) cls.push('current');
+        return `<div class="${cls.join(' ')}" style="--hl:${hlColor}">${cell}</div>`;
+      }).join('')}</div>`).join('')}
+  </div>`;
+    }
+
+    function ipRenderHashMap(v) {
+      const entries = v.data?.entries || [];
+      const highlights = v.highlights?.indices || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      if (entries.length === 0) return `<div class="viz-empty">Empty HashMap</div>`;
+      return `<div class="viz-hashmap">
+    ${entries.map(([k, val], i) => {
+        const isHl = highlights.includes(i) || highlights.includes(k);
+        return `<div class="viz-hash-row ${isHl ? 'highlight' : ''}" ${isHl ? `style="--hl:${hlColor}"` : ''}>
+        <div class="viz-hash-key">${k}</div>
+        <div class="viz-hash-arrow">→</div>
+        <div class="viz-hash-val">${val}</div>
+      </div>`;
+      }).join('')}
+  </div>`;
+    }
+
+    function ipRenderLinkedList(v) {
+      const nodes = v.data?.nodes || [];
+      const highlights = v.highlights?.indices || [];
+      const pointers = v.pointers || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      return `<div class="viz-linkedlist">
+    ${nodes.map((n, i) => {
+        const ptrs = pointers.filter(p => p.index === i);
+        const isHl = highlights.includes(i);
+        return `<div class="viz-ll-node-wrap">
+        ${ptrs.length ? `<div class="viz-ll-ptrs">${ptrs.map(p => `<div class="viz-ll-ptr" style="--c:${ipColorFor(p.color)}">${p.name}<div class="viz-ll-ptr-arrow">▼</div></div>`).join('')}</div>` : ''}
+        <div class="viz-ll-node ${isHl ? 'highlight' : ''}" ${isHl ? `style="--hl:${hlColor}"` : ''}>
+          <div class="viz-ll-val">${n.val}</div>
+          <div class="viz-ll-next">${n.next === null || n.next === undefined ? '⌀' : '→'}</div>
+        </div>
+      </div>`;
+      }).join('')}
+  </div>`;
+    }
+
+    function ipRenderTree(v) {
+      const nodes = v.data?.nodes || [];
+      if (nodes.length === 0) return `<div class="viz-empty">Empty Tree</div>`;
+      const highlights = v.highlights?.indices || [];
+      const visited = v.visited || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      // compute levels using BFS from root (assume node 0 is root)
+      const levels = [];
+      const queue = [{ id: 0, level: 0 }];
+      const seen = new Set();
+      while (queue.length) {
+        const { id, level } = queue.shift();
+        if (seen.has(id)) continue; seen.add(id);
+        const node = nodes[id];
+        if (!node) continue;
+        if (!levels[level]) levels[level] = [];
+        levels[level].push(node);
+        if (node.left !== null && node.left !== undefined) queue.push({ id: node.left, level: level + 1 });
+        if (node.right !== null && node.right !== undefined) queue.push({ id: node.right, level: level + 1 });
+      }
+      return `<div class="viz-tree">
+    ${levels.map(levelNodes => `<div class="viz-tree-level">
+      ${levelNodes.map(n => {
+        const isHl = highlights.includes(n.id);
+        const isVisited = visited.includes(n.id);
+        const cls = ['viz-tree-node'];
+        if (isVisited) cls.push('visited');
+        if (isHl) cls.push('highlight');
+        return `<div class="${cls.join(' ')}" ${isHl ? `style="--hl:${hlColor}"` : ''}>${n.val}</div>`;
+      }).join('')}
+    </div>`).join('')}
+  </div>`;
+    }
+
+    function ipRenderStack(v) {
+      const items = v.data?.items || [];
+      const highlights = v.highlights?.indices || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      if (items.length === 0) return `<div class="viz-empty">Empty Stack</div>`;
+      return `<div class="viz-stack">
+    <div class="viz-stack-label-top">TOP ↓</div>
+    ${[...items].reverse().map((val, ri) => {
+        const i = items.length - 1 - ri;
+        const isHl = highlights.includes(i);
+        return `<div class="viz-stack-item ${isHl ? 'highlight' : ''}" ${isHl ? `style="--hl:${hlColor}"` : ''}>${val}</div>`;
+      }).join('')}
+    <div class="viz-stack-label-bottom">BOTTOM</div>
+  </div>`;
+    }
+
+    function ipRenderQueue(v) {
+      const items = v.data?.items || [];
+      const highlights = v.highlights?.indices || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      if (items.length === 0) return `<div class="viz-empty">Empty Queue</div>`;
+      return `<div class="viz-queue">
+    <div class="viz-queue-label">FRONT →</div>
+    <div class="viz-queue-items">
+      ${items.map((val, i) => {
+        const isHl = highlights.includes(i);
+        return `<div class="viz-queue-item ${isHl ? 'highlight' : ''}" ${isHl ? `style="--hl:${hlColor}"` : ''}>${val}</div>`;
+      }).join('')}
+    </div>
+    <div class="viz-queue-label">← BACK</div>
+  </div>`;
+    }
+
+    function ipRenderGraph(v) {
+      const nodes = v.data?.nodes || [];
+      const edges = v.data?.edges || [];
+      const highlights = v.highlights?.indices || [];
+      const visited = v.visited || [];
+      const frontier = v.frontier || [];
+      const hlColor = ipColorFor(v.highlights?.color);
+      // simple circular layout
+      const radius = 90; const cx = 130; const cy = 130;
+      const positions = {};
+      nodes.forEach((n, i) => {
+        const angle = (i / nodes.length) * 2 * Math.PI - Math.PI / 2;
+        positions[n.id] = { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+      });
+      return `<svg class="viz-graph" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+    ${edges.map(([a, b]) => {
+        const pa = positions[a]; const pb = positions[b];
+        if (!pa || !pb) return '';
+        return `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" stroke="#444" stroke-width="1.5"/>`;
+      }).join('')}
+    ${nodes.map(n => {
+        const p = positions[n.id]; if (!p) return '';
+        const isHl = highlights.includes(n.id);
+        const isVisited = visited.includes(n.id);
+        const isFrontier = frontier.includes(n.id);
+        const fill = isHl ? hlColor : isVisited ? '#333' : isFrontier ? '#ff9f47' : '#1a1a1a';
+        const stroke = isHl ? hlColor : '#666';
+        const textCol = isHl || isFrontier ? '#000' : '#fff';
+        return `
+        <circle cx="${p.x}" cy="${p.y}" r="18" fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y + 5}" text-anchor="middle" font-size="13" font-weight="700" fill="${textCol}" font-family="DM Mono, monospace">${n.id}</text>`;
+      }).join('')}
+  </svg>`;
+    }
+
+    function ipRenderScalar(v) {
+      const vals = v.data?.values || {};
+      if (Object.keys(vals).length === 0) return '';
+      return `<div class="viz-scalars">
+    ${Object.entries(vals).map(([k, val]) => `
+      <div class="viz-scalar">
+        <div class="viz-scalar-name">${k}</div>
+        <div class="viz-scalar-val">${val}</div>
+      </div>`).join('')}
+  </div>`;
+    }
+
+    function ipRenderVisual(visual) {
+      if (!visual || !visual.type) return '';
+      switch (visual.type) {
+        case 'array': return ipRenderArray(visual);
+        case 'grid': return ipRenderGrid(visual);
+        case 'hashmap': return ipRenderHashMap(visual);
+        case 'linkedlist': return ipRenderLinkedList(visual);
+        case 'tree': return ipRenderTree(visual);
+        case 'stack': return ipRenderStack(visual);
+        case 'queue': return ipRenderQueue(visual);
+        case 'graph': return ipRenderGraph(visual);
+        case 'scalar': return ipRenderScalar(visual);
+        default: return '';
+      }
+    }
+
+    // ── CODE SIDE WITH HIGHLIGHTED LINE ──
+    function ipRenderCodeSide(highlightLine) {
+      const lines = ipVizCode.split('\n');
+      return `<div class="viz-code-side">
+    ${lines.map((line, i) => {
+        const isHl = (i + 1) === highlightLine;
+        return `<div class="viz-code-line ${isHl ? 'active' : ''}">
+        <span class="viz-code-num">${(i + 1).toString().padStart(2, ' ')}</span>
+        <span class="viz-code-text">${(line || ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
+      </div>`;
+      }).join('')}
+  </div>`;
+    }
+
+    // ── VARIABLE PANEL (TEXT FALLBACK FOR THINGS NOT IN VISUAL) ──
+    function ipRenderVarsPanel(step) {
+      const vars = step.vars || {};
+      const changed = step.changed || [];
+      if (Object.keys(vars).length === 0) return '';
+      return `<div class="viz-vars-panel">
+    <div class="viz-vars-title">Variables</div>
+    <div class="viz-vars-grid">
+      ${Object.entries(vars).map(([name, val]) => {
+        const isChanged = changed.includes(name);
+        const display = typeof val === 'object' ? JSON.stringify(val) : String(val);
+        return `<div class="viz-var ${isChanged ? 'changed' : ''}">
+          <div class="viz-var-name">${name}</div>
+          <div class="viz-var-val">${display}</div>
+          ${isChanged ? '<div class="viz-var-flash">⚡ changed</div>' : ''}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+    }
+
+    // ── MAIN RENDER ──
+    function ipRenderViz() {
       const out = document.getElementById('ip-viz-output');
       const step = ipVizSteps[ipVizCurrent];
       if (!step) return;
       const total = ipVizSteps.length;
       const pct = Math.round(((ipVizCurrent + 1) / total) * 100);
-      const changed = step.changed || [];
-      const varsHTML = Object.entries(step.vars || {}).map(([name, val]) => {
-        const isChanged = changed.includes(name);
-        const displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
-        return `<div class="ip-viz-var ${isChanged ? 'changed' : ''}">
-      <div class="ip-viz-var-name">${name}</div>
-      <div class="ip-viz-var-val">${displayVal}</div>
-    </div>`;
-      }).join('');
+      const stepType = step.stepType || 'UPDATE';
+      const tc = ipStepColors[stepType] || ipStepColors.UPDATE;
+
       out.innerHTML = `
-    <div class="ip-viz-controls">
-      <button class="ip-viz-btn" onclick="ipVizPrev()" ${ipVizCurrent === 0 ? 'disabled' : ''}>◀</button>
-      <button class="ip-viz-btn" onclick="ipVizPlay()" title="Play all">▶▶</button>
-      <button class="ip-viz-btn" onclick="ipVizNext()" ${ipVizCurrent >= total - 1 ? 'disabled' : ''}>▶</button>
-      <div class="ip-viz-progress"><div class="ip-viz-progress-fill" style="width:${pct}%"></div></div>
-      <div class="ip-viz-counter">${ipVizCurrent + 1} / ${total}</div>
-      <button class="ip-viz-btn" onclick="ipVizReset()" title="Reset" style="background:var(--surface);color:var(--text)">⟲</button>
+    <div class="viz-controls-bar">
+      <div class="viz-controls-left">
+        <button class="viz-ctrl-btn" onclick="ipVizPrev()" ${ipVizCurrent === 0 ? 'disabled' : ''} title="Previous">◀</button>
+        <button class="viz-ctrl-btn primary" onclick="ipVizPlay()" id="ip-viz-play-btn" title="Play/Pause">${ipVizPlayInterval ? '⏸' : '▶'}</button>
+        <button class="viz-ctrl-btn" onclick="ipVizNext()" ${ipVizCurrent >= total - 1 ? 'disabled' : ''} title="Next">▶</button>
+        <button class="viz-ctrl-btn" onclick="ipVizReset()" title="Reset">⟲</button>
+      </div>
+      <div class="viz-controls-mid">
+        <div class="viz-progress"><div class="viz-progress-fill" style="width:${pct}%"></div></div>
+        <div class="viz-counter">${ipVizCurrent + 1} / ${total}</div>
+      </div>
+      <div class="viz-controls-right">
+        <label class="viz-speed-label">Speed</label>
+        <select class="viz-speed-sel" onchange="ipVizSetSpeed(this.value)">
+          <option value="2500" ${ipVizSpeed === 2500 ? 'selected' : ''}>0.5×</option>
+          <option value="1500" ${ipVizSpeed === 1500 ? 'selected' : ''}>1×</option>
+          <option value="800" ${ipVizSpeed === 800 ? 'selected' : ''}>2×</option>
+          <option value="400" ${ipVizSpeed === 400 ? 'selected' : ''}>4×</option>
+        </select>
+      </div>
     </div>
-    <div class="ip-viz-step">
-      <div class="ip-viz-step-num">STEP ${step.step}</div>
-      <div class="ip-viz-step-line">${step.line || '(no line)'}</div>
-      <div class="ip-viz-step-desc">${step.description || ''}</div>
-      ${varsHTML ? `<div class="ip-viz-vars">${varsHTML}</div>` : ''}
+
+    ${ipVizPattern ? `<div class="viz-pattern-badge">🎯 Pattern: <strong>${ipVizPattern}</strong></div>` : ''}
+
+    <div class="viz-main-grid">
+      <div class="viz-left">
+        ${ipRenderCodeSide(step.lineNumber)}
+      </div>
+      <div class="viz-right">
+        <div class="viz-step-card">
+          <div class="viz-step-header">
+            <span class="viz-step-badge" style="background:${tc.bg};color:${tc.fg}">${tc.icon} ${tc.label}</span>
+            <span class="viz-step-num">STEP ${step.step}</span>
+          </div>
+          <div class="viz-step-desc">${step.description || ''}</div>
+        </div>
+        <div class="viz-visual-card">
+          ${ipRenderVisual(step.visual)}
+        </div>
+        ${ipRenderVarsPanel(step)}
+      </div>
     </div>
-    ${ipVizCurrent === total - 1 && summary ? `<div class="ip-output on" style="margin-top:14px"><h3>✓ Final Result</h3><p>${summary}</p></div>` : ''}
+
+    ${ipVizCurrent === total - 1 && ipVizSummary ? `<div class="viz-summary-card"><div class="viz-summary-icon">✅</div><div><div class="viz-summary-title">Final Result</div><div class="viz-summary-text">${ipVizSummary}</div></div></div>` : ''}
   `;
     }
 
     function ipVizNext() { if (ipVizCurrent < ipVizSteps.length - 1) { ipVizCurrent++; ipRenderViz(); } }
     function ipVizPrev() { if (ipVizCurrent > 0) { ipVizCurrent--; ipRenderViz(); } }
-    function ipVizReset() { ipVizCurrent = 0; ipRenderViz(); }
-
-    let ipVizPlayInterval = null;
+    function ipVizReset() {
+      ipVizCurrent = 0;
+      if (ipVizPlayInterval) { clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; }
+      ipRenderViz();
+    }
+    function ipVizSetSpeed(v) {
+      ipVizSpeed = parseInt(v);
+      if (ipVizPlayInterval) {
+        clearInterval(ipVizPlayInterval);
+        ipVizPlayInterval = setInterval(ipVizPlayTick, ipVizSpeed);
+      }
+    }
+    function ipVizPlayTick() {
+      if (ipVizCurrent >= ipVizSteps.length - 1) {
+        clearInterval(ipVizPlayInterval); ipVizPlayInterval = null;
+        ipRenderViz(); return;
+      }
+      ipVizCurrent++; ipRenderViz();
+    }
     function ipVizPlay() {
-      if (ipVizPlayInterval) { clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; return; }
-      ipVizPlayInterval = setInterval(() => {
-        if (ipVizCurrent >= ipVizSteps.length - 1) {
-          clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; return;
-        }
-        ipVizCurrent++; ipRenderViz();
-      }, 1500);
+      if (ipVizPlayInterval) { clearInterval(ipVizPlayInterval); ipVizPlayInterval = null; ipRenderViz(); return; }
+      ipVizPlayInterval = setInterval(ipVizPlayTick, ipVizSpeed);
+      ipRenderViz();
     }
 
     // ── INTERVIEW PREP: ASK DOUBT ─────────────────────────────────
