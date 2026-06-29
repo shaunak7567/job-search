@@ -4317,6 +4317,675 @@
     .m-ip-doubt-msg.bot li {
       margin-left: 14px;
     }
+
+    /* ── MOBILE VISUAL CODE VISUALIZER ── */
+    .m-viz-controls-bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .m-viz-ctrl-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .m-viz-ctrl-btn:disabled {
+      opacity: .4;
+    }
+
+    .m-viz-ctrl-btn.primary {
+      background: #47ffb3;
+      color: #000;
+      border-color: #47ffb3;
+    }
+
+    .m-viz-progress {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .m-viz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #47c4ff, #47ffb3);
+      transition: width .3s;
+    }
+
+    .m-viz-counter {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      min-width: 42px;
+      text-align: right;
+    }
+
+    .m-viz-speed {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 8px;
+    }
+
+    .m-viz-pattern {
+      background: linear-gradient(90deg, rgba(71, 255, 179, .1), rgba(71, 196, 255, .1));
+      border: 1px solid rgba(71, 255, 179, .3);
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-viz-pattern strong {
+      color: #47ffb3;
+    }
+
+    .m-viz-code-card {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      line-height: 1.55;
+      margin-bottom: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .m-viz-code-line {
+      display: flex;
+      padding: 1px 8px;
+      border-left: 2px solid transparent;
+    }
+
+    .m-viz-code-line.active {
+      background: rgba(71, 255, 179, .1);
+      border-left-color: #47ffb3;
+      animation: lineGlow .5s ease;
+    }
+
+    .m-viz-code-num {
+      color: var(--muted);
+      min-width: 22px;
+      text-align: right;
+      margin-right: 8px;
+    }
+
+    .m-viz-code-text {
+      color: var(--accent);
+      white-space: pre;
+    }
+
+    .m-viz-code-line.active .m-viz-code-text {
+      color: #47ffb3;
+      font-weight: 600;
+    }
+
+    .m-viz-step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      animation: slideInRight .3s ease;
+    }
+
+    .m-viz-step-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 6px;
+    }
+
+    .m-viz-step-badge {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 10px;
+      letter-spacing: .5px;
+    }
+
+    .m-viz-step-num {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+    }
+
+    .m-viz-step-desc {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .m-viz-visual-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    /* mobile array */
+    .m-viz-array-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .m-viz-array {
+      display: flex;
+      gap: 3px;
+    }
+
+    .m-viz-cell {
+      width: 34px;
+      height: 42px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .3s;
+    }
+
+    .m-viz-cell-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .m-viz-cell-idx {
+      font-size: 8px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+    }
+
+    .m-viz-cell.highlight {
+      background: rgba(71, 255, 179, .15);
+      border-color: var(--hl);
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    .m-viz-cell.highlight .m-viz-cell-val {
+      color: var(--hl);
+    }
+
+    .m-viz-cell.compare {
+      background: rgba(255, 159, 71, .15);
+      border-color: #ff9f47;
+    }
+
+    .m-viz-cell.visited {
+      opacity: .35;
+    }
+
+    .m-viz-pointers-row {
+      display: flex;
+      gap: 3px;
+    }
+
+    .m-viz-ptr-slot {
+      width: 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 24px;
+    }
+
+    .m-viz-ptr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: ptrBob .8s ease infinite;
+    }
+
+    .m-viz-ptr-arrow {
+      color: var(--c);
+      font-size: 9px;
+      line-height: 1;
+    }
+
+    .m-viz-ptr-name {
+      font-size: 8px;
+      font-family: 'DM Mono', monospace;
+      color: var(--c);
+      font-weight: 700;
+    }
+
+    /* mobile grid */
+    .m-viz-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .m-viz-grid-row {
+      display: flex;
+      gap: 1px;
+    }
+
+    .m-viz-grid-cell {
+      width: 28px;
+      height: 28px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text);
+      transition: all .3s;
+      flex-shrink: 0;
+    }
+
+    .m-viz-grid-cell.visited {
+      opacity: .4;
+    }
+
+    .m-viz-grid-cell.frontier {
+      background: rgba(255, 159, 71, .2);
+      border-color: #ff9f47;
+      color: #ff9f47;
+    }
+
+    .m-viz-grid-cell.highlight,
+    .m-viz-grid-cell.current {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px var(--hl);
+      font-weight: 700;
+    }
+
+    /* mobile hashmap */
+    .m-viz-hashmap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .m-viz-hash-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 6px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      transition: all .3s;
+    }
+
+    .m-viz-hash-row.highlight {
+      background: rgba(71, 255, 179, .1);
+      border-color: var(--hl);
+      transform: translateX(3px);
+      box-shadow: -2px 0 0 var(--hl);
+    }
+
+    .m-viz-hash-key {
+      color: #47c4ff;
+      font-weight: 700;
+    }
+
+    .m-viz-hash-arrow {
+      color: var(--muted);
+    }
+
+    .m-viz-hash-val {
+      color: #47ffb3;
+      font-weight: 700;
+    }
+
+    /* mobile linked list */
+    .m-viz-ll {
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      flex-wrap: wrap;
+      padding-top: 22px;
+    }
+
+    .m-viz-ll-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .m-viz-ll-ptrs {
+      position: absolute;
+      top: -20px;
+      display: flex;
+      gap: 3px;
+    }
+
+    .m-viz-ll-ptr {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--c);
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .m-viz-ll-node {
+      display: flex;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+      transition: all .3s;
+    }
+
+    .m-viz-ll-node.highlight {
+      border-color: var(--hl);
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    .m-viz-ll-val {
+      padding: 7px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      border-right: 1px solid var(--border);
+    }
+
+    .m-viz-ll-next {
+      padding: 7px 6px;
+      color: var(--muted);
+      font-size: 11px;
+      background: var(--surface);
+    }
+
+    /* mobile tree */
+    .m-viz-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 6px;
+    }
+
+    .m-viz-tree-level {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .m-viz-tree-node {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .m-viz-tree-node.visited {
+      opacity: .35;
+    }
+
+    .m-viz-tree-node.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      transform: scale(1.15);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    /* mobile stack/queue */
+    .m-viz-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .m-viz-stack-lbl {
+      font-size: 8px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .m-viz-stack-item {
+      width: 70px;
+      padding: 7px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .m-viz-stack-item.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    .m-viz-queue {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .m-viz-q-lbl {
+      font-size: 8px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+    }
+
+    .m-viz-queue-item {
+      width: 32px;
+      height: 32px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all .3s;
+    }
+
+    .m-viz-queue-item.highlight {
+      background: var(--hl);
+      color: #000;
+      border-color: var(--hl);
+      box-shadow: 0 0 0 2px var(--hl);
+    }
+
+    /* mobile graph */
+    .m-viz-graph {
+      width: 200px;
+      height: 200px;
+      max-width: 100%;
+    }
+
+    /* mobile scalar/vars */
+    .m-viz-scalars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 6px;
+      width: 100%;
+    }
+
+    .m-viz-scalar {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 7px 9px;
+    }
+
+    .m-viz-scalar-name {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .m-viz-scalar-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: #47ffb3;
+      font-weight: 700;
+    }
+
+    .m-viz-empty {
+      color: var(--muted);
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      text-align: center;
+      padding: 14px;
+    }
+
+    .m-viz-vars-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+
+    .m-viz-vars-title {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .m-viz-vars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+      gap: 5px;
+    }
+
+    .m-viz-var {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 7px;
+      transition: all .3s;
+    }
+
+    .m-viz-var.changed {
+      border-color: #47ffb3;
+      background: rgba(71, 255, 179, .06);
+      animation: varPulse 0.8s ease;
+    }
+
+    .m-viz-var-name {
+      font-size: 9px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .m-viz-var-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .m-viz-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(71, 255, 179, .08), rgba(71, 196, 255, .04));
+      border: 1px solid rgba(71, 255, 179, .3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .m-viz-summary-icon {
+      font-size: 24px;
+    }
+
+    .m-viz-summary-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #47ffb3;
+    }
+
+    .m-viz-summary-text {
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.5;
+      margin-top: 2px;
+    }
   </style>
 </head>
 
@@ -6614,7 +7283,7 @@ Respond ONLY with valid JSON:
       return m ? m[0] : '—';
     }
 
-    async function mIpCallClaude(prompt, outputEl, systemMsg) {
+    async function mIpCallClaude(prompt, outputEl, systemMsg, maxTokens) {
       const key = localStorage.getItem('ai-anthropic-key');
       if (!key) {
         outputEl.innerHTML = `<div class="m-ip-output on" style="color:var(--accent2)">Add your Claude API key in the ✨ AI tab first.</div>`;
@@ -6632,7 +7301,7 @@ Respond ONLY with valid JSON:
           },
           body: JSON.stringify({
             model: 'claude-sonnet-4-6',
-            max_tokens: 2000,
+            max_tokens: maxTokens || 2000,
             system: systemMsg || "You are an expert coding interview coach. Be precise and structured.",
             messages: [{ role: 'user', content: prompt }]
           })
@@ -6711,8 +7380,37 @@ Respond ONLY with valid JSON:
       const cnames = { google: 'Google', meta: 'Meta', amazon: 'Amazon', apple: 'Apple', microsoft: 'Microsoft', netflix: 'Netflix', uber: 'Uber', airbnb: 'Airbnb', stripe: 'Stripe', linkedin: 'LinkedIn', twitter: 'X/Twitter', salesforce: 'Salesforce', other: 'the company' };
       const rnames = { swe: 'Software Engineer', senior: 'Senior SWE', staff: 'Staff/Principal Engineer', ml: 'ML Engineer', backend: 'Backend Engineer', fullstack: 'Full-stack Engineer' };
       const cname = cnames[company] || company, rname = rnames[role] || role;
-      const prompt = `${days} days to prep for ${itype} at ${cname} for ${rname}.\n\n## Must-do LeetCode problems\nTop 10-15. Each: number+name, difficulty, pattern, why ${cname} asks.\n\n## Key patterns\n3-5 most critical.\n\n## ${cname}-specific tips\n2-3 culture/style/values.\n\n## ${days}-day study plan\nDay-by-day, 30 min/day.\n\n## System design\nIf relevant, top 2-3 SD questions.`;
-      const text = await mIpCallClaude(prompt, out, `FAANG interview coach with deep knowledge of ${cname}'s process. Specific and actionable.`);
+      const prompt = `You're coaching me for a ${itype} interview at ${cname} for ${rname}. I have ${days} days.
+
+I need REAL, SPECIFIC questions actually asked at ${cname} — not generic LeetCode lists. Pull from Glassdoor, Blind, LeetCode discuss tagged ${cname}, recent 2024-2026 candidate reports.
+
+## Top 12 Coding Questions Asked at ${cname}
+For each:
+- **LC #XXX. Name** (difficulty)
+- **Pattern:** algorithmic pattern
+- **Why ${cname} asks it:** specific reason
+- **Variant they ask:** the exact twist ${cname} adds
+- **Recency:** how recent (e.g. "2024 onsites")
+
+Rank by frequency — most common first.
+
+## ${cname}'s Style — What's Different
+2-3 specific things candidates have reported about ${cname}'s interview style.
+
+## Top 5 Behavioral Questions
+Specific behavioral questions ${cname} asks (include their leadership principles if relevant).
+
+## ${days}-Day Study Plan
+Day-by-day (30-60 min/day). Front-load most common patterns.
+
+## System Design (if applicable)
+Top 3 SD topics ${cname} asks for ${rname}. 1-line follow-up each.
+
+## Red Flags
+3 specific mistakes that fail candidates at ${cname}.
+
+Be specific. No generic advice. If unsure about a recent question, say "general pattern".`;
+      const text = await mIpCallClaude(prompt, out, `Elite FAANG interview coach with current 2024-2026 knowledge of ${cname}'s actual interview process. You read Glassdoor and Blind. You give specific questions, not generic LeetCode lists. If unsure, say "general pattern" instead of inventing.`, 4000);
       if (text) out.innerHTML = `<div class="m-ip-output on">${mIpRenderMarkdown(text)}</div>`;
     }
 
@@ -6726,9 +7424,14 @@ Respond ONLY with valid JSON:
       if (text) out.innerHTML = `<div class="m-ip-output on">${mIpRenderMarkdown(text)}</div>`;
     }
 
-    // ── MOBILE VISUALIZER ─────────────────────────────────────────
+    // ── MOBILE VISUAL CODE VISUALIZER ─────────────────────────────
     let mIpVizSteps = [];
     let mIpVizCurrent = 0;
+    let mIpVizCode = '';
+    let mIpVizPattern = '';
+    let mIpVizSummary = '';
+    let mIpVizSpeed = 1500;
+    let mIpVizPlayInterval = null;
 
     async function mIpVisualize() {
       const code = document.getElementById('m-ip-viz-code').value.trim();
@@ -6737,60 +7440,224 @@ Respond ONLY with valid JSON:
       if (!code) { toast('Paste your code first'); return; }
       if (!input) { toast('Provide sample input'); return; }
       const out = document.getElementById('m-ip-viz-out');
-      out.innerHTML = `<div class="m-ip-output on"><div class="m-ip-loading"><div class="m-ip-spin-inner"></div>Tracing…</div></div>`;
-      const prompt = `Trace this code with the input. JSON only:\n\n${title ? `Problem: ${title}\n` : ''}Code:\n\`\`\`\n${code}\n\`\`\`\nInput:\n${input}\n\nFormat:\n{"steps":[{"step":1,"line":"code line","description":"plain English","vars":{"x":"value"},"changed":["x"]}],"summary":"final result"}\n\nRules:\n- Every meaningful step (loop iters, calls, conditions)\n- vars always shows all in-scope variables\n- changed = vars that changed this step\n- 8-25 steps total`;
-      const text = await mIpCallClaude(prompt, out, "Expert code execution tracer. Generate precise step-by-step traces.");
+      mIpVizCode = code;
+      out.innerHTML = `<div class="m-ip-output on"><div class="m-ip-loading"><div class="m-ip-spin-inner"></div>🎨 Building visual trace…</div></div>`;
+      const prompt = `Analyze this code and produce a VISUAL execution trace.
+
+${title ? `Problem: ${title}\n` : ''}Code:
+\`\`\`
+${code}
+\`\`\`
+Input:
+${input}
+
+Output ONLY valid JSON:
+{
+ "pattern": "Sliding Window | Two Pointers | Binary Search | BFS | DFS | DP | Greedy | Hash Map | Stack | Queue | Linked List | Tree Traversal | Backtracking | Other",
+ "summary": "1 sentence",
+ "steps": [{
+   "step":1,"lineNumber":3,"line":"code line","description":"plain English",
+   "stepType":"INIT | LOOP | COMPARE | UPDATE | SWAP | PUSH | POP | RECURSE | RETURN | CONDITION",
+   "vars":{"x":<actual value>},"changed":["x"],
+   "visual":{
+     "type":"array | grid | hashmap | linkedlist | tree | stack | queue | graph | scalar",
+     "data":<format per type below>,
+     "highlights":{"indices":[],"color":"primary | secondary | success | warn | error"},
+     "pointers":[{"name":"i","index":0,"color":"primary"}],
+     "compare":[{"a":0,"b":5}],"visited":[],"frontier":[]
+   }
+ }]
+}
+
+Data formats:
+- array: {"items":[1,5,3]}
+- grid: {"rows":[[1,0],[0,1]],"current":[0,1]}
+- hashmap: {"entries":[["a",1]]}
+- linkedlist: {"nodes":[{"val":1,"next":1},{"val":2,"next":null}]}
+- tree: {"nodes":[{"id":0,"val":5,"left":1,"right":2}]}
+- stack/queue: {"items":[1,2]}
+- graph: {"nodes":[{"id":"A"}],"edges":[["A","B"]]}
+- scalar: {"values":{"result":42}}
+
+Rules: detect PRIMARY structure for visual.type. Use actual types in vars. 10-20 steps. Be concise.`;
+      const text = await mIpCallClaude(prompt, out, "Expert code execution tracer. Output structured JSON visual traces.", 7000);
       if (!text) return;
       try {
         const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
         mIpVizSteps = parsed.steps || [];
+        mIpVizPattern = parsed.pattern || '';
+        mIpVizSummary = parsed.summary || '';
         mIpVizCurrent = 0;
         if (mIpVizSteps.length === 0) { out.innerHTML = `<div class="m-ip-output on" style="color:var(--accent2)">No steps generated.</div>`; return; }
-        mIpRenderViz(parsed.summary);
+        mIpRenderViz();
       } catch (e) {
+        console.error('Viz parse:', e);
         out.innerHTML = `<div class="m-ip-output on" style="color:var(--accent2)">Failed to parse trace.</div>`;
       }
     }
 
-    function mIpRenderViz(summary) {
+    const mIpStepColors = {
+      INIT: { bg: '#47c4ff', fg: '#000', icon: '🟦', label: 'INIT' },
+      LOOP: { bg: '#e8ff47', fg: '#000', icon: '🔁', label: 'LOOP' },
+      COMPARE: { bg: '#ff9f47', fg: '#000', icon: '⚖️', label: 'CMP' },
+      UPDATE: { bg: '#47ffb3', fg: '#000', icon: '✏️', label: 'UPD' },
+      SWAP: { bg: '#c447ff', fg: '#fff', icon: '🔄', label: 'SWAP' },
+      PUSH: { bg: '#47ffb3', fg: '#000', icon: '⬆️', label: 'PUSH' },
+      POP: { bg: '#ff9f47', fg: '#000', icon: '⬇️', label: 'POP' },
+      RECURSE: { bg: '#c447ff', fg: '#fff', icon: '🌀', label: 'REC' },
+      RETURN: { bg: '#47ff9f', fg: '#000', icon: '✅', label: 'RET' },
+      CONDITION: { bg: '#ff9f47', fg: '#000', icon: '❓', label: 'IF' }
+    };
+    function mIpColorFor(name) { return ({ primary: '#47ffb3', secondary: '#47c4ff', success: '#47ff9f', warn: '#ff9f47', error: '#ff4747' }[name]) || '#47ffb3'; }
+
+    function mIpRenderArray(v) {
+      const items = v.data?.items || []; const pointers = v.pointers || [];
+      const highlights = v.highlights?.indices || []; const visited = v.visited || [];
+      const compare = (v.compare || []).flatMap(c => [c.a, c.b]);
+      const hlColor = mIpColorFor(v.highlights?.color);
+      const ptrsByIdx = {}; pointers.forEach(p => { if (!ptrsByIdx[p.index]) ptrsByIdx[p.index] = []; ptrsByIdx[p.index].push(p); });
+      return `<div class="m-viz-array-wrap"><div class="m-viz-array">
+    ${items.map((val, i) => { const cls = ['m-viz-cell']; if (visited.includes(i)) cls.push('visited'); if (highlights.includes(i)) cls.push('highlight'); if (compare.includes(i)) cls.push('compare'); return `<div class="${cls.join(' ')}" style="--hl:${hlColor}"><div class="m-viz-cell-val">${val}</div><div class="m-viz-cell-idx">${i}</div></div>`; }).join('')}
+  </div><div class="m-viz-pointers-row">
+    ${items.map((_, i) => { const p = ptrsByIdx[i] || []; return `<div class="m-viz-ptr-slot">${p.map(pp => `<div class="m-viz-ptr" style="--c:${mIpColorFor(pp.color)}"><div class="m-viz-ptr-arrow">▲</div><div class="m-viz-ptr-name">${pp.name}</div></div>`).join('')}</div>`; }).join('')}
+  </div></div>`;
+    }
+
+    function mIpRenderGrid(v) {
+      const rows = v.data?.rows || []; const cur = v.data?.current;
+      const vis = (v.visited || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const hi = (v.highlights?.indices || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const fr = (v.frontier || []).map(x => Array.isArray(x) ? x.join(',') : x);
+      const hlColor = mIpColorFor(v.highlights?.color);
+      return `<div class="m-viz-grid">${rows.map((row, ri) => `<div class="m-viz-grid-row">${row.map((c, ci) => { const k = `${ri},${ci}`; const cls = ['m-viz-grid-cell']; if (vis.includes(k)) cls.push('visited'); if (fr.includes(k)) cls.push('frontier'); if (hi.includes(k)) cls.push('highlight'); if (cur && cur[0] === ri && cur[1] === ci) cls.push('current'); return `<div class="${cls.join(' ')}" style="--hl:${hlColor}">${c}</div>`; }).join('')}</div>`).join('')}</div>`;
+    }
+
+    function mIpRenderHashMap(v) {
+      const e = v.data?.entries || []; const hi = v.highlights?.indices || []; const hlColor = mIpColorFor(v.highlights?.color);
+      if (e.length === 0) return `<div class="m-viz-empty">Empty</div>`;
+      return `<div class="m-viz-hashmap">${e.map(([k, val], i) => { const isHl = hi.includes(i) || hi.includes(k); return `<div class="m-viz-hash-row ${isHl ? 'highlight' : ''}" style="--hl:${hlColor}"><div class="m-viz-hash-key">${k}</div><div class="m-viz-hash-arrow">→</div><div class="m-viz-hash-val">${val}</div></div>`; }).join('')}</div>`;
+    }
+
+    function mIpRenderLinkedList(v) {
+      const n = v.data?.nodes || []; const hi = v.highlights?.indices || []; const ptrs = v.pointers || []; const hlColor = mIpColorFor(v.highlights?.color);
+      return `<div class="m-viz-ll">${n.map((nd, i) => { const p = ptrs.filter(x => x.index === i); const isHl = hi.includes(i); return `<div class="m-viz-ll-wrap">${p.length ? `<div class="m-viz-ll-ptrs">${p.map(pp => `<div class="m-viz-ll-ptr" style="--c:${mIpColorFor(pp.color)}">${pp.name}<div>▼</div></div>`).join('')}</div>` : ''}<div class="m-viz-ll-node ${isHl ? 'highlight' : ''}" style="--hl:${hlColor}"><div class="m-viz-ll-val">${nd.val}</div><div class="m-viz-ll-next">${nd.next === null || nd.next === undefined ? '⌀' : '→'}</div></div></div>`; }).join('')}</div>`;
+    }
+
+    function mIpRenderTree(v) {
+      const nodes = v.data?.nodes || [];
+      if (nodes.length === 0) return `<div class="m-viz-empty">Empty Tree</div>`;
+      const hi = v.highlights?.indices || []; const vis = v.visited || []; const hlColor = mIpColorFor(v.highlights?.color);
+      const levels = []; const q = [{ id: 0, level: 0 }]; const seen = new Set();
+      while (q.length) { const { id, level } = q.shift(); if (seen.has(id)) continue; seen.add(id); const nd = nodes[id]; if (!nd) continue; if (!levels[level]) levels[level] = []; levels[level].push(nd); if (nd.left !== null && nd.left !== undefined) q.push({ id: nd.left, level: level + 1 }); if (nd.right !== null && nd.right !== undefined) q.push({ id: nd.right, level: level + 1 }); }
+      return `<div class="m-viz-tree">${levels.map(l => `<div class="m-viz-tree-level">${l.map(n => { const cls = ['m-viz-tree-node']; if (vis.includes(n.id)) cls.push('visited'); if (hi.includes(n.id)) cls.push('highlight'); return `<div class="${cls.join(' ')}" style="--hl:${hlColor}">${n.val}</div>`; }).join('')}</div>`).join('')}</div>`;
+    }
+
+    function mIpRenderStack(v) {
+      const items = v.data?.items || []; const hi = v.highlights?.indices || []; const hlColor = mIpColorFor(v.highlights?.color);
+      if (items.length === 0) return `<div class="m-viz-empty">Empty</div>`;
+      return `<div class="m-viz-stack"><div class="m-viz-stack-lbl">TOP ↓</div>${[...items].reverse().map((val, ri) => { const i = items.length - 1 - ri; const isHl = hi.includes(i); return `<div class="m-viz-stack-item ${isHl ? 'highlight' : ''}" style="--hl:${hlColor}">${val}</div>`; }).join('')}<div class="m-viz-stack-lbl">BOTTOM</div></div>`;
+    }
+
+    function mIpRenderQueue(v) {
+      const items = v.data?.items || []; const hi = v.highlights?.indices || []; const hlColor = mIpColorFor(v.highlights?.color);
+      if (items.length === 0) return `<div class="m-viz-empty">Empty</div>`;
+      return `<div class="m-viz-queue"><div class="m-viz-q-lbl">F→</div>${items.map((val, i) => { const isHl = hi.includes(i); return `<div class="m-viz-queue-item ${isHl ? 'highlight' : ''}" style="--hl:${hlColor}">${val}</div>`; }).join('')}<div class="m-viz-q-lbl">←B</div></div>`;
+    }
+
+    function mIpRenderGraph(v) {
+      const nodes = v.data?.nodes || []; const edges = v.data?.edges || []; const hi = v.highlights?.indices || []; const vis = v.visited || []; const fr = v.frontier || []; const hlColor = mIpColorFor(v.highlights?.color);
+      const r = 70; const cx = 100; const cy = 100; const pos = {};
+      nodes.forEach((n, i) => { const a = (i / nodes.length) * 2 * Math.PI - Math.PI / 2; pos[n.id] = { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) }; });
+      return `<svg class="m-viz-graph" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${edges.map(([a, b]) => { const pa = pos[a]; const pb = pos[b]; if (!pa || !pb) return ''; return `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" stroke="#444" stroke-width="1.5"/>`; }).join('')}${nodes.map(n => { const p = pos[n.id]; if (!p) return ''; const isHl = hi.includes(n.id); const isV = vis.includes(n.id); const isF = fr.includes(n.id); const fill = isHl ? hlColor : isV ? '#333' : isF ? '#ff9f47' : '#1a1a1a'; const stroke = isHl ? hlColor : '#666'; const tc = isHl || isF ? '#000' : '#fff'; return `<circle cx="${p.x}" cy="${p.y}" r="14" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="${p.x}" y="${p.y + 4}" text-anchor="middle" font-size="10" font-weight="700" fill="${tc}" font-family="DM Mono,monospace">${n.id}</text>`; }).join('')}</svg>`;
+    }
+
+    function mIpRenderScalar(v) {
+      const vals = v.data?.values || {};
+      if (Object.keys(vals).length === 0) return '';
+      return `<div class="m-viz-scalars">${Object.entries(vals).map(([k, val]) => `<div class="m-viz-scalar"><div class="m-viz-scalar-name">${k}</div><div class="m-viz-scalar-val">${val}</div></div>`).join('')}</div>`;
+    }
+
+    function mIpRenderVisual(visual) {
+      if (!visual || !visual.type) return '';
+      switch (visual.type) {
+        case 'array': return mIpRenderArray(visual);
+        case 'grid': return mIpRenderGrid(visual);
+        case 'hashmap': return mIpRenderHashMap(visual);
+        case 'linkedlist': return mIpRenderLinkedList(visual);
+        case 'tree': return mIpRenderTree(visual);
+        case 'stack': return mIpRenderStack(visual);
+        case 'queue': return mIpRenderQueue(visual);
+        case 'graph': return mIpRenderGraph(visual);
+        case 'scalar': return mIpRenderScalar(visual);
+        default: return '';
+      }
+    }
+
+    function mIpRenderCodeSide(highlightLine) {
+      const lines = mIpVizCode.split('\n');
+      return `<div class="m-viz-code-side">${lines.map((line, i) => { const isHl = (i + 1) === highlightLine; return `<div class="m-viz-code-line ${isHl ? 'active' : ''}"><span class="m-viz-code-num">${(i + 1).toString().padStart(2, ' ')}</span><span class="m-viz-code-text">${(line || ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span></div>`; }).join('')}</div>`;
+    }
+
+    function mIpRenderVarsPanel(step) {
+      const vars = step.vars || {}; const changed = step.changed || [];
+      if (Object.keys(vars).length === 0) return '';
+      return `<div class="m-viz-vars-panel"><div class="m-viz-vars-title">Variables</div><div class="m-viz-vars-grid">${Object.entries(vars).map(([n, v]) => { const ch = changed.includes(n); const d = typeof v === 'object' ? JSON.stringify(v) : String(v); return `<div class="m-viz-var ${ch ? 'changed' : ''}"><div class="m-viz-var-name">${n}</div><div class="m-viz-var-val">${d}</div></div>`; }).join('')}</div></div>`;
+    }
+
+    function mIpRenderViz() {
       const out = document.getElementById('m-ip-viz-out');
-      const step = mIpVizSteps[mIpVizCurrent];
-      if (!step) return;
-      const total = mIpVizSteps.length;
-      const pct = Math.round(((mIpVizCurrent + 1) / total) * 100);
-      const changed = step.changed || [];
-      const varsHTML = Object.entries(step.vars || {}).map(([name, val]) => {
-        const isChanged = changed.includes(name);
-        const displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
-        return `<div class="m-ip-viz-var ${isChanged ? 'changed' : ''}"><div class="m-ip-viz-var-name">${name}</div><div class="m-ip-viz-var-val">${displayVal}</div></div>`;
-      }).join('');
+      const step = mIpVizSteps[mIpVizCurrent]; if (!step) return;
+      const total = mIpVizSteps.length; const pct = Math.round(((mIpVizCurrent + 1) / total) * 100);
+      const tc = mIpStepColors[step.stepType || 'UPDATE'] || mIpStepColors.UPDATE;
       out.innerHTML = `
-    <div class="m-ip-viz-controls">
-      <button class="m-ip-viz-btn" onclick="mIpVizPrev()" ${mIpVizCurrent === 0 ? 'disabled' : ''}>◀</button>
-      <button class="m-ip-viz-btn" onclick="mIpVizPlay()">▶▶</button>
-      <button class="m-ip-viz-btn" onclick="mIpVizNext()" ${mIpVizCurrent >= total - 1 ? 'disabled' : ''}>▶</button>
-      <div class="m-ip-viz-progress"><div class="m-ip-viz-progress-fill" style="width:${pct}%"></div></div>
-      <div class="m-ip-viz-counter">${mIpVizCurrent + 1} / ${total}</div>
+    <div class="m-viz-controls-bar">
+      <button class="m-viz-ctrl-btn" onclick="mIpVizPrev()" ${mIpVizCurrent === 0 ? 'disabled' : ''}>◀</button>
+      <button class="m-viz-ctrl-btn primary" onclick="mIpVizPlay()">${mIpVizPlayInterval ? '⏸' : '▶'}</button>
+      <button class="m-viz-ctrl-btn" onclick="mIpVizNext()" ${mIpVizCurrent >= total - 1 ? 'disabled' : ''}>▶</button>
+      <button class="m-viz-ctrl-btn" onclick="mIpVizReset()">⟲</button>
+      <div class="m-viz-progress"><div class="m-viz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="m-viz-counter">${mIpVizCurrent + 1}/${total}</div>
     </div>
-    <div class="m-ip-viz-step">
-      <div class="m-ip-viz-step-num">STEP ${step.step}</div>
-      <div class="m-ip-viz-step-line">${step.line || ''}</div>
-      <div class="m-ip-viz-step-desc">${step.description || ''}</div>
-      ${varsHTML ? `<div class="m-ip-viz-vars">${varsHTML}</div>` : ''}
+    <select class="m-viz-speed" onchange="mIpVizSetSpeed(this.value)">
+      <option value="2500" ${mIpVizSpeed === 2500 ? 'selected' : ''}>0.5×</option>
+      <option value="1500" ${mIpVizSpeed === 1500 ? 'selected' : ''}>1×</option>
+      <option value="800" ${mIpVizSpeed === 800 ? 'selected' : ''}>2×</option>
+      <option value="400" ${mIpVizSpeed === 400 ? 'selected' : ''}>4×</option>
+    </select>
+    ${mIpVizPattern ? `<div class="m-viz-pattern">🎯 <strong>${mIpVizPattern}</strong></div>` : ''}
+    <div class="m-viz-code-card">${mIpRenderCodeSide(step.lineNumber)}</div>
+    <div class="m-viz-step-card">
+      <div class="m-viz-step-header">
+        <span class="m-viz-step-badge" style="background:${tc.bg};color:${tc.fg}">${tc.icon} ${tc.label}</span>
+        <span class="m-viz-step-num">STEP ${step.step}</span>
+      </div>
+      <div class="m-viz-step-desc">${step.description || ''}</div>
     </div>
-    ${mIpVizCurrent === total - 1 && summary ? `<div class="m-ip-output on" style="margin-top:12px"><h3>✓ Final Result</h3><p>${summary}</p></div>` : ''}
+    <div class="m-viz-visual-card">${mIpRenderVisual(step.visual)}</div>
+    ${mIpRenderVarsPanel(step)}
+    ${mIpVizCurrent === total - 1 && mIpVizSummary ? `<div class="m-viz-summary"><div class="m-viz-summary-icon">✅</div><div><div class="m-viz-summary-title">Final Result</div><div class="m-viz-summary-text">${mIpVizSummary}</div></div></div>` : ''}
   `;
     }
 
     function mIpVizNext() { if (mIpVizCurrent < mIpVizSteps.length - 1) { mIpVizCurrent++; mIpRenderViz(); } }
     function mIpVizPrev() { if (mIpVizCurrent > 0) { mIpVizCurrent--; mIpRenderViz(); } }
-    let mIpVizPlayInterval = null;
+    function mIpVizReset() {
+      mIpVizCurrent = 0;
+      if (mIpVizPlayInterval) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; }
+      mIpRenderViz();
+    }
+    function mIpVizSetSpeed(v) {
+      mIpVizSpeed = parseInt(v);
+      if (mIpVizPlayInterval) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = setInterval(mIpVizTick, mIpVizSpeed); }
+    }
+    function mIpVizTick() {
+      if (mIpVizCurrent >= mIpVizSteps.length - 1) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; mIpRenderViz(); return; }
+      mIpVizCurrent++; mIpRenderViz();
+    }
     function mIpVizPlay() {
-      if (mIpVizPlayInterval) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; return; }
-      mIpVizPlayInterval = setInterval(() => {
-        if (mIpVizCurrent >= mIpVizSteps.length - 1) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; return; }
-        mIpVizCurrent++; mIpRenderViz();
-      }, 1500);
+      if (mIpVizPlayInterval) { clearInterval(mIpVizPlayInterval); mIpVizPlayInterval = null; mIpRenderViz(); return; }
+      mIpVizPlayInterval = setInterval(mIpVizTick, mIpVizSpeed);
+      mIpRenderViz();
     }
 
     // ── MOBILE ASK DOUBT ──────────────────────────────────────────
